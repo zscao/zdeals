@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZDeals.Api.Contract\ZDeals.Api.Contract.csproj" />
+    <ProjectReference Include="..\ZDeals.Common\ZDeals.Common.csproj" />
+    <ProjectReference Include="..\ZDeals.Data\ZDeals.Data.csproj" />
+  </ItemGroup>
+
+</Project>
