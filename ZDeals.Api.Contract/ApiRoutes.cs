@@ -4,6 +4,12 @@
     {
         public const string BaseUrl = "api/";
 
+        public static class Error
+        {
+            public const string Production = BaseUrl + "error";
+            public const string Development = BaseUrl + "error-development";
+        }
+
         public static class Deals
         {
             public const string SearchDeals = BaseUrl + "deals";

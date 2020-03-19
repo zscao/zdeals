@@ -6,6 +6,7 @@ using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service.Mapping;
 using ZDeals.Common;
+using ZDeals.Common.ErrorCodes;
 using ZDeals.Data;
 using ZDeals.Data.Entities.Sales;
 
@@ -25,7 +26,7 @@ namespace ZDeals.Api.Service.Impl
             var deal = await _dbContext.Deals.Include(x => x.Store).FirstOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
             {
-                return new Result<Deal>(new NotFoundError { Code = 1, Message = "The deal does not exist." });
+                return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
             }
 
             return new Result<Deal>(deal.ToDealModel());
@@ -62,7 +63,7 @@ namespace ZDeals.Api.Service.Impl
             var deal = await _dbContext.Deals.Include(x => x.Store).FirstOrDefaultAsync(x => x.Id == dealId);
             if(deal?.Store == null)
             {
-                return new Result<Store>(new NotFoundError() { Code = 2, Message = "Store not found" });
+                return new Result<Store>(new Error(ErrorType.NotFound) { Code = Sales.StoreNotFound, Message = "Store not found" });
             }
 
             return new Result<Store>(deal.Store.ToStoreModel());
@@ -73,7 +74,7 @@ namespace ZDeals.Api.Service.Impl
             var deal = await _dbContext.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
             {
-                return new Result<Deal>(new NotFoundError { Code = 4, Message = "Deal does not exist" });
+                return new Result<Deal>(new Error(ErrorType.Validation) { Code = Sales.DealNotFound, Message = "Deal does not exist" });
             }
 
             deal.Title = request.Title;
@@ -86,26 +87,6 @@ namespace ZDeals.Api.Service.Impl
             deal.ExpiryDate = request.ExpiryDate;
 
             var saved = await _dbContext.SaveChangesAsync();
-            return new Result<Deal>(deal.ToDealModel());
-        }
-
-        public async Task<Result<Deal>> UpdateStore(int dealId, int storeId)
-        {
-            var deal = await _dbContext.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
-            if (deal == null)
-            {
-                return new Result<Deal>(new NotFoundError { Code = 4, Message = "Deal does not exist" });
-            }
-
-            var store = await _dbContext.Stores.FirstOrDefaultAsync(x => x.Id == storeId);
-            if(store == null)
-            {
-                return new Result<Deal>(new NotFoundError { Code = 5, Message = "Store does not exist" });
-            }
-
-            deal.Store = store;
-            var saved = await _dbContext.SaveChangesAsync();
-
             return new Result<Deal>(deal.ToDealModel());
         }
     }

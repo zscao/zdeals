@@ -8,6 +8,7 @@ using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service.Mapping;
 using ZDeals.Common;
+using ZDeals.Common.ErrorCodes;
 using ZDeals.Data;
 using ZDeals.Data.Entities.Sales;
 
@@ -48,7 +49,7 @@ namespace ZDeals.Api.Service.Impl
             var category = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == categoryId);
             if(category == null)
             {
-                return new Result<Category>(new NotFoundError { Code = 6, Message = "Category does not exist" });
+                return new Result<Category>(new Error(ErrorType.NotFound) { Code = Sales.CategoryNotFound, Message = "Category does not exist" });
             }
 
             return new Result<Category>(category.ToCategoryModel());

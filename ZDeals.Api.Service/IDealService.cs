@@ -15,7 +15,5 @@ namespace ZDeals.Api.Service
         Task<Result<Store>> GetDealStore(int dealId);
 
         Task<Result<Deal>> UpdateDeal(int dealId, UpdateDealRequest request);
-
-        Task<Result<Deal>> UpdateStore(int dealId, int storeId);
     }
 }

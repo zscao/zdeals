@@ -7,6 +7,7 @@ using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service.Mapping;
 using ZDeals.Common;
+using ZDeals.Common.ErrorCodes;
 using ZDeals.Data;
 using ZDeals.Data.Entities.Sales;
 
@@ -46,7 +47,7 @@ namespace ZDeals.Api.Service.Impl
             var store = await _dbContext.Stores.FirstOrDefaultAsync(x => x.Id == storeId);
             if(store == null)
             {
-                return new Result<Store>(new NotFoundError { Code = 3, Message = "Store does not exist" });
+                return new Result<Store>(new Error(ErrorType.NotFound) { Code = Sales.StoreNotFound, Message = "Store does not exist" });
             }
 
             return new Result<Store>(store.ToStoreModel());

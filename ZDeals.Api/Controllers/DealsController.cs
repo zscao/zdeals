@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using ZDeals.Api.Contract;
 using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
-using ZDeals.Api.Contract.Responses;
 using ZDeals.Api.Service;
+using ZDeals.Common;
 
 namespace ZDeals.Api.Controllers
 {
@@ -29,8 +29,6 @@ namespace ZDeals.Api.Controllers
         /// </remarks>
         /// <response code="200">all deals in the system</response>
         [HttpGet(ApiRoutes.Deals.SearchDeals)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public ActionResult<PagedDealList> Search(int? pageSize, int? pageNumber)
         {
             var response = new PagedDealList
@@ -53,15 +51,11 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpPost(ApiRoutes.Deals.CreateDeal)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Deal>> Create(CreateDealRequest request)
+        public async Task<ActionResult<Result>> Create(CreateDealRequest request)
         {
             var result = await _dealService.CreateDeal(request);
-            if (result.HasError())
-                return BadRequest(result.Errors);
 
-            return Created($"/api/deals/{result.Data.Id}", result.Data);
+            return Created($"/api/deals/{result.Data.Id}", result);
         }
 
         /// <summary>
@@ -74,35 +68,15 @@ namespace ZDeals.Api.Controllers
         /// <response code="200">details of the deal</response>
         /// <response code="400">the deal is not found</response>
         [HttpGet(ApiRoutes.Deals.GetDealById)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Deal>> GetById(int dealId)
+        public async Task<ActionResult<Result>> GetById(int dealId)
         {
-            var result = await _dealService.GetDealById(dealId);
-            if (result.HasError())
-                return BadRequest(result.Errors);
-
-            return Ok(result.Data);
+            return await _dealService.GetDealById(dealId);
         }
 
         [HttpGet(ApiRoutes.Deals.GetDealStore)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Store>> GetStore(int dealId)
+        public async Task<ActionResult<Result>> GetStore(int dealId)
         {
-            var result = await _dealService.GetDealStore(dealId);
-            if (result.HasError())
-                return BadRequest(result.Errors);
-
-            return Ok(result.Data);
-        }
-
-        [HttpPut(ApiRoutes.Deals.UpdateDealStore)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Deal>> UpdateDealStore(int dealId, int storeId)
-        {
-            return await Task.FromResult(new Deal());
+            return await _dealService.GetDealStore(dealId);
         }
     }
 }

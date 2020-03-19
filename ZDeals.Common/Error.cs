@@ -1,32 +1,25 @@
 ﻿namespace ZDeals.Common
 {
-    public abstract class Error
+    public class Error
     {
+        public ErrorType Type { get; private set; }
         /// <summary>
         /// codes are defined in modules
         /// </summary>
         public int Code { get; set; }
         public string Message { get; set; }
+
+        public Error(ErrorType type)
+        {
+            this.Type = type;
+        }
     }
 
-
-    public class InternalError : Error
+    public enum ErrorType
     {
-
-    }
-
-    public class UnknownError : Error
-    {
-
-    }
-
-    public class BadRequestError: Error
-    {
-
-    }
-
-    public class NotFoundError: Error
-    {
-
+        Internal = -1,
+        Unknown = 0,
+        Validation = 1,
+        NotFound = 2
     }
 }

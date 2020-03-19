@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
 using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
-using ZDeals.Api.Contract.Responses;
 using ZDeals.Api.Service;
+using ZDeals.Common;
 
 namespace ZDeals.Api.Controllers
 {
@@ -25,43 +22,22 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpGet(ApiRoutes.Categories.SearchCategories)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<Category>>> Search()
+        public async Task<ActionResult<Result>> Search()
         {
-            var result = await _categoryService.SearchCategories();
-            if (result.HasError())
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return result.Data.ToArray();
+            return await _categoryService.SearchCategories();
         }
 
         [HttpPost(ApiRoutes.Categories.CreateCategory)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Category>> Create(CreateCategoryRequest request)
         {
             var result = await _categoryService.CreateCategory(request);
-
-            if (result.HasError())
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Created($"api/categories/{result.Data.Id}", result.Data);
+            return Created($"api/categories/{result.Data.Id}", result);
         }
 
         [HttpGet(ApiRoutes.Categories.GetCategoryById)]
-        public async Task<ActionResult<Category>> GetById(int categoryId)
+        public async Task<ActionResult<Result>> GetById(int categoryId)
         {
-            var result = await _categoryService.GetCategoryById(categoryId);
-            if (result.HasError())
-            {
-                return BadRequest(result.Errors);
-            }
-            return result.Data;
+            return await _categoryService.GetCategoryById(categoryId);
         }
     }
 }

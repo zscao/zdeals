@@ -29,9 +29,9 @@ namespace ZDeals.Common
             return Errors?.Any() ?? false;
         }
 
-        public bool HasError(Type type)
+        public bool HasError(ErrorType type)
         {
-            return Errors?.Any(x => x.GetType() == type) ?? false;
+            return Errors?.Any(x => x.Type == type) ?? false;
         }
 
     }
