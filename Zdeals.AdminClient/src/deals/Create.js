@@ -1,27 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, InputGroup, Button, Row, Col } from 'react-bootstrap';
-import Select from 'react-select';
 import { useForm } from 'react-hook-form';
 
 import Page from '../shared/Page';
 import Card from '../shared/Card';
 import FormErrorBlock from '../shared/FormErrorBlock';
 
+import { dealService } from '../state/services';
+
 const buttons = [
   { title: 'Back to List', link: '/deals' }
 ]
 
-const storeOptions = [
-  { value: 1, label: 'Taobao' },
-  { value: 2, label: 'Amazon' }
-]
-
 export default function Create(props) {
+
 
   const { register, handleSubmit, errors } = useForm()
 
-  const onFormSubmit = formValues => {
-    console.log('form submitting:', formValues);
+  function onFormSubmit(values) {
+
+    if(values.dealPrice) values.dealPrice = Number.parseFloat(values.dealPrice);
+    if(values.fullPrice) values.fullPrice = Number.parseFloat(values.fullPrice);
+
+    //if(!values.expiryDate) values.expiryDate = null;
+
+    dealService.createDeal(values).then(response => {
+      console.log(response)
+    })
+    .catch(error => {
+      console.log(error);
+    })
 
   }
 
@@ -100,21 +108,16 @@ export default function Create(props) {
               <Form.Group className="row">
                 <Form.Label className="col-sm-2 col-form-label">Published Date</Form.Label>
                 <div className="col-sm-3">
-                  <Form.Control type="text" placeholder="DD/MM/YYYY" />
+                  <Form.Control type="date" name="publishedDate" isInvalid={!!errors.publishedDate} placeholder="DD/MM/YYYY" ref={register({required: 'Published date is required'})}/>
+                  <FormErrorBlock error={errors.publishedDate} />
                 </div>
               </Form.Group>
 
               <Form.Group className="row">
                 <Form.Label className="col-sm-2 col-form-label">Expiry Date</Form.Label>
                 <div className="col-sm-3">
-                  <Form.Control type="text" placeholder="DD/MM/YYYY" />
-                </div>
-              </Form.Group>
-
-              <Form.Group className="row">
-                <Form.Label className="col-sm-2 col-form-label">Store</Form.Label>
-                <div className="col-sm-4">
-                  <Select options={storeOptions} />
+                  <Form.Control type="date" name="expiryDate" isInvalid={!!errors.expiryDate} placeholder="DD/MM/YYYY" ref={register} />
+                  <FormErrorBlock error={errors.expiryDate} />
                 </div>
               </Form.Group>
 

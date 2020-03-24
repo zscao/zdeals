@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.min.css';
 
 import './App.scss';
 
@@ -22,6 +25,7 @@ class App extends Component {
             <Footer />
           </div>
         </div>
+        <ToastContainer position="bottom-right" />
       </div>
     );
   }

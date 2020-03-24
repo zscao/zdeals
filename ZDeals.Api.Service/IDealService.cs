@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
@@ -8,6 +9,8 @@ namespace ZDeals.Api.Service
 {
     public interface IDealService
     {
+        Task<Result<PagedDealList>> SearchDeals(int? pageSize, int? pageNumber);
+
         Task<Result<Deal>> CreateDeal(CreateDealRequest request);
 
         Task<Result<Deal>> GetDealById(int dealId);

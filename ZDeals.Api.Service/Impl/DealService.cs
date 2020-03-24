@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract.Models;
@@ -21,6 +22,32 @@ namespace ZDeals.Api.Service.Impl
             _dbContext = dbContext;
         }
 
+        public async Task<Result<PagedDealList>> SearchDeals(int? pageSize, int? pageNumber)
+        {
+            int size = pageSize ?? 20;
+            int number = pageNumber ?? 1;
+
+            var total = await _dbContext.Deals.CountAsync();
+
+            var deals = await _dbContext.Deals.AsNoTracking()
+                .Include(x => x.Store)
+                .OrderByDescending(x => x.Id)
+                .Skip((number - 1) * size)
+                .Take(size)
+                .ToListAsync();
+
+            var paged = new PagedDealList
+            {
+                Data = deals.Select(x => x.ToDealListModel()),
+                PageSize = size,
+                PageNumber = number,
+                TotalCount = total
+            };
+
+            return new Result<PagedDealList>(paged);
+        }
+
+
         public async Task<Result<Deal>> GetDealById(int dealId)
         {
             var deal = await _dbContext.Deals.Include(x => x.Store).FirstOrDefaultAsync(x => x.Id == dealId);
@@ -34,10 +61,6 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> CreateDeal(CreateDealRequest request)
         {
-            var store = request.storeId > 0
-                ? await _dbContext.Stores.FirstOrDefaultAsync(x => x.Id == request.storeId)
-                : null;
-
             var deal = new DealEntity
             {
                 Title = request.Title,
@@ -49,7 +72,7 @@ namespace ZDeals.Api.Service.Impl
                 PublishedDate = request.PublishedDate,
                 ExpiryDate = request.ExpiryDate,
                 Source = request.Source,
-                Store = store,
+                Store = null,
             };
             
             var entry =_dbContext.Deals.Add(deal);            

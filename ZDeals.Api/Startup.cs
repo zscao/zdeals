@@ -12,6 +12,8 @@ namespace ZDeals.Api
 {
     public class Startup
     {
+        private readonly string MyAllowedSpecificOrigins = "_myAllowedSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -22,6 +24,16 @@ namespace ZDeals.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowedSpecificOrigins, builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
             services.AddControllers(options =>
             {
                 options.Filters.Add(typeof(ResponseFilter));
@@ -43,6 +55,8 @@ namespace ZDeals.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(MyAllowedSpecificOrigins);
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

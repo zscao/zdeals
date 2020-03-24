@@ -29,25 +29,9 @@ namespace ZDeals.Api.Controllers
         /// </remarks>
         /// <response code="200">all deals in the system</response>
         [HttpGet(ApiRoutes.Deals.SearchDeals)]
-        public ActionResult<PagedDealList> Search(int? pageSize, int? pageNumber)
+        public async Task<ActionResult<Result>> Search(int? pageSize, int? pageNumber)
         {
-            var response = new PagedDealList
-            {
-                Data = new List<DealList>()
-                {
-                    new DealList
-                    {
-                        Id = 1,
-                        Title = "20% off on all Dell monitors"
-                    }
-                },
-                TotalCount = 1,
-                PageSize = pageSize ?? 10,
-                PageNumber = pageNumber ?? 1,
-                PrevPage = null,
-                NextPage = "api/deals?pageSize=10&pageNumber=2"
-            };
-            return response;
+            return await _dealService.SearchDeals(pageSize, pageNumber);
         }
 
         [HttpPost(ApiRoutes.Deals.CreateDeal)]
