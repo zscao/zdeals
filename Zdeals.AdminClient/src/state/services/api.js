@@ -16,7 +16,16 @@ export function get(url, params, failureToast, successToast) {
   return axios.get(url, params)
     .then(response => {
       if(successToast) toast.success(successToast);
-      return response;
+      return response.data;
+    })
+    .catch(handleAxiosError(failureToast));
+}
+
+export function put(url, params, failureToast, successToast) {
+  return axios.put(url, params)
+    .then(response => {
+      if(successToast) toast.success(successToast);
+      return response.data;
     })
     .catch(handleAxiosError(failureToast));
 }

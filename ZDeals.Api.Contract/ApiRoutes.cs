@@ -19,7 +19,6 @@
             public const string DeleteDeal = BaseUrl + "deals/{dealId}";
 
             public const string GetDealStore = BaseUrl + "deals/{dealId}/store";
-            public const string UpdateDealStore = BaseUrl + "deals/{dealId}/store/{storeId}";
         }
 
         public static class Stores

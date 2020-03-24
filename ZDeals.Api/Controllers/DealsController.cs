@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
-using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service;
 using ZDeals.Common;
@@ -34,14 +33,6 @@ namespace ZDeals.Api.Controllers
             return await _dealService.SearchDeals(pageSize, pageNumber);
         }
 
-        [HttpPost(ApiRoutes.Deals.CreateDeal)]
-        public async Task<ActionResult<Result>> Create(CreateDealRequest request)
-        {
-            var result = await _dealService.CreateDeal(request);
-
-            return Created($"/api/deals/{result.Data.Id}", result);
-        }
-
         /// <summary>
         /// returns the details of a deal specified by id
         /// </summary>
@@ -61,6 +52,21 @@ namespace ZDeals.Api.Controllers
         public async Task<ActionResult<Result>> GetStore(int dealId)
         {
             return await _dealService.GetDealStore(dealId);
+        }
+
+
+        [HttpPost(ApiRoutes.Deals.CreateDeal)]
+        public async Task<ActionResult<Result>> Create([FromBody] CreateDealRequest request)
+        {
+            var result = await _dealService.CreateDeal(request);
+
+            return Created($"/api/deals/{result.Data.Id}", result);
+        }
+
+        [HttpPut(ApiRoutes.Deals.UpdateDeal)]
+        public async Task<ActionResult<Result>> Update(int dealId, [FromBody] UpdateDealRequest request)
+        {
+            return await _dealService.UpdateDeal(dealId, request);
         }
     }
 }

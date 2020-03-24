@@ -13,7 +13,15 @@ namespace ZDeals.Api.Service.Mapping
             {
                 Id = entity.Id,
                 Title = entity.Title,
+                Highlight = entity.Highlight,
+                Descrition = entity.Description,
+                DealPrice = entity.DealPrice,
+                FullPrice = entity.FullPrice,
+                Discount = entity.Discount,
+                PublishedDate = entity.PublishedDate,
+                ExpiryDate = entity.ExpiryDate,
                 Store = entity.Store?.ToStoreModel(),
+                Source = entity.Source,
             };
         }
 

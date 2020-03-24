@@ -1,9 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { Button } from 'react-bootstrap';
 
 import Page from '../shared/Page';
 import Card from '../shared/Card';
 
-import { dealService } from '../state/services';
+import * as dealRequests from '../state/ducks/deals/requests';
 
 const buttons = [
   { title: 'Add Deal', link: '/deals/create' }
@@ -12,12 +15,27 @@ const buttons = [
 class DealList extends React.Component {
 
   componentDidMount() {
-    dealService.searchDeals().then(response => {
-      console.log(response);
-    });
+
+    this.props.searchDeals();
+  }
+
+  editDeal = deal => {
+    this.jumpTo('/deals/edit/' + deal.id)
+  }
+
+  jumpTo = next => {
+    if(this.props.history) {
+      this.props.history.push(next);
+    }
   }
 
   render() {
+
+    const { deals } = this.props;
+    const searchResult = deals.search.result || {};
+    const data = searchResult.data || [];
+
+
     return (
       <Page title="Deal List" buttons={buttons}>
         <div className="row">
@@ -26,43 +44,23 @@ class DealList extends React.Component {
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Profile</th>
-                    <th>VatNo.</th>
-                    <th>Created</th>
-                    <th>Status</th>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Published</th>
+                    <th>Store</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Jacob</td>
-                    <td>53275531</td>
-                    <td>12 May 2017</td>
-                    <td><label className="badge badge-danger">Pending</label></td>
-                  </tr>
-                  <tr>
-                    <td>Messsy</td>
-                    <td>53275532</td>
-                    <td>15 May 2017</td>
-                    <td><label className="badge badge-warning">In progress</label></td>
-                  </tr>
-                  <tr>
-                    <td>John</td>
-                    <td>53275533</td>
-                    <td>14 May 2017</td>
-                    <td><label className="badge badge-info">Fixed</label></td>
-                  </tr>
-                  <tr>
-                    <td>Peter</td>
-                    <td>53275534</td>
-                    <td>16 May 2017</td>
-                    <td><label className="badge badge-success">Completed</label></td>
-                  </tr>
-                  <tr>
-                    <td>Dave</td>
-                    <td>53275535</td>
-                    <td>20 May 2017</td>
-                    <td><label className="badge badge-warning">In progress</label></td>
-                  </tr>
+                  {data.map(deal => (<tr key={deal.id}>
+                    <td>{deal.id}</td>
+                    <td>{deal.title}</td>
+                    <td>{deal.publishedDate}</td>
+                    <td>{deal.store && deal.store.name}</td>
+                    <td>
+                      <Button variant="primary" onClick={() => this.editDeal(deal)}>Edit</Button>
+                    </td>
+                  </tr>))}
                 </tbody>
               </table>
             </Card>
@@ -73,4 +71,12 @@ class DealList extends React.Component {
   }
 }
 
-export default DealList;
+const mapStateToProps = state => ({
+  deals: state.deals
+});
+
+const mapDispatchToProps = {
+  ...dealRequests
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DealList);

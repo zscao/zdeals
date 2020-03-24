@@ -13,10 +13,10 @@ namespace ZDeals.Data.Entities.Sales
         public string Title { get; set; }
 
         [MaxLength(200)]
-        public string HighLight { get; set; }
+        public string Highlight { get; set; }
 
         [MaxLength(2000)]
-        public string Descrition { get; set; }
+        public string Description { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(10, 2)")]

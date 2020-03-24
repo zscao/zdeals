@@ -64,8 +64,8 @@ namespace ZDeals.Api.Service.Impl
             var deal = new DealEntity
             {
                 Title = request.Title,
-                HighLight = request.HighLight,
-                Descrition = request.Descrition,
+                Highlight = request.HighLight,
+                Description = request.Description,
                 FullPrice = request.FullPrice,
                 DealPrice = request.DealPrice,
                 Discount = request.Discount,
@@ -101,7 +101,8 @@ namespace ZDeals.Api.Service.Impl
             }
 
             deal.Title = request.Title;
-            deal.HighLight = request.HighLight;
+            deal.Highlight = request.HighLight;
+            deal.Description = request.Description;
             deal.Discount = request.Discount;
             deal.FullPrice = request.FullPrice;
             deal.DealPrice = request.DealPrice;
