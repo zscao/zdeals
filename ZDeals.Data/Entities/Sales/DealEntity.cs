@@ -42,5 +42,8 @@ namespace ZDeals.Data.Entities.Sales
         public StoreEntity Store { get; set; }
 
         public ICollection<DealCategoryJoin> DealCategory { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime CreatedTime { get; set; }
     }
 }

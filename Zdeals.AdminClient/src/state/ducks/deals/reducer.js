@@ -13,16 +13,7 @@ const defaultState = {
 function deals(state = defaultState, action) {
   switch (action.type) {
 
-    case types.SEARCH_DEAL_REQUEST:
-      return {
-        ...state, search: {
-          ...state.search,
-          query: action.payload,
-          loading: true,
-        }
-      };
-
-    case types.SEARCH_DEAL_SUCCESS:
+    case types.SEARCH_DEALS:
       return {
         ...state, search: {
           ...state.search,
@@ -31,16 +22,6 @@ function deals(state = defaultState, action) {
           invalid: false,
         }
       };
-
-    case types.SEARCH_DEAL_FAILURE:
-      return {
-        ...state, search: {
-          ...state.search,
-          error: action.payload,
-          loading: false,
-          invalid: true
-        }
-      }
 
     default:
       return state;

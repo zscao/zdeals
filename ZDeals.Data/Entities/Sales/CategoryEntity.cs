@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,5 +26,8 @@ namespace ZDeals.Data.Entities.Sales
         public ICollection<CategoryEntity> Children { get; set; }
 
         public ICollection<DealCategoryJoin> DealCategory { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime CreatedTime { get; set; }
     }
 }

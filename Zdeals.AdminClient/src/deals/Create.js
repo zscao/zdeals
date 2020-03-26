@@ -5,7 +5,7 @@ import Page from '../shared/Page';
 import Card from '../shared/Card';
 import DealFrom from './DealForm';
 
-import { dealService } from '../state/services';
+import * as dealActions from '../state/ducks/deals/actions';
 
 const buttons = [
   { title: 'Back to List', link: '/deals' }
@@ -19,8 +19,8 @@ export default function Create(props) {
 
   function submitForm(values) {
 
-    dealService.createDeal(values).then(response => {
-      console.log(response)
+    dealActions.createDeal(values).then(response => {
+      //console.log(response)
     })
   }
 

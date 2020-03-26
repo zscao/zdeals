@@ -20,6 +20,6 @@
         Internal = -1,
         Unknown = 0,
         Validation = 1,
-        NotFound = 2
+        NotFound = 2,
     }
 }

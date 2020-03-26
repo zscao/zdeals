@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap';
 import Page from '../shared/Page';
 import Card from '../shared/Card';
 
-import * as dealRequests from '../state/ducks/deals/requests';
+import * as dealActions from '../state/ducks/deals/actions';
 
 const buttons = [
   { title: 'Add Deal', link: '/deals/create' }
@@ -15,8 +15,7 @@ const buttons = [
 class DealList extends React.Component {
 
   componentDidMount() {
-
-    this.props.searchDeals();
+    this.props.searchDeals({pageSize: 20});
   }
 
   editDeal = deal => {
@@ -54,7 +53,7 @@ class DealList extends React.Component {
                 <tbody>
                   {data.map(deal => (<tr key={deal.id}>
                     <td>{deal.id}</td>
-                    <td>{deal.title}</td>
+                    <td className="text-overflow" style={{width: '50%'}}>{deal.title}</td>
                     <td>{deal.publishedDate}</td>
                     <td>{deal.store && deal.store.name}</td>
                     <td>
@@ -76,7 +75,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  ...dealRequests
+  ...dealActions
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DealList);

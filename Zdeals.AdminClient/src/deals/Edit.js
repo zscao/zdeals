@@ -6,7 +6,8 @@ import Page from '../shared/Page';
 import Card from '../shared/Card';
 import DealFrom from './DealForm';
 
-import { dealService } from '../state/services';
+import * as dealActions from '../state/ducks/deals/actions';
+import { connect } from 'react-redux';
 
 const buttons = [
   { title: 'Back to List', link: '/deals' }
@@ -25,7 +26,7 @@ class DealEdit extends React.Component {
     const id = params.id;
 
     if(id) {
-      dealService.getDealById(id).then(response => {
+      this.props.getDealById(id).then(response => {
         this.setState({ deal: response })
       })
     }
@@ -35,8 +36,8 @@ class DealEdit extends React.Component {
     const deal = this.state.deal;
     if(!deal || !deal.id) return;
 
-    dealService.updateDeal(deal.id, values).then(response => {
-      console.log(response)
+    this.props.updateDeal(deal.id, values).then(response => {
+      //console.log(response)
     })
   }
 
@@ -59,4 +60,8 @@ class DealEdit extends React.Component {
   }
 }
 
-export default DealEdit
+const mapDispatchToProps = {
+  ...dealActions
+}
+
+export default connect(null, mapDispatchToProps)(DealEdit)

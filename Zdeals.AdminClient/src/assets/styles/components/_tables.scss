@@ -48,4 +48,9 @@
       }
     }
   }
+  td.text-overflow {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

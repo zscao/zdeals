@@ -3,8 +3,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
-import deals from './deals/reducer';
-
+import deals from './ducks/deals/reducer';
 
 const reducers = combineReducers({
   deals,
@@ -16,4 +15,6 @@ export default createStore(
   reducers,
   applyMiddleware(...middleware)
 );
+
+
 

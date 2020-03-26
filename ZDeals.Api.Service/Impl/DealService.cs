@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +17,12 @@ namespace ZDeals.Api.Service.Impl
     public class DealService : IDealService
     {
         private readonly ZDealsDbContext _dbContext;
+        private readonly IStoreService _storeService;
 
-        public DealService(ZDealsDbContext dbContext)
+        public DealService(ZDealsDbContext dbContext, IStoreService storeService)
         {
             _dbContext = dbContext;
+            _storeService = storeService;
         }
 
         public async Task<Result<PagedDealList>> SearchDeals(int? pageSize, int? pageNumber)
@@ -61,6 +64,8 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> CreateDeal(CreateDealRequest request)
         {
+            var store = await FindStoreForUrl(request.Source);
+
             var deal = new DealEntity
             {
                 Title = request.Title,
@@ -72,7 +77,7 @@ namespace ZDeals.Api.Service.Impl
                 PublishedDate = request.PublishedDate,
                 ExpiryDate = request.ExpiryDate,
                 Source = request.Source,
-                Store = null,
+                Store = store,
             };
             
             var entry =_dbContext.Deals.Add(deal);            
@@ -112,6 +117,27 @@ namespace ZDeals.Api.Service.Impl
 
             var saved = await _dbContext.SaveChangesAsync();
             return new Result<Deal>(deal.ToDealModel());
+        }
+
+
+        private async Task<StoreEntity> FindStoreForUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url)) return null;
+
+            Uri uri;
+            try
+            {
+                uri = new Uri(url);
+            }
+            catch
+            {
+                return null;
+            }
+
+            var host = uri.Host.ToLower();
+            var store = await _dbContext.Stores.FirstOrDefaultAsync(x => host.EndsWith(x.Domain));
+
+            return store;
         }
     }
 }
