@@ -34,7 +34,6 @@ class DealList extends React.Component {
     const searchResult = deals.search.result || {};
     const data = searchResult.data || [];
 
-
     return (
       <Page title="Deal List" buttons={buttons}>
         <div className="row">

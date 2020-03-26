@@ -4,8 +4,10 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import deals from './ducks/deals/reducer';
+import api from './ducks/api/reducer';
 
 const reducers = combineReducers({
+  api,
   deals,
 });
 

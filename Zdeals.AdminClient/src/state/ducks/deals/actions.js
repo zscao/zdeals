@@ -16,6 +16,7 @@ export const getDealById = id => {
     url: `${apiRoutes.deals.base}/${id}`,
     //onSuccess: data => { console.log('data: ', data)}
     //onFailure: error => { console.log('error: ', error)}
+    label: types.GET_DEAL_BY_ID
   });
 }
 
@@ -24,6 +25,10 @@ export const createDeal = request => {
     method: 'POST',
     url: apiRoutes.deals.base,
     data: request,
+    toast: {
+      success: 'Deal created.'
+    },
+    label: types.CREATE_DEAL
   })
 }
 
@@ -32,7 +37,11 @@ export const updateDeal = (id, request) => {
   return apiFetch({
     method: 'PUT',
     url,
-    data: request
+    data: request,
+    toast: {
+      success: 'Deal saved.'
+    },
+    label: types.EDIT_DEAL
   })
 } 
 

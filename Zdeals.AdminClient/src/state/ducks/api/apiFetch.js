@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { toast as toastify } from 'react-toastify';
+
 import { baseUrl } from './apiRoutes';
 import { apiError, apiStart, apiEnd } from './actions';
 
@@ -12,7 +14,8 @@ export default function apiFetch(request) {
       label = '',
       headers = null,
       onSuccess = null,
-      onFailure = null
+      onFailure = null,
+      toast = null,
     } = request;
 
     if(label)dispatch(apiStart(label));
@@ -23,6 +26,9 @@ export default function apiFetch(request) {
     return axios.request({url, method, headers, [dataOrParams]: data})
     .then(response => {
       handleCallback(dispatch, onSuccess, response.data);
+
+      if(toast && toast.success) toastify.success(toast.success);
+      
       return response.data;
     })
     .catch(e => {
@@ -32,7 +38,10 @@ export default function apiFetch(request) {
         error = { code: e.code || 400, message: e.message }
       }
       handleCallback(dispatch, onFailure, error);
-      dispatch(apiError(error));
+      //dispatch(apiError(error));
+      if(!(toast && toast.failure))
+        toastify.error(error.message, { autoClose: false})
+
       return Promise.reject(error);
     })
     .finally(() => {

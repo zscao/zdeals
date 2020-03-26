@@ -1,1 +1,4 @@
 export const SEARCH_DEALS = 'DEALS/SEARCH_DEALS';
+export const GET_DEAL_BY_ID = 'DEALS/GET_DEAL_BY_ID';
+export const CREATE_DEAL = 'DEALS/CREATE_DEAL';
+export const EDIT_DEAL = 'DEALS/EDIT_DEAL';

@@ -10,6 +10,7 @@ import AppRoutes from './AppRoutes';
 import Navbar from '../shared/Navbar';
 import Sidebar from '../shared/Sidebar';
 import Footer from '../shared/Footer';
+import PageLoader from '../shared/PageLoader';
 
 class App extends Component {
   render() {
@@ -25,7 +26,7 @@ class App extends Component {
             <Footer />
           </div>
         </div>
-        <ToastContainer position="bottom-right" />
+        <PageLoader />
       </div>
     );
   }

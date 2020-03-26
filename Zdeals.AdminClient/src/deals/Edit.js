@@ -60,8 +60,12 @@ class DealEdit extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  api: state.api
+})
+
 const mapDispatchToProps = {
   ...dealActions
 }
 
-export default connect(null, mapDispatchToProps)(DealEdit)
+export default connect(mapStateToProps, mapDispatchToProps)(DealEdit)
