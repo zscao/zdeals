@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 
 import './App.scss';
 
 import AppRoutes from './AppRoutes';
-import Navbar from '../shared/Navbar';
-import Sidebar from '../shared/Sidebar';
-import Footer from '../shared/Footer';
-import PageLoader from '../shared/PageLoader';
+import Navbar from './shared/Navbar';
+import Sidebar from './shared/Sidebar';
+import Footer from './shared/Footer';
+import PageLoader from './shared/PageLoader';
 
 class App extends Component {
   render() {

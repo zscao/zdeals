@@ -48,11 +48,11 @@ class Sidebar extends Component {
  
   } 
   render () {
-    return (
+    return ( 
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
         <div className="text-center sidebar-brand-wrapper d-flex align-items-center">
-          <a className="sidebar-brand brand-logo" href="index.html"><img src={require("../assets/images/logo.svg")} alt="logo" /></a>
-          <a className="sidebar-brand brand-logo-mini pt-3" href="index.html"><img src={require("../assets/images/logo-mini.svg" )} alt="logo" /></a>
+          <a className="sidebar-brand brand-logo" href="index.html"><img src={require("../../assets/images/logo.svg")} alt="logo" /></a>
+          <a className="sidebar-brand brand-logo-mini pt-3" href="index.html"><img src={require("../../assets/images/logo-mini.svg" )} alt="logo" /></a>
         </div>
         <ul className="nav">
           <li className="nav-item nav-profile not-navigation-link">
@@ -61,7 +61,7 @@ class Sidebar extends Component {
                 <Dropdown.Toggle className="nav-link user-switch-dropdown-toggler p-0 toggle-arrow-hide bg-transparent border-0 w-100">
                   <div className="d-flex justify-content-between align-items-start">
                     <div className="profile-image">
-                      <img src={ require("../assets/images/faces/face8.jpg")} alt="profile" />
+                      <img src={ require("../../assets/images/faces/face8.jpg")} alt="profile" />
                     </div>
                     <div className="text-left ml-3">
                       <p className="profile-name">Richard V.Welsh</p>
@@ -127,10 +127,10 @@ class Sidebar extends Component {
               <span className="menu-title">Deals</span>
             </Link>
           </li>
-          <li className={ this.isPathActive('/tables') ? 'nav-item active' : 'nav-item' }>
-            <Link className="nav-link" to="/tables/basic-table">
+          <li className={ this.isPathActive('/stores') ? 'nav-item active' : 'nav-item' }>
+            <Link className="nav-link" to="/stores">
               <i className="mdi mdi-table-large menu-icon"></i>
-              <span className="menu-title">Tables</span>
+              <span className="menu-title">Stores</span>
             </Link>
           </li>
           <li className={ this.isPathActive('/icons') ? 'nav-item active' : 'nav-item' }>

@@ -6,26 +6,28 @@ import { Button } from 'react-bootstrap';
 import Page from '../shared/Page';
 import Card from '../shared/Card';
 
-import * as dealActions from '../state/ducks/deals/actions';
+import * as dealActions from '../../state/ducks/deals/actions';
+import { createHistoryJumper } from '../helpers/routeHelper';
 
 const buttons = [
-  { title: 'Add Deal', link: '/deals/create' }
+  { name: 'createDeal', title: 'Create Deal' }
 ]
 
 class DealList extends React.Component {
+
+  jumper = createHistoryJumper(this.props.history);
 
   componentDidMount() {
     this.props.searchDeals({pageSize: 20});
   }
 
   editDeal = deal => {
-    this.jumpTo('/deals/edit/' + deal.id)
+    this.jumper.jumpTo('/deals/edit/' + deal.id)
   }
 
-  jumpTo = next => {
-    if(this.props.history) {
-      this.props.history.push(next);
-    }
+  onButtonClick = button => {
+    if(button.name === 'createDeal')
+      this.jumper.jumpTo('/deals/create');
   }
 
   render() {
@@ -35,10 +37,10 @@ class DealList extends React.Component {
     const data = searchResult.data || [];
 
     return (
-      <Page title="Deal List" buttons={buttons}>
+      <Page title="Deal List" buttons={buttons} onButtonClick={this.onButtonClick}>
         <div className="row">
           <div className="col-12 grid-margin stretch-card">
-            <Card title="Basic Table" className="table-responsive">
+            <Card title="Deals" className="table-responsive">
               <table className="table">
                 <thead>
                   <tr>

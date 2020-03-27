@@ -6,8 +6,9 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import FormErrorBlock from '../shared/FormErrorBlock';
+import {dealFormValidation as validation } from './validation';
 
-export default function DealForm(props) {
+function DealForm(props) {
 
   const { register, handleSubmit, reset, errors } = useForm()
 
@@ -34,9 +35,7 @@ export default function DealForm(props) {
   }
 
   function onCancel() {
-    if(typeof(props.onCancel) !== 'function') return;
-
-    props.onCancel();
+    if(typeof(props.onCancel) === 'function') props.onCancel();
   }
 
   return (
@@ -44,7 +43,7 @@ export default function DealForm(props) {
       <Form.Group className="row">
         <Form.Label className="col-sm-2 col-form-label">Source</Form.Label>
         <div className="col-sm-10">
-          <Form.Control type="text" name="source" readOnly={props.mode === 'edit'} isInvalid={!!errors.source} placeholder="The URL of the original page" ref={register({ required: 'Source is required' })} />
+          <Form.Control type="text" name="source" readOnly={props.mode === 'edit'} isInvalid={!!errors.source} placeholder="The URL of the original page" ref={register(validation.source)} />
           <FormErrorBlock error={errors.source} />
         </div>
       </Form.Group>
@@ -52,7 +51,7 @@ export default function DealForm(props) {
       <Form.Group className="row">
         <Form.Label className="col-sm-2 col-form-label">Title</Form.Label>
         <div className="col-sm-10">
-          <Form.Control type="text" name="title" isInvalid={!!errors.title} placeholder="Title" ref={register({ required: 'Title is required' })} />
+          <Form.Control type="text" name="title" isInvalid={!!errors.title} placeholder="Title" ref={register(validation.title)} />
           <FormErrorBlock error={errors.title} />
         </div>
       </Form.Group>
@@ -60,7 +59,7 @@ export default function DealForm(props) {
       <Form.Group className="row">
         <Form.Label className="col-sm-2 col-form-label">Highlight</Form.Label>
         <div className="col-sm-10">
-          <Form.Control type="text" name="highlight" isInvalid={!!errors.highlight} placeholder="Highlight" ref={register({ required: 'Highlight is required' })} />
+          <Form.Control type="text" name="highlight" isInvalid={!!errors.highlight} placeholder="Highlight" ref={register(validation.highlight)} />
           <FormErrorBlock error={errors.highlight} />
         </div>
       </Form.Group>
@@ -73,7 +72,7 @@ export default function DealForm(props) {
               <InputGroup.Text>$</InputGroup.Text>
             </InputGroup.Prepend>
 
-            <Form.Control type="text" name="dealPrice" isInvalid={!!errors.dealPrice} placeholder="0.00" ref={register({ pattern: { value: /^\d*(\.\d{1,2})?$/, message: 'Deal price must be numbers' } })} />
+            <Form.Control type="text" name="dealPrice" isInvalid={!!errors.dealPrice} placeholder="0.00" ref={register(validation.dealPrice)} />
             <FormErrorBlock error={errors.dealPrice} />
           </InputGroup>
         </div>
@@ -87,7 +86,7 @@ export default function DealForm(props) {
               <InputGroup.Text>$</InputGroup.Text>
             </InputGroup.Prepend>
 
-            <Form.Control type="text" name="fullPrice" isInvalid={!!errors.fullPrice} placeholder="0.00" ref={register({ pattern: { value: /^\d*(\.\d{1,2})?$/, message: 'Full price must be numbers' } })} />
+            <Form.Control type="text" name="fullPrice" isInvalid={!!errors.fullPrice} placeholder="0.00" ref={register(validation.fullPrice)} />
             <FormErrorBlock error={errors.fullPrice} />
           </InputGroup>
         </div>
@@ -110,7 +109,7 @@ export default function DealForm(props) {
       <Form.Group className="row">
         <Form.Label className="col-sm-2 col-form-label">Published Date</Form.Label>
         <div className="col-sm-3">
-          <Form.Control type="date" name="publishedDate" isInvalid={!!errors.publishedDate} placeholder="DD/MM/YYYY" ref={register({ required: 'Published date is required' })} />
+          <Form.Control type="date" name="publishedDate" isInvalid={!!errors.publishedDate} placeholder="DD/MM/YYYY" ref={register(validation.publishedDate)} />
           <FormErrorBlock error={errors.publishedDate} />
         </div>
       </Form.Group>
@@ -124,9 +123,11 @@ export default function DealForm(props) {
       </Form.Group>
 
       <div className="form-buttons">
-        <Button size="lg" variant="light">Cancel</Button>
-        <Button type="submit" size="lg" onClick={onCancel}>Submit</Button>
+        <Button size="lg" variant="light" onClick={onCancel}>Cancel</Button>
+        <Button type="submit" size="lg">Submit</Button>
       </div>
     </Form>
   )
 }
+
+export default DealForm;

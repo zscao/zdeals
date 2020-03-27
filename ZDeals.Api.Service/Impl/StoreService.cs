@@ -24,16 +24,38 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<PagedStoreList>> SearchDeals()
         {
-            var stores = await _dbContext.Stores.Select(x => x.ToStoreModel()).ToListAsync();
+            var total = await _dbContext.Stores.CountAsync();
+            var stores = await _dbContext.Stores.AsNoTracking().ToListAsync();
 
-            return new Result<PagedStoreList> { Data = new PagedStoreList { Data = stores } };
+            var paged = new PagedStoreList
+            {
+                Data = stores.Select(x => x.ToStoreModel()),
+                TotalCount = total,
+                PageSize = total,
+                PageNumber = 1
+            };
+
+            return new Result<PagedStoreList> { Data = paged };
         }
+
+        public async Task<Result<Store>> GetStoreById(int storeId)
+        {
+            var store = await _dbContext.Stores.FirstOrDefaultAsync(x => x.Id == storeId);
+            if (store == null)
+            {
+                return new Result<Store>(new Error(ErrorType.NotFound) { Code = Sales.StoreNotFound, Message = "Store does not exist" });
+            }
+
+            return new Result<Store>(store.ToStoreModel());
+        }
+
         public async Task<Result<Store>> CreateStore(CreateStoreRequest request)
         {
             var store = new StoreEntity
             {
                 Name = request.Name,
-                Website = request.Website
+                Website = request.Website,
+                Domain = request.Domain
             };
 
             var entry = _dbContext.Stores.Add(store);
@@ -42,16 +64,6 @@ namespace ZDeals.Api.Service.Impl
             return new Result<Store>(entry.Entity.ToStoreModel());
         }
 
-        public async Task<Result<Store>> GetStoreById(int storeId)
-        {
-            var store = await _dbContext.Stores.FirstOrDefaultAsync(x => x.Id == storeId);
-            if(store == null)
-            {
-                return new Result<Store>(new Error(ErrorType.NotFound) { Code = Sales.StoreNotFound, Message = "Store does not exist" });
-            }
-
-            return new Result<Store>(store.ToStoreModel());
-        }
 
 
     }

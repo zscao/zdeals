@@ -6,7 +6,7 @@ import Page from '../shared/Page';
 import Card from '../shared/Card';
 import DealFrom from './DealForm';
 
-import * as dealActions from '../state/ducks/deals/actions';
+import * as dealActions from '../../state/ducks/deals/actions';
 import { connect } from 'react-redux';
 
 const buttons = [

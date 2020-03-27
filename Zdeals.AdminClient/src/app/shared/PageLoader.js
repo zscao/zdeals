@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import spinner from '../assets/images/spinner.gif';
+import spinner from '../../assets/images/spinner.gif';
 
 const PageLoader = props => {
 

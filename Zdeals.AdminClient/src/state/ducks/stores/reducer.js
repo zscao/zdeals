@@ -8,7 +8,7 @@ const defaultState = {
   }
 }
 
-function deals(state = defaultState, action) {
+function stores(state = defaultState, action) {
   switch (action.type) {
 
     case apiTypes.API_SUCCESS:
@@ -20,15 +20,14 @@ function deals(state = defaultState, action) {
 }
 
 function handleApiSuccessAction(state, payload) {
-  if (!payload.label) return state;
+  if (!payload || !payload.label) return state;
 
   switch (payload.label) {
-
-    case types.SEARCH_DEALS:
+    case types.SEARCH_STORES:
       return {
         ...state, search: {
-          query: payload.query,
-          result: payload.data,
+          request: payload.request,
+          result: payload.data
         }
       };
 
@@ -37,5 +36,4 @@ function handleApiSuccessAction(state, payload) {
   }
 }
 
-
-export default deals;
+export default stores;

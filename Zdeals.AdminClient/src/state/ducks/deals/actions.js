@@ -2,49 +2,45 @@ import * as types from './types';
 import apiFetch from '../api/apiFetch';
 import apiRoutes from '../api/apiRoutes';
 
-export const searchDeals = request => {
+export const searchDeals = data => {
   return apiFetch({
     url: apiRoutes.deals.base,
-    data: request,
-    onSuccess: data => ({ type: types.SEARCH_DEALS, payload: data }),
-    label: types.SEARCH_DEALS
+    label: types.SEARCH_DEALS,
+    data,
+    //onSuccess: data => ({ type: types.SEARCH_DEALS, payload: data }),
   });
 }
 
 export const getDealById = id => {
   return apiFetch({
     url: `${apiRoutes.deals.base}/${id}`,
+    label: types.GET_DEAL_BY_ID,
     //onSuccess: data => { console.log('data: ', data)}
     //onFailure: error => { console.log('error: ', error)}
-    label: types.GET_DEAL_BY_ID
   });
 }
 
-export const createDeal = request => {
+export const createDeal = data => {
   return apiFetch({
-    method: 'POST',
     url: apiRoutes.deals.base,
-    data: request,
+    method: 'POST',
+    label: types.CREATE_DEAL,
+    data,
     toast: {
       success: 'Deal created.'
     },
-    label: types.CREATE_DEAL
   })
 }
 
-export const updateDeal = (id, request) => {
+export const updateDeal = (id, data) => {
   const url = `${apiRoutes.deals.base}/${id}`;
   return apiFetch({
-    method: 'PUT',
     url,
-    data: request,
+    method: 'PUT',
+    label: types.EDIT_DEAL,
+    data,
     toast: {
       success: 'Deal saved.'
     },
-    label: types.EDIT_DEAL
   })
 } 
-
-export const test = () => {
-    return {type: 'TEST'}
-}

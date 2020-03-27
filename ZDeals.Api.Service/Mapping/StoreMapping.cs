@@ -14,6 +14,7 @@ namespace ZDeals.Api.Service.Mapping
                 Id = entity.Id,
                 Name = entity.Name,
                 Website = entity.Website,
+                Domain = entity.Domain,
             };
         }
     }

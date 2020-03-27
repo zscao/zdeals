@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast as toastify } from 'react-toastify';
 
 import { baseUrl } from './apiRoutes';
-import { apiError, apiStart, apiEnd } from './actions';
+import { apiStart, apiEnd, apiSuccess } from './actions';
 
 export default function apiFetch(request) {
   return dispatch => {
@@ -25,7 +25,13 @@ export default function apiFetch(request) {
 
     return axios.request({url, method, headers, [dataOrParams]: data})
     .then(response => {
-      handleCallback(dispatch, onSuccess, response.data);
+
+      if(onSuccess) {
+        handleCallback(dispatch, onSuccess, response.data);
+      }
+      else if(label) {
+        dispatch(apiSuccess(label, response.data, data));
+      }
 
       if(toast && toast.success) toastify.success(toast.success);
       
