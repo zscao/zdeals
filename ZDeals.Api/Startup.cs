@@ -41,6 +41,7 @@ namespace ZDeals.Api
 
             services.AddZDealsDbContext(Configuration);
             services.AddZDealsServices();
+            services.AddZdealsStorage();
 
             services.AddSwaggerGen(c =>
             {

@@ -14,5 +14,7 @@ namespace ZDeals.Api.Service
 
         Task<Result<Store>> CreateStore(CreateStoreRequest request);
 
+        Task<Result<Store>> UpdateStore(int storeId, UpdateStoreRequest request);
+
     }
 }

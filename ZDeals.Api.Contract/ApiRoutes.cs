@@ -26,6 +26,7 @@
             public const string SearchStores = BaseUrl + "stores";
             public const string GetStoreById = BaseUrl + "stores/{storeId}";
             public const string CreateStore = BaseUrl + "stores";
+            public const string UpdateStore = BaseUrl + "stores/{storeId}";
 
         }
 
@@ -35,6 +36,12 @@
             public const string GetCategoryById = BaseUrl + "categories/{categoryId}";
             public const string CreateCategory = BaseUrl + "categories";
 
+        }
+
+        public static class Images
+        {
+            public const string GetImageById = BaseUrl + "images/{imageId}";
+            public const string CreateImage = BaseUrl + "images";
         }
     }
 }

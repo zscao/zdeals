@@ -26,6 +26,14 @@ namespace ZDeals.Api.Controllers
             return await _storeService.SearchDeals();
         }
 
+
+        [HttpGet(ApiRoutes.Stores.GetStoreById)]
+        public async Task<ActionResult<Result>> GetById(int storeId)
+        {
+            return await _storeService.GetStoreById(storeId);
+        }
+
+
         [HttpPost(ApiRoutes.Stores.CreateStore)]
         public async Task<ActionResult<Result>> Create(CreateStoreRequest request)
         {
@@ -33,10 +41,10 @@ namespace ZDeals.Api.Controllers
             return Created($"api/stores/{result.Data.Id}", result);
         }
 
-        [HttpGet(ApiRoutes.Stores.GetStoreById)]
-        public async Task<ActionResult<Result>> GetById(int storeId)
+        [HttpPut(ApiRoutes.Stores.UpdateStore)]
+        public async Task<ActionResult<Result>> Update(int storeId, [FromBody] UpdateStoreRequest request)
         {
-            return await _storeService.GetStoreById(storeId);
+            return await _storeService.UpdateStore(storeId, request);
         }
     }
 }

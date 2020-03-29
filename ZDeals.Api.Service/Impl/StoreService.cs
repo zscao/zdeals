@@ -64,7 +64,21 @@ namespace ZDeals.Api.Service.Impl
             return new Result<Store>(entry.Entity.ToStoreModel());
         }
 
+        public async Task<Result<Store>> UpdateStore(int storeId, UpdateStoreRequest request)
+        {
+            var store = await _dbContext.Stores.FirstOrDefaultAsync(x => x.Id == storeId);
+            if(store == null)
+            {
+                return new Result<Store>(new Error(ErrorType.NotFound) { Code = Sales.StoreNotFound, Message = "Store does not exist" });
+            }
 
+            store.Name = request.Name;
+            store.Website = request.Website;
+            store.Domain = request.Domain;
+
+            var saved = await _dbContext.SaveChangesAsync();
+            return new Result<Store>(store.ToStoreModel());
+        }
 
     }
 }
