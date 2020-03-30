@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ZDeals.Data.Migrations
 {
-    public partial class InitCreate : Migration
+    public partial class InitDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,9 @@ namespace ZDeals.Data.Migrations
                     Code = table.Column<string>(maxLength: 50, nullable: false),
                     Title = table.Column<string>(maxLength: 50, nullable: false),
                     DisplayOrder = table.Column<int>(nullable: false),
-                    ParentId = table.Column<int>(nullable: true)
+                    ParentId = table.Column<int>(nullable: true),
+                    CreatedTime = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
                 },
                 constraints: table =>
                 {
@@ -37,7 +39,10 @@ namespace ZDeals.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
-                    Website = table.Column<string>(maxLength: 200, nullable: true)
+                    Website = table.Column<string>(maxLength: 200, nullable: true),
+                    Domain = table.Column<string>(maxLength: 100, nullable: true),
+                    CreatedTime = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
                 },
                 constraints: table =>
                 {
@@ -51,15 +56,18 @@ namespace ZDeals.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(maxLength: 200, nullable: false),
-                    HighLight = table.Column<string>(maxLength: 200, nullable: true),
-                    Descrition = table.Column<string>(maxLength: 2000, nullable: true),
+                    Highlight = table.Column<string>(maxLength: 200, nullable: true),
+                    Description = table.Column<string>(maxLength: 2000, nullable: true),
                     FullPrice = table.Column<decimal>(type: "decimal(10, 2)", nullable: false),
                     DealPrice = table.Column<decimal>(type: "decimal(10, 2)", nullable: false),
                     Discount = table.Column<string>(maxLength: 100, nullable: true),
                     PublishedDate = table.Column<DateTime>(nullable: false),
                     ExpiryDate = table.Column<DateTime>(nullable: true),
                     Source = table.Column<string>(maxLength: 400, nullable: true),
-                    StoreId = table.Column<int>(nullable: true)
+                    StoreId = table.Column<int>(nullable: true),
+                    DefaultPicture = table.Column<string>(nullable: true),
+                    CreatedTime = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
                 },
                 constraints: table =>
                 {
@@ -96,6 +104,28 @@ namespace ZDeals.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DealPictures",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    FileName = table.Column<string>(maxLength: 100, nullable: false),
+                    Alt = table.Column<string>(maxLength: 200, nullable: true),
+                    Title = table.Column<string>(maxLength: 200, nullable: true),
+                    DealId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DealPictures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DealPictures_Deals_DealId",
+                        column: x => x.DealId,
+                        principalTable: "Deals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Categories_Code",
                 table: "Categories",
@@ -113,6 +143,11 @@ namespace ZDeals.Data.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DealPictures_DealId",
+                table: "DealPictures",
+                column: "DealId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Deals_StoreId",
                 table: "Deals",
                 column: "StoreId");
@@ -128,6 +163,9 @@ namespace ZDeals.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "DealCategory");
+
+            migrationBuilder.DropTable(
+                name: "DealPictures");
 
             migrationBuilder.DropTable(
                 name: "Categories");

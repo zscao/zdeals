@@ -14,6 +14,8 @@ namespace ZDeals.Data
         public DbSet<StoreEntity> Stores { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
 
+        public DbSet<DealPictureEntity> DealPictures { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<StoreEntity>(e =>
@@ -37,8 +39,13 @@ namespace ZDeals.Data
                 dc.HasKey(e => new { e.DealId, e.CategoryId });
                 dc.HasOne(e => e.Deal).WithMany(e => e.DealCategory).HasForeignKey(e => e.DealId).IsRequired(true);
                 dc.HasOne(e => e.Category).WithMany(e => e.DealCategory).HasForeignKey(e => e.CategoryId).IsRequired(true);
-            });                
+            });
 
+            builder.Entity<DealPictureEntity>(dp =>
+            {
+                dp.HasKey(e => new { e.FileName, e.DealId });
+                dp.HasOne(e => e.Deal).WithMany(e => e.Pictures).HasForeignKey(e => e.DealId).IsRequired(true);
+            });
         }
     }
 }

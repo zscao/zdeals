@@ -9,8 +9,8 @@ using ZDeals.Data;
 namespace ZDeals.Data.Migrations
 {
     [DbContext(typeof(ZDealsDbContext))]
-    [Migration("20200318090506_InitCreate")]
-    partial class InitCreate
+    [Migration("20200329233739_RemoveDealPictureEntity")]
+    partial class RemoveDealPictureEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,7 +19,7 @@ namespace ZDeals.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("ZDeals.Data.Entities.Sales.CategoryEntiry", b =>
+            modelBuilder.Entity("ZDeals.Data.Entities.Sales.CategoryEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,6 +29,10 @@ namespace ZDeals.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50);
+
+                    b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
@@ -72,10 +76,17 @@ namespace ZDeals.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime(6)");
+
                     b.Property<decimal>("DealPrice")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<string>("Descrition")
+                    b.Property<string>("DefaultPicture")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Description")
                         .HasColumnType("varchar(2000) CHARACTER SET utf8mb4")
                         .HasMaxLength(2000);
 
@@ -89,7 +100,7 @@ namespace ZDeals.Data.Migrations
                     b.Property<decimal>("FullPrice")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<string>("HighLight")
+                    b.Property<string>("Highlight")
                         .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
                         .HasMaxLength(200);
 
@@ -115,11 +126,43 @@ namespace ZDeals.Data.Migrations
                     b.ToTable("Deals");
                 });
 
+            modelBuilder.Entity("ZDeals.Data.Entities.Sales.DealPictureEntity", b =>
+                {
+                    b.Property<string>("FileName")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("DealId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Alt")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Title")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200);
+
+                    b.HasKey("FileName", "DealId");
+
+                    b.HasIndex("DealId");
+
+                    b.ToTable("DealPictures");
+                });
+
             modelBuilder.Entity("ZDeals.Data.Entities.Sales.StoreEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Domain")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -138,16 +181,16 @@ namespace ZDeals.Data.Migrations
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("ZDeals.Data.Entities.Sales.CategoryEntiry", b =>
+            modelBuilder.Entity("ZDeals.Data.Entities.Sales.CategoryEntity", b =>
                 {
-                    b.HasOne("ZDeals.Data.Entities.Sales.CategoryEntiry", "Parent")
+                    b.HasOne("ZDeals.Data.Entities.Sales.CategoryEntity", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId");
                 });
 
             modelBuilder.Entity("ZDeals.Data.Entities.Sales.DealCategoryJoin", b =>
                 {
-                    b.HasOne("ZDeals.Data.Entities.Sales.CategoryEntiry", "Category")
+                    b.HasOne("ZDeals.Data.Entities.Sales.CategoryEntity", "Category")
                         .WithMany("DealCategory")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -165,6 +208,15 @@ namespace ZDeals.Data.Migrations
                     b.HasOne("ZDeals.Data.Entities.Sales.StoreEntity", "Store")
                         .WithMany("Deals")
                         .HasForeignKey("StoreId");
+                });
+
+            modelBuilder.Entity("ZDeals.Data.Entities.Sales.DealPictureEntity", b =>
+                {
+                    b.HasOne("ZDeals.Data.Entities.Sales.DealEntity", "Deal")
+                        .WithMany("Pictures")
+                        .HasForeignKey("DealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

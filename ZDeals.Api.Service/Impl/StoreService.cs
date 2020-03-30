@@ -22,12 +22,12 @@ namespace ZDeals.Api.Service.Impl
             _dbContext = dbContext;
         }
 
-        public async Task<Result<PagedStoreList>> SearchDeals()
+        public async Task<Result<PagedStores>> SearchDeals()
         {
             var total = await _dbContext.Stores.CountAsync();
             var stores = await _dbContext.Stores.AsNoTracking().ToListAsync();
 
-            var paged = new PagedStoreList
+            var paged = new PagedStores
             {
                 Data = stores.Select(x => x.ToStoreModel()),
                 TotalCount = total,
@@ -35,7 +35,7 @@ namespace ZDeals.Api.Service.Impl
                 PageNumber = 1
             };
 
-            return new Result<PagedStoreList> { Data = paged };
+            return new Result<PagedStores> { Data = paged };
         }
 
         public async Task<Result<Store>> GetStoreById(int storeId)

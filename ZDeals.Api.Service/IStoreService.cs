@@ -8,7 +8,7 @@ namespace ZDeals.Api.Service
 {
     public interface IStoreService
     {
-        Task<Result<PagedStoreList>> SearchDeals();
+        Task<Result<PagedStores>> SearchDeals();
 
         Task<Result<Store>> GetStoreById(int storeId);
 

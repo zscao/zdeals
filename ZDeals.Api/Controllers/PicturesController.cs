@@ -1,37 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
+using System;
+using System.IO;
+using System.Threading.Tasks;
+
 using ZDeals.Api.Contract;
 using ZDeals.Storage;
 
 namespace ZDeals.Api.Controllers
 {
     [ApiController]
-    public class ImagesController : ControllerBase
+    [Route(ApiRoutes.Pictures.Base)]
+    public class PicturesController : ControllerBase
     {
         private readonly IBlobService _blobService;
 
-        public ImagesController(IBlobService blobService)
+        public PicturesController(IBlobService blobService)
         {
             blobService.Container = "test";
             _blobService = blobService;
         }
 
-        [HttpGet(ApiRoutes.Images.GetImageById)]
-        public async Task<IActionResult> GetImage(string imageId)
+        [HttpGet("{pictureId}")]
+        public async Task<IActionResult> GetImage(string pictureId)
         {
             try
             {
-                var descriptor = await _blobService.GetBlobDescriptorAsync(imageId);
+                var descriptor = await _blobService.GetBlobDescriptorAsync(pictureId);
                 if (string.IsNullOrEmpty(descriptor?.Url))
                 {
                     return NotFound();
                 }
-                var blob = await _blobService.GetBlobAsync(imageId);
+                var blob = await _blobService.GetBlobAsync(pictureId);
                 return File(blob, descriptor.ContentType);
             }
             catch(Exception ex)
@@ -40,7 +41,7 @@ namespace ZDeals.Api.Controllers
             }
         }
 
-        [HttpPost(ApiRoutes.Images.CreateImage)]
+        [HttpPost]
         public async Task<IActionResult> UploadImage(IFormFile file)
         {
             var properties = new BlobProperties

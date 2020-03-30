@@ -9,8 +9,8 @@ using ZDeals.Data;
 namespace ZDeals.Data.Migrations
 {
     [DbContext(typeof(ZDealsDbContext))]
-    [Migration("20200325025518_AddDomainOnStore")]
-    partial class AddDomainOnStore
+    [Migration("20200329021323_InitDatabase")]
+    partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -83,6 +83,9 @@ namespace ZDeals.Data.Migrations
                     b.Property<decimal>("DealPrice")
                         .HasColumnType("decimal(10, 2)");
 
+                    b.Property<string>("DefaultPicture")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<string>("Description")
                         .HasColumnType("varchar(2000) CHARACTER SET utf8mb4")
                         .HasMaxLength(2000);
@@ -121,6 +124,35 @@ namespace ZDeals.Data.Migrations
                     b.HasIndex("StoreId");
 
                     b.ToTable("Deals");
+                });
+
+            modelBuilder.Entity("ZDeals.Data.Entities.Sales.DealPictureEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Alt")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200);
+
+                    b.Property<int>("DealId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Title")
+                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
+                        .HasMaxLength(200);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DealId");
+
+                    b.ToTable("DealPictures");
                 });
 
             modelBuilder.Entity("ZDeals.Data.Entities.Sales.StoreEntity", b =>
@@ -181,6 +213,15 @@ namespace ZDeals.Data.Migrations
                     b.HasOne("ZDeals.Data.Entities.Sales.StoreEntity", "Store")
                         .WithMany("Deals")
                         .HasForeignKey("StoreId");
+                });
+
+            modelBuilder.Entity("ZDeals.Data.Entities.Sales.DealPictureEntity", b =>
+                {
+                    b.HasOne("ZDeals.Data.Entities.Sales.DealEntity", "Deal")
+                        .WithMany("Pictures")
+                        .HasForeignKey("DealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

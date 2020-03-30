@@ -10,8 +10,5 @@ namespace ZDeals.Api.Contract
 
         public int PageSize { get; set; }
         public int PageNumber { get; set; }
-
-        public string PrevPage { get; set; }
-        public string NextPage { get; set; }
     }
 }

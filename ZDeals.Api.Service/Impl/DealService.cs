@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,7 +25,7 @@ namespace ZDeals.Api.Service.Impl
             _storeService = storeService;
         }
 
-        public async Task<Result<PagedDealList>> SearchDeals(int? pageSize, int? pageNumber)
+        public async Task<Result<PagedDeals>> SearchDeals(int? pageSize, int? pageNumber)
         {
             int size = pageSize ?? 20;
             int number = pageNumber ?? 1;
@@ -39,15 +39,15 @@ namespace ZDeals.Api.Service.Impl
                 .Take(size)
                 .ToListAsync();
 
-            var paged = new PagedDealList
+            var paged = new PagedDeals
             {
-                Data = deals.Select(x => x.ToDealListModel()),
+                Data = deals.Select(x => x.ToDealModel()),
                 PageSize = size,
                 PageNumber = number,
                 TotalCount = total
             };
 
-            return new Result<PagedDealList>(paged);
+            return new Result<PagedDeals>(paged);
         }
 
 
@@ -120,6 +120,55 @@ namespace ZDeals.Api.Service.Impl
         }
 
 
+        public async Task<Result<DealPictureList>> GetPictures(int dealId)
+        {
+            var deal = await _dbContext.Deals.Include(x => x.Pictures).FirstOrDefaultAsync(x => x.Id == dealId);
+            if (deal == null)
+                return new Result<DealPictureList>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "Could not find the deal" });
+
+            var list = new DealPictureList
+            {
+                Data = deal.Pictures.Select(x => x.ToDealPictureModel(isDefault: x.FileName == deal.DefaultPicture))
+            };
+
+            if(list.Data?.Count() > 1)
+            {
+                list.Data = list.Data.OrderBy(x => x.IsDefaultPicture ? 0 : 1);
+            }
+
+            return new Result<DealPictureList>(list);
+        }
+
+        public async Task<Result<DealPicture>> SavePicture(int dealId, SaveDealPictureRequest request)
+        {
+            var deal = await _dbContext.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
+            if (deal == null)
+                return new Result<DealPicture>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "Could not find the deal" });
+
+            var picture = await _dbContext.DealPictures.FirstOrDefaultAsync(x => x.DealId == dealId && x.FileName == request.FileName);
+            if(picture != null)
+            {
+                picture.Title = request.Title;
+                picture.Alt = request.Alt;
+            }
+            else
+            {
+                var entry = _dbContext.DealPictures.Add(new DealPictureEntity
+                {
+                    FileName = request.FileName,
+                    Title = request.Title,
+                    Alt = request.Alt,
+                    DealId = deal.Id
+                });
+                picture = entry.Entity;
+            }
+
+            if(string.IsNullOrEmpty(deal.DefaultPicture) || request.IsDefaultPicture) deal.DefaultPicture = request.FileName;
+
+            var saved = await _dbContext.SaveChangesAsync();
+            return new Result<DealPicture>(picture.ToDealPictureModel(request.IsDefaultPicture));
+        }
+
         private async Task<StoreEntity> FindStoreForUrl(string url)
         {
             if (string.IsNullOrEmpty(url)) return null;
@@ -139,5 +188,6 @@ namespace ZDeals.Api.Service.Impl
 
             return store;
         }
+
     }
 }

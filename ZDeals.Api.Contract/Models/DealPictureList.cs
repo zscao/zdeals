@@ -1,6 +1,6 @@
 ﻿namespace ZDeals.Api.Contract.Models
 {
-    public class PagedStoreList: PagedData<Store>
+    public class DealPictureList: DataList<DealPicture>
     {
     }
 }

@@ -11,6 +11,7 @@ using ZDeals.Common;
 namespace ZDeals.Api.Controllers
 {
     [ApiController]
+    [Route(ApiRoutes.Categories.Base)]
     public class CategoriesController : ControllerBase
     {
 
@@ -21,20 +22,20 @@ namespace ZDeals.Api.Controllers
             _categoryService = categoryService;
         }
 
-        [HttpGet(ApiRoutes.Categories.SearchCategories)]
+        [HttpGet]
         public async Task<ActionResult<Result>> Search()
         {
             return await _categoryService.SearchCategories();
         }
 
-        [HttpPost(ApiRoutes.Categories.CreateCategory)]
+        [HttpPost]
         public async Task<ActionResult<Category>> Create(CreateCategoryRequest request)
         {
             var result = await _categoryService.CreateCategory(request);
             return Created($"api/categories/{result.Data.Id}", result);
         }
 
-        [HttpGet(ApiRoutes.Categories.GetCategoryById)]
+        [HttpGet("{categoryId}")]
         public async Task<ActionResult<Result>> GetById(int categoryId)
         {
             return await _categoryService.GetCategoryById(categoryId);

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
@@ -11,6 +10,7 @@ using ZDeals.Common;
 namespace ZDeals.Api.Controllers
 {
     [ApiController]
+    [Route(ApiRoutes.Deals.Base)]
     public class DealsController : ControllerBase
     {
         private readonly IDealService _dealService;
@@ -27,7 +27,7 @@ namespace ZDeals.Api.Controllers
         ///     Sample request: /api/deals
         /// </remarks>
         /// <response code="200">all deals in the system</response>
-        [HttpGet(ApiRoutes.Deals.SearchDeals)]
+        [HttpGet]
         public async Task<ActionResult<Result>> Search(int? pageSize, int? pageNumber)
         {
             return await _dealService.SearchDeals(pageSize, pageNumber);
@@ -42,31 +42,43 @@ namespace ZDeals.Api.Controllers
         /// <param name="id"></param>
         /// <response code="200">details of the deal</response>
         /// <response code="400">the deal is not found</response>
-        [HttpGet(ApiRoutes.Deals.GetDealById)]
+        [HttpGet("{dealId}")]
         public async Task<ActionResult<Result>> GetById(int dealId)
         {
             return await _dealService.GetDealById(dealId);
         }
 
-        [HttpGet(ApiRoutes.Deals.GetDealStore)]
+        [HttpPost]
+        public async Task<ActionResult<Result>> Create([FromBody] CreateDealRequest request)
+        {
+            var result = await _dealService.CreateDeal(request);
+
+            return Created($"{ApiRoutes.Deals.Base}/{result.Data?.Id}", result);
+        }
+
+        [HttpPut("{dealId}")]
+        public async Task<ActionResult<Result>> Update(int dealId, [FromBody] UpdateDealRequest request)
+        {
+            return await _dealService.UpdateDeal(dealId, request);
+        }
+
+        [HttpGet("{dealId}/store")]
         public async Task<ActionResult<Result>> GetStore(int dealId)
         {
             return await _dealService.GetDealStore(dealId);
         }
 
-
-        [HttpPost(ApiRoutes.Deals.CreateDeal)]
-        public async Task<ActionResult<Result>> Create([FromBody] CreateDealRequest request)
+        [HttpGet("{dealId}/pictures")]
+        public async Task<ActionResult<Result>> GetPictures(int dealId)
         {
-            var result = await _dealService.CreateDeal(request);
-
-            return Created($"/api/deals/{result.Data.Id}", result);
+            return await _dealService.GetPictures(dealId);
         }
 
-        [HttpPut(ApiRoutes.Deals.UpdateDeal)]
-        public async Task<ActionResult<Result>> Update(int dealId, [FromBody] UpdateDealRequest request)
+        [HttpPut("{dealId}/pictures")]
+        public async Task<ActionResult<Result>> SavePicture(int dealId, SaveDealPictureRequest request)
         {
-            return await _dealService.UpdateDeal(dealId, request);
+            var result = await _dealService.SavePicture(dealId, request);
+            return Created($"{ApiRoutes.Deals.Base}/{dealId}/pictures/{result.Data.FileName}", result);
         }
     }
 }

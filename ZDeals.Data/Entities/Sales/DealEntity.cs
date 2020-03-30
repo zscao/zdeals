@@ -41,7 +41,14 @@ namespace ZDeals.Data.Entities.Sales
 
         public StoreEntity Store { get; set; }
 
+        /// <summary>
+        /// the file id of the default picture
+        /// </summary>
+        public string DefaultPicture { get; set; }
+
         public ICollection<DealCategoryJoin> DealCategory { get; set; }
+
+        public ICollection<DealPictureEntity> Pictures { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedTime { get; set; }

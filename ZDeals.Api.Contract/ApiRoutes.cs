@@ -12,36 +12,45 @@
 
         public static class Deals
         {
-            public const string SearchDeals = BaseUrl + "deals";
-            public const string GetDealById = BaseUrl + "deals/{dealId}";
-            public const string CreateDeal = BaseUrl + "deals";
-            public const string UpdateDeal = BaseUrl + "deals/{dealId}";
-            public const string DeleteDeal = BaseUrl + "deals/{dealId}";
+            public const string Base = BaseUrl + "deals";
 
-            public const string GetDealStore = BaseUrl + "deals/{dealId}/store";
+            //public const string SearchDeals = BaseUrl + "deals";
+            //public const string GetDealById = BaseUrl + "deals/{dealId}";
+            //public const string CreateDeal = BaseUrl + "deals";
+            //public const string UpdateDeal = BaseUrl + "deals/{dealId}";
+            //public const string DeleteDeal = BaseUrl + "deals/{dealId}";
+
+            //public const string GetDealStore = BaseUrl + "deals/{dealId}/store";
+            //public const string SaveDealPicture = BaseUrl + "/deals/{dealId}/pictures";
         }
 
         public static class Stores
         {
-            public const string SearchStores = BaseUrl + "stores";
-            public const string GetStoreById = BaseUrl + "stores/{storeId}";
-            public const string CreateStore = BaseUrl + "stores";
-            public const string UpdateStore = BaseUrl + "stores/{storeId}";
+            public const string Base = BaseUrl + "stores";
+
+            //public const string SearchStores = BaseUrl + "stores";
+            //public const string GetStoreById = BaseUrl + "stores/{storeId}";
+            //public const string CreateStore = BaseUrl + "stores";
+            //public const string UpdateStore = BaseUrl + "stores/{storeId}";
 
         }
 
         public static class Categories
         {
-            public const string SearchCategories = BaseUrl + "categories";
-            public const string GetCategoryById = BaseUrl + "categories/{categoryId}";
-            public const string CreateCategory = BaseUrl + "categories";
+            public const string Base = BaseUrl + "categories";
+
+            //public const string SearchCategories = BaseUrl + "categories";
+            //public const string GetCategoryById = BaseUrl + "categories/{categoryId}";
+            //public const string CreateCategory = BaseUrl + "categories";
 
         }
 
-        public static class Images
+        public static class Pictures
         {
-            public const string GetImageById = BaseUrl + "images/{imageId}";
-            public const string CreateImage = BaseUrl + "images";
+            public const string Base = BaseUrl + "pictures";
+
+            //public const string GetImageById = BaseUrl + "pictures/{pictureId}";
+            //public const string CreateImage = BaseUrl + "pictures";
         }
     }
 }

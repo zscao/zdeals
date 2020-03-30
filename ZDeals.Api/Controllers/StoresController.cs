@@ -10,6 +10,7 @@ using ZDeals.Common;
 namespace ZDeals.Api.Controllers
 {
     [ApiController]
+    [Route(ApiRoutes.Stores.Base)]
     public class StoresController : ControllerBase
     {
 
@@ -20,28 +21,28 @@ namespace ZDeals.Api.Controllers
             _storeService = storeService;
         }
 
-        [HttpGet(ApiRoutes.Stores.SearchStores)]
+        [HttpGet]
         public async Task<ActionResult<Result>> Search()
         {
             return await _storeService.SearchDeals();
         }
 
 
-        [HttpGet(ApiRoutes.Stores.GetStoreById)]
+        [HttpGet("{storeId}")]
         public async Task<ActionResult<Result>> GetById(int storeId)
         {
             return await _storeService.GetStoreById(storeId);
         }
 
 
-        [HttpPost(ApiRoutes.Stores.CreateStore)]
+        [HttpPost]
         public async Task<ActionResult<Result>> Create(CreateStoreRequest request)
         {
             var result = await _storeService.CreateStore(request);
             return Created($"api/stores/{result.Data.Id}", result);
         }
 
-        [HttpPut(ApiRoutes.Stores.UpdateStore)]
+        [HttpPut("{storeId}")]
         public async Task<ActionResult<Result>> Update(int storeId, [FromBody] UpdateStoreRequest request)
         {
             return await _storeService.UpdateStore(storeId, request);

@@ -28,53 +28,53 @@ namespace ZDeals.Storage.FileSystem
             return Task.FromResult(dir.Exists);
         }
 
-        public async Task<Stream> GetBlobAsync(string id, CancellationToken cancellationToken = default)
+        public async Task<Stream> GetBlobAsync(string blobName, CancellationToken cancellationToken = default)
         {
-            var path = GetFilePath(id);
+            var path = GetFilePath(blobName);
             return await ReadFileStream(path, cancellationToken);
         }
 
-        public async Task<Stream> GetBlobAsync(string container, string id, CancellationToken cancellationToken = default)
+        public async Task<Stream> GetBlobAsync(string container, string blobName, CancellationToken cancellationToken = default)
         {
-            var path = GetFilePath(container, id);
+            var path = GetFilePath(container, blobName);
             return await ReadFileStream(path, cancellationToken);
         }
 
-        public Task<BlobDescriptor> GetBlobDescriptorAsync(string id, CancellationToken cancellationToken = default)
+        public Task<BlobDescriptor> GetBlobDescriptorAsync(string blobName, CancellationToken cancellationToken = default)
         {
-            var path = GetFilePath(id);
+            var path = GetFilePath(blobName);
             return Task.FromResult(GetFileDescriptor(path));
         }
 
-        public Task<BlobDescriptor> GetBlobDescriptorAsync(string container, string id, CancellationToken cancellationToken = default)
+        public Task<BlobDescriptor> GetBlobDescriptorAsync(string container, string blobName, CancellationToken cancellationToken = default)
         {
-            var path = GetFilePath(container, id);
+            var path = GetFilePath(container, blobName);
             return Task.FromResult(GetFileDescriptor(path));
         }
 
-        public async Task<bool> UploadBlobAsync(string id, Stream stream, BlobProperties properties = null, CancellationToken cancellationToken = default)
+        public async Task<bool> UploadBlobAsync(string blobName, Stream stream, BlobProperties properties = null, CancellationToken cancellationToken = default)
         {
-            var path = GetFilePath(id);
+            var path = GetFilePath(blobName);
             return await WriteFileStream(stream, path, cancellationToken);
         }
 
-        public async Task<bool> UploadBlobAsync(string container, string id, Stream stream, BlobProperties properties = null, CancellationToken cancellationToken = default)
+        public async Task<bool> UploadBlobAsync(string container, string blobName, Stream stream, BlobProperties properties = null, CancellationToken cancellationToken = default)
         {
-            var path = GetFilePath(container, id);
+            var path = GetFilePath(container, blobName);
             return await WriteFileStream(stream, path, cancellationToken);
         }
 
-        private string GetFilePath(string id)
+        private string GetFilePath(string fileName)
         {
             if (string.IsNullOrEmpty(this.Container))
-                return Path.Combine(_config.Directory, id);
+                return Path.Combine(_config.Directory, fileName);
             else
-                return GetFilePath(this.Container, id);
+                return GetFilePath(this.Container, fileName);
         }
 
-        private string GetFilePath(string container, string id)
+        private string GetFilePath(string container, string fileName)
         {
-            return Path.Combine(_config.Directory, container, id);
+            return Path.Combine(_config.Directory, container, fileName);
         }
 
 
