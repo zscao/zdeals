@@ -25,7 +25,7 @@ namespace ZDeals.Api.Service.Impl
             _storeService = storeService;
         }
 
-        public async Task<Result<PagedDeals>> SearchDeals(int? pageSize, int? pageNumber)
+        public async Task<Result<PagedDeals>> SearchDealsAsync(int? pageSize, int? pageNumber)
         {
             int size = pageSize ?? 20;
             int number = pageNumber ?? 1;
@@ -51,7 +51,7 @@ namespace ZDeals.Api.Service.Impl
         }
 
 
-        public async Task<Result<Deal>> GetDealById(int dealId)
+        public async Task<Result<Deal>> GetDealByIdAsync(int dealId)
         {
             var deal = await _dbContext.Deals.Include(x => x.Store).FirstOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
@@ -62,7 +62,7 @@ namespace ZDeals.Api.Service.Impl
             return new Result<Deal>(deal.ToDealModel());
         }
 
-        public async Task<Result<Deal>> CreateDeal(CreateDealRequest request)
+        public async Task<Result<Deal>> CreateDealAsync(CreateDealRequest request)
         {
             var store = await FindStoreForUrl(request.Source);
 
@@ -86,7 +86,7 @@ namespace ZDeals.Api.Service.Impl
             return new Result<Deal>(entry.Entity.ToDealModel());
         }
 
-        public async Task<Result<Store>> GetDealStore(int dealId)
+        public async Task<Result<Store>> GetDealStoreAsync(int dealId)
         {
             var deal = await _dbContext.Deals.Include(x => x.Store).FirstOrDefaultAsync(x => x.Id == dealId);
             if(deal?.Store == null)
@@ -97,7 +97,7 @@ namespace ZDeals.Api.Service.Impl
             return new Result<Store>(deal.Store.ToStoreModel());
         }
 
-        public async Task<Result<Deal>> UpdateDeal(int dealId, UpdateDealRequest request)
+        public async Task<Result<Deal>> UpdateDealAsync(int dealId, UpdateDealRequest request)
         {
             var deal = await _dbContext.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
@@ -120,7 +120,7 @@ namespace ZDeals.Api.Service.Impl
         }
 
 
-        public async Task<Result<DealPictureList>> GetPictures(int dealId)
+        public async Task<Result<DealPictureList>> GetPicturesAsync(int dealId)
         {
             var deal = await _dbContext.Deals.Include(x => x.Pictures).FirstOrDefaultAsync(x => x.Id == dealId);
             if (deal == null)
@@ -139,7 +139,7 @@ namespace ZDeals.Api.Service.Impl
             return new Result<DealPictureList>(list);
         }
 
-        public async Task<Result<DealPicture>> SavePicture(int dealId, SaveDealPictureRequest request)
+        public async Task<Result<DealPicture>> SavePictureAsync(int dealId, SaveDealPictureRequest request)
         {
             var deal = await _dbContext.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
             if (deal == null)

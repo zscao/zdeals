@@ -8,13 +8,13 @@ namespace ZDeals.Api.Service
 {
     public interface IStoreService
     {
-        Task<Result<PagedStores>> SearchDeals();
+        Task<Result<PagedStores>> SearchDealsAsync();
 
-        Task<Result<Store>> GetStoreById(int storeId);
+        Task<Result<Store>> GetStoreByIdAsync(int storeId);
 
-        Task<Result<Store>> CreateStore(CreateStoreRequest request);
+        Task<Result<Store>> CreateStoreAsync(CreateStoreRequest request);
 
-        Task<Result<Store>> UpdateStore(int storeId, UpdateStoreRequest request);
+        Task<Result<Store>> UpdateStoreAsync(int storeId, UpdateStoreRequest request);
 
     }
 }

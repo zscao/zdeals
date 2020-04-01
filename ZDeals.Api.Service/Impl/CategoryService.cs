@@ -23,13 +23,13 @@ namespace ZDeals.Api.Service.Impl
             _dbContext = dbContext;
         }
 
-        public async Task<Result<IEnumerable<Category>>> SearchCategories()
+        public async Task<Result<IEnumerable<Category>>> SearchCategoriesAsync()
         {
             var categories = await _dbContext.Categories.Select(x => x.ToCategoryModel()).ToListAsync();
 
             return new Result<IEnumerable<Category>> { Data = categories };
         }
-        public async Task<Result<Category>> CreateCategory(CreateCategoryRequest request)
+        public async Task<Result<Category>> CreateCategoryAsync(CreateCategoryRequest request)
         {
             var catetory = new CategoryEntity
             {
@@ -44,7 +44,7 @@ namespace ZDeals.Api.Service.Impl
             return new Result<Category>(entry.Entity.ToCategoryModel());
         }
 
-        public async Task<Result<Category>> GetCategoryById(int categoryId)
+        public async Task<Result<Category>> GetCategoryByIdAsync(int categoryId)
         {
             var category = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == categoryId);
             if(category == null)

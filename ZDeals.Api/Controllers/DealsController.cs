@@ -32,7 +32,7 @@ namespace ZDeals.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<Result>> Search(int? pageSize, int? pageNumber)
         {
-            return await _dealService.SearchDeals(pageSize, pageNumber);
+            return await _dealService.SearchDealsAsync(pageSize, pageNumber);
         }
 
         /// <summary>
@@ -47,13 +47,13 @@ namespace ZDeals.Api.Controllers
         [HttpGet("{dealId}")]
         public async Task<ActionResult<Result>> GetById(int dealId)
         {
-            return await _dealService.GetDealById(dealId);
+            return await _dealService.GetDealByIdAsync(dealId);
         }
 
         [HttpPost]
         public async Task<ActionResult<Result>> Create([FromBody] CreateDealRequest request)
         {
-            var result = await _dealService.CreateDeal(request);
+            var result = await _dealService.CreateDealAsync(request);
 
             return Created($"{ApiRoutes.Deals.Base}/{result.Data?.Id}", result);
         }
@@ -61,25 +61,25 @@ namespace ZDeals.Api.Controllers
         [HttpPut("{dealId}")]
         public async Task<ActionResult<Result>> Update(int dealId, [FromBody] UpdateDealRequest request)
         {
-            return await _dealService.UpdateDeal(dealId, request);
+            return await _dealService.UpdateDealAsync(dealId, request);
         }
 
         [HttpGet("{dealId}/store")]
         public async Task<ActionResult<Result>> GetStore(int dealId)
         {
-            return await _dealService.GetDealStore(dealId);
+            return await _dealService.GetDealStoreAsync(dealId);
         }
 
         [HttpGet("{dealId}/pictures")]
         public async Task<ActionResult<Result>> GetPictures(int dealId)
         {
-            return await _dealService.GetPictures(dealId);
+            return await _dealService.GetPicturesAsync(dealId);
         }
 
         [HttpPut("{dealId}/pictures")]
         public async Task<ActionResult<Result>> SavePicture(int dealId, SaveDealPictureRequest request)
         {
-            var result = await _dealService.SavePicture(dealId, request);
+            var result = await _dealService.SavePictureAsync(dealId, request);
             return Created($"{ApiRoutes.Deals.Base}/{dealId}/pictures/{result.Data.FileName}", result);
         }
     }

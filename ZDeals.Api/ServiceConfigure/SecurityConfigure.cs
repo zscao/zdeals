@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 using System.Text;
+using ZDeals.Api.Options;
 
 namespace ZDeals.Api.ServiceConfigure
 {
@@ -11,6 +12,11 @@ namespace ZDeals.Api.ServiceConfigure
     {
         public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            var jwtOptions = new JwtOptions();
+            configuration.Bind("JwtOptions", jwtOptions);
+
+            services.AddSingleton(jwtOptions);
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -19,13 +25,11 @@ namespace ZDeals.Api.ServiceConfigure
             })
             .AddJwtBearer(options =>
             {
-                var key = configuration["Jwt:Key"];
-
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Key)),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };

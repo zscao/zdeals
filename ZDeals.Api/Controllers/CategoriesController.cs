@@ -27,20 +27,20 @@ namespace ZDeals.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<Result>> Search()
         {
-            return await _categoryService.SearchCategories();
+            return await _categoryService.SearchCategoriesAsync();
         }
 
         [HttpPost]
         public async Task<ActionResult<Category>> Create(CreateCategoryRequest request)
         {
-            var result = await _categoryService.CreateCategory(request);
+            var result = await _categoryService.CreateCategoryAsync(request);
             return Created($"api/categories/{result.Data.Id}", result);
         }
 
         [HttpGet("{categoryId}")]
         public async Task<ActionResult<Result>> GetById(int categoryId)
         {
-            return await _categoryService.GetCategoryById(categoryId);
+            return await _categoryService.GetCategoryByIdAsync(categoryId);
         }
     }
 }

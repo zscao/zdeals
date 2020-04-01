@@ -8,19 +8,19 @@ namespace ZDeals.Api.Service
 {
     public interface IDealService
     {
-        Task<Result<PagedDeals>> SearchDeals(int? pageSize, int? pageNumber);
+        Task<Result<PagedDeals>> SearchDealsAsync(int? pageSize, int? pageNumber);
 
-        Task<Result<Deal>> CreateDeal(CreateDealRequest request);
+        Task<Result<Deal>> CreateDealAsync(CreateDealRequest request);
 
-        Task<Result<Deal>> GetDealById(int dealId);
+        Task<Result<Deal>> GetDealByIdAsync(int dealId);
 
-        Task<Result<Store>> GetDealStore(int dealId);
+        Task<Result<Store>> GetDealStoreAsync(int dealId);
 
-        Task<Result<Deal>> UpdateDeal(int dealId, UpdateDealRequest request);
+        Task<Result<Deal>> UpdateDealAsync(int dealId, UpdateDealRequest request);
 
 
-        Task<Result<DealPictureList>> GetPictures(int dealId);
+        Task<Result<DealPictureList>> GetPicturesAsync(int dealId);
 
-        Task<Result<DealPicture>> SavePicture(int dealId, SaveDealPictureRequest request);
+        Task<Result<DealPicture>> SavePictureAsync(int dealId, SaveDealPictureRequest request);
     }
 }

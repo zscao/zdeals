@@ -22,7 +22,7 @@ namespace ZDeals.Api.Service.Impl
             _dbContext = dbContext;
         }
 
-        public async Task<Result<PagedStores>> SearchDeals()
+        public async Task<Result<PagedStores>> SearchDealsAsync()
         {
             var total = await _dbContext.Stores.CountAsync();
             var stores = await _dbContext.Stores.AsNoTracking().ToListAsync();
@@ -38,7 +38,7 @@ namespace ZDeals.Api.Service.Impl
             return new Result<PagedStores> { Data = paged };
         }
 
-        public async Task<Result<Store>> GetStoreById(int storeId)
+        public async Task<Result<Store>> GetStoreByIdAsync(int storeId)
         {
             var store = await _dbContext.Stores.FirstOrDefaultAsync(x => x.Id == storeId);
             if (store == null)
@@ -49,7 +49,7 @@ namespace ZDeals.Api.Service.Impl
             return new Result<Store>(store.ToStoreModel());
         }
 
-        public async Task<Result<Store>> CreateStore(CreateStoreRequest request)
+        public async Task<Result<Store>> CreateStoreAsync(CreateStoreRequest request)
         {
             var store = new StoreEntity
             {
@@ -64,7 +64,7 @@ namespace ZDeals.Api.Service.Impl
             return new Result<Store>(entry.Entity.ToStoreModel());
         }
 
-        public async Task<Result<Store>> UpdateStore(int storeId, UpdateStoreRequest request)
+        public async Task<Result<Store>> UpdateStoreAsync(int storeId, UpdateStoreRequest request)
         {
             var store = await _dbContext.Stores.FirstOrDefaultAsync(x => x.Id == storeId);
             if(store == null)

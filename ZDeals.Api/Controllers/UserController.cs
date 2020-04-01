@@ -1,66 +1,60 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Contract.Responses;
+using ZDeals.Api.Helpers;
+using ZDeals.Api.Options;
+using ZDeals.Api.Service;
+using ZDeals.Common;
 
 namespace ZDeals.Api.Controllers
 {
+    [Authorize]
     [Route(ApiRoutes.Users.Base)]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-
-        public UserController(IConfiguration configuration)
+        private readonly IUserService _userService;
+        private readonly JwtOptions _jwtOptions;
+        public UserController(IUserService userService, JwtOptions jwtOptions)
         {
-            _configuration = configuration;
+            _userService = userService;
+            _jwtOptions = jwtOptions;
         }
 
-        [HttpPost("login")]
-        public IActionResult Login(LoginRequest request)
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<ActionResult<Result>> CreateUser(CreateUserRequest request)
         {
+            return await _userService.CreateUserAsync(request);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<ActionResult<Result>> Login(LoginRequest request)
+        {
+            var authResult = await _userService.AuthenticateAsync(request);
+            if (authResult.HasError())
+            {
+                return authResult;
+            }
+
+            var user = authResult.Data;
+
             var response = new AuthenticationResponse
             {
-                Username = request.Username,
-                Token = GenerateJWT(request)
+                Token = AuthenticationHelper.GenerateJWT(user, _jwtOptions),
+                User = user
             };
-            return Ok(response);
+
+            return new Result<AuthenticationResponse>(response);
         }
 
 
-        private string GenerateJWT(LoginRequest request)
-        {
-            var key = _configuration["Jwt:Key"];
-            var issuer = _configuration["Jwt:Issuer"];
-            var audience = _configuration["Jwt:Audience"];
 
-            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, request.Username),
-                    //new Claim(ClaimTypes.Role, "guest")
-                }),
-                Issuer = issuer,
-                Audience = audience,
-                Expires = DateTime.Now.AddMinutes(60),
-                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
-            };
-
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.CreateToken(tokenDescriptor);
-
-            return handler.WriteToken(token);
-        }
     }
 }

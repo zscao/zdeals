@@ -26,28 +26,28 @@ namespace ZDeals.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<Result>> Search()
         {
-            return await _storeService.SearchDeals();
+            return await _storeService.SearchDealsAsync();
         }
 
 
         [HttpGet("{storeId}")]
         public async Task<ActionResult<Result>> GetById(int storeId)
         {
-            return await _storeService.GetStoreById(storeId);
+            return await _storeService.GetStoreByIdAsync(storeId);
         }
 
 
         [HttpPost]
         public async Task<ActionResult<Result>> Create(CreateStoreRequest request)
         {
-            var result = await _storeService.CreateStore(request);
+            var result = await _storeService.CreateStoreAsync(request);
             return Created($"api/stores/{result.Data.Id}", result);
         }
 
         [HttpPut("{storeId}")]
         public async Task<ActionResult<Result>> Update(int storeId, [FromBody] UpdateStoreRequest request)
         {
-            return await _storeService.UpdateStore(storeId, request);
+            return await _storeService.UpdateStoreAsync(storeId, request);
         }
     }
 }
