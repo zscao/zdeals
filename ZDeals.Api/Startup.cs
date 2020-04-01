@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using Microsoft.OpenApi.Models;
 using ZDeals.Api.Filters;
 using ZDeals.Api.ServiceConfigure;
 
@@ -12,7 +11,7 @@ namespace ZDeals.Api
 {
     public class Startup
     {
-        private readonly string MyAllowedSpecificOrigins = "_myAllowedSpecificOrigins";
+        private const string AllowedOrigins = "AllowedOrigins";
 
         public Startup(IConfiguration configuration)
         {
@@ -26,7 +25,7 @@ namespace ZDeals.Api
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(MyAllowedSpecificOrigins, builder =>
+                options.AddPolicy(AllowedOrigins, builder =>
                 {
                     builder.WithOrigins("http://localhost:3000")
                         .AllowAnyHeader()
@@ -39,14 +38,12 @@ namespace ZDeals.Api
                 options.Filters.Add(typeof(ResponseFilter));
             });
 
+            services.AddJwtAuthentication(Configuration);
+
             services.AddZDealsDbContext(Configuration);
             services.AddZDealsServices();
-            services.AddZdealsStorage();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ZDeals API", Version = "v1" });
-            });
+            services.AddSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +54,7 @@ namespace ZDeals.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(MyAllowedSpecificOrigins);
+            app.UseCors(AllowedOrigins);
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -69,6 +66,7 @@ namespace ZDeals.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

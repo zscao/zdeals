@@ -10,6 +10,11 @@
             public const string Development = BaseUrl + "error-development";
         }
 
+        public static class Users
+        {
+            public const string Base = BaseUrl + "users";
+        }
+
         public static class Deals
         {
             public const string Base = BaseUrl + "deals";

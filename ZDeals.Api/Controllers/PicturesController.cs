@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
@@ -10,6 +11,7 @@ using ZDeals.Storage;
 
 namespace ZDeals.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route(ApiRoutes.Pictures.Base)]
     public class PicturesController : ControllerBase
@@ -22,6 +24,7 @@ namespace ZDeals.Api.Controllers
             _blobService = blobService;
         }
 
+        [AllowAnonymous]
         [HttpGet("{pictureId}")]
         public async Task<IActionResult> GetImage(string pictureId)
         {

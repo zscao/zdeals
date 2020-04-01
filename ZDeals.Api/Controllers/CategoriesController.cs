@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ using ZDeals.Common;
 
 namespace ZDeals.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route(ApiRoutes.Categories.Base)]
     public class CategoriesController : ControllerBase
