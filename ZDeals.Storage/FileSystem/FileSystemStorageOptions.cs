@@ -1,6 +1,6 @@
 ﻿namespace ZDeals.Storage.FileSystem
 {
-    public class FileSystemStorageConfig
+    public class FileSystemStorageOptions
     {
         public string Directory { get; set; }
     }

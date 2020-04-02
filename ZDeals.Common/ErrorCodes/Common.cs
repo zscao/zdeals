@@ -4,5 +4,6 @@
     {
         public const int UnhandledException = 1;
         public const int NullArgument = 2;
+        public const int Invalid = 3;
     }
 }

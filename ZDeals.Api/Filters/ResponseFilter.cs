@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
 
 using System.Threading.Tasks;
 
@@ -16,13 +15,6 @@ namespace ZDeals.Api.Filters
     /// </summary>
     public class ResponseFilter : IAsyncResultFilter
     {
-        private readonly ILogger<ResponseFilter> _logger; 
-
-        public ResponseFilter(ILogger<ResponseFilter> logger)
-        {
-            _logger = logger;
-        }
-
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
             if (context.Result is ObjectResult)
@@ -36,30 +28,38 @@ namespace ZDeals.Api.Filters
                     if (resultValue.HasError())
                     {
                         int status;
+                        string message;
                         if (resultValue.HasError(ErrorType.Internal))
                         {
                             status = StatusCodes.Status500InternalServerError;
+                            message = "Internal server error";
                         }
                         else if (resultValue.HasError(ErrorType.NotFound))
                         {
                             status = StatusCodes.Status404NotFound;
+                            message = "The resource does not exist";
+                        }
+                        else if(resultValue.HasError(ErrorType.Validation))
+                        {
+                            status = StatusCodes.Status400BadRequest;
+                            message = "Validation errors";
                         }
                         else
                         {
                             status = StatusCodes.Status400BadRequest;
+                            message = "Bad request";
                         }
 
                         result.StatusCode = status;
-                        result.Value = resultValue.Errors.ToErrorResponse(status);
+                        result.Value = resultValue.Errors.ToErrorResponse(status, message);
                     }
                     else
                     {
                         var dataProperty = type.GetProperty("Data");
                         if (dataProperty != null)
                         {
-                            var data = dataProperty.GetValue(resultValue);
-                            result.Value = data;
-                            if(data == null)
+                            result.Value = dataProperty.GetValue(resultValue);                            
+                            if(result.Value == null)
                             {
                                 result.StatusCode = StatusCodes.Status204NoContent;
                             }

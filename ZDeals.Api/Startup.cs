@@ -4,14 +4,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using ZDeals.Api.Filters;
 using ZDeals.Api.ServiceConfigure;
 
 namespace ZDeals.Api
 {
     public class Startup
     {
-        private const string AllowedOrigins = "AllowedOrigins";
+        private const string CorsPolicyName = "AllowedOrigins";
 
         public Startup(IConfiguration configuration)
         {
@@ -23,25 +22,14 @@ namespace ZDeals.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy(AllowedOrigins, builder =>
-                {
-                    builder.WithOrigins("http://localhost:3000")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
+            services.AddCors(Configuration, CorsPolicyName);
 
-            services.AddControllers(options =>
-            {
-                options.Filters.Add(typeof(ResponseFilter));
-            });
+            services.AddWebAndValidations();
 
             services.AddJwtAuthentication(Configuration);
 
             services.AddZDealsDbContext(Configuration);
-            services.AddZDealsServices();
+            services.AddZDealsServices(Configuration);
 
             services.AddSwagger();
         }
@@ -54,7 +42,7 @@ namespace ZDeals.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(AllowedOrigins);
+            app.UseCors(CorsPolicyName);
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

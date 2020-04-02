@@ -4,7 +4,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
+using ZDeals.Api.Constants;
 using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Options;
 
@@ -21,7 +21,7 @@ namespace ZDeals.Api.Helpers
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role ?? "Guest")
+                    new Claim(ClaimTypes.Role, user.Role ?? AppRoles.Guest)
                 }),
                 Issuer = options.Issuer,
                 Audience = options.Audience,

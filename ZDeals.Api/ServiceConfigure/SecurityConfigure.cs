@@ -13,7 +13,7 @@ namespace ZDeals.Api.ServiceConfigure
         public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtOptions = new JwtOptions();
-            configuration.Bind("JwtOptions", jwtOptions);
+            configuration.GetSection("JwtOptions").Bind(jwtOptions);
 
             services.AddSingleton(jwtOptions);
 

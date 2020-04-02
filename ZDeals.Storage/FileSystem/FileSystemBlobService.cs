@@ -8,13 +8,13 @@ namespace ZDeals.Storage.FileSystem
 {
     public class FileSystemBlobService : IBlobService
     {
-        private readonly FileSystemStorageConfig _config;
+        private readonly FileSystemStorageOptions _config;
         public string Container
         {
             get; set;
         }
 
-        public FileSystemBlobService(FileSystemStorageConfig config)
+        public FileSystemBlobService(FileSystemStorageOptions config)
         {
             _config = config;
         }

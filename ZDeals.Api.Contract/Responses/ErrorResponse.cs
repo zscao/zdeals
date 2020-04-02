@@ -5,6 +5,9 @@ namespace ZDeals.Api.Contract.Responses
     public class ErrorResponse
     {
         public int Status { get; set; }
+
+        public string Message { get; set; }
+
         public List<ErrorDetail> Errors { get; set; }
     }
 

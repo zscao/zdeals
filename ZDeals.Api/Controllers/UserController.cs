@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using System.Threading.Tasks;
-
+using ZDeals.Api.Constants;
 using ZDeals.Api.Contract;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Contract.Responses;
@@ -26,7 +26,7 @@ namespace ZDeals.Api.Controllers
             _jwtOptions = jwtOptions;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = AppRoles.Admin)]
         [HttpPost]
         public async Task<ActionResult<Result>> CreateUser(CreateUserRequest request)
         {
@@ -37,18 +37,16 @@ namespace ZDeals.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<Result>> Login(LoginRequest request)
         {
-            var authResult = await _userService.AuthenticateAsync(request);
-            if (authResult.HasError())
+            var result = await _userService.AuthenticateAsync(request);
+            if (result.HasError())
             {
-                return authResult;
+                return result;
             }
-
-            var user = authResult.Data;
 
             var response = new AuthenticationResponse
             {
-                Token = AuthenticationHelper.GenerateJWT(user, _jwtOptions),
-                User = user
+                Token = AuthenticationHelper.GenerateJWT(result.Data, _jwtOptions),
+                User = result.Data
             };
 
             return new Result<AuthenticationResponse>(response);
