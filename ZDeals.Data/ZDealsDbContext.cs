@@ -14,7 +14,7 @@ namespace ZDeals.Data
         public DbSet<DealEntity> Deals { get; set; }
         public DbSet<StoreEntity> Stores { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
-
+        public DbSet<DealCategoryJoin> DealCategories { get; set; }
         public DbSet<DealPictureEntity> DealPictures { get; set; }
 
         public DbSet<UserEntity> Users { get; set; }
@@ -35,6 +35,14 @@ namespace ZDeals.Data
             {
                 e.HasOne(c => c.Parent).WithMany(c => c.Children).HasForeignKey(c => c.ParentId);
                 e.HasIndex(c => c.Code).IsUnique(true);
+
+                e.HasData(new CategoryEntity
+                {
+                    Id = 1,
+                    Code = "root",
+                    Title = "Categories",
+                    CreatedTime = System.DateTime.Now
+                });
             });
 
             builder.Entity<DealCategoryJoin>(dc =>

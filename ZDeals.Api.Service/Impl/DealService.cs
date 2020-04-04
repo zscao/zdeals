@@ -169,6 +169,41 @@ namespace ZDeals.Api.Service.Impl
             return new Result<DealPicture>(picture.ToDealPictureModel(request.IsDefaultPicture));
         }
 
+        public async Task<Result<DealCategoryList>> GetCategoriesAsync(int dealId)
+        {
+            var categories = await _dbContext.DealCategories.Include(x => x.Category).Where(x => x.DealId == dealId).ToListAsync();
+
+            var list = new DealCategoryList
+            {
+                Data = categories.Select(x => x.Category.ToCategoryMode())
+            };
+
+            return new Result<DealCategoryList>(list);
+        }
+
+        public async Task<Result<DealCategoryList>> SaveCategoriesAsync(int dealId, SaveDealCategoriesRequest request)
+        {
+            var deal = await _dbContext.Deals.Include(x => x.DealCategory).FirstOrDefaultAsync(x => x.Id == dealId);
+            if(deal == null)
+                return new Result<DealCategoryList>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "Could not find the deal" });
+
+            var toRemove = deal.DealCategory.Where(x => request.Categories.Contains(x.CategoryId) == false).ToList();
+            foreach (var c in toRemove)
+                deal.DealCategory.Remove(c);
+
+            foreach(var c in request.Categories)
+            {
+                if (deal.DealCategory.Any(x => x.CategoryId == c) == false) 
+                    deal.DealCategory.Add(new DealCategoryJoin { DealId = dealId, CategoryId = c });
+            }
+
+            var saved = await _dbContext.SaveChangesAsync();
+
+            return await GetCategoriesAsync(dealId);
+        }
+
+
+        #region private methods
         private async Task<StoreEntity> FindStoreForUrl(string url)
         {
             if (string.IsNullOrEmpty(url)) return null;
@@ -189,5 +224,6 @@ namespace ZDeals.Api.Service.Impl
             return store;
         }
 
+        #endregion
     }
 }

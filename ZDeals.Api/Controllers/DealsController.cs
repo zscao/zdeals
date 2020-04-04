@@ -82,5 +82,17 @@ namespace ZDeals.Api.Controllers
             var result = await _dealService.SavePictureAsync(dealId, request);
             return Created($"{ApiRoutes.Deals.Base}/{dealId}/pictures/{result.Data.FileName}", result);
         }
+
+        [HttpGet("{dealId}/categories")]
+        public async Task<ActionResult<Result>> GetCategories(int dealId)
+        {
+            return await _dealService.GetCategoriesAsync(dealId);
+        }
+
+        [HttpPut("{dealId}/categories")]
+        public async Task<ActionResult<Result>> SaveCategories(int dealId, SaveDealCategoriesRequest request)
+        {
+            return await _dealService.SaveCategoriesAsync(dealId, request);
+        }
     }
 }

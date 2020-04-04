@@ -9,10 +9,12 @@ namespace ZDeals.Api.Service
 {
     public interface ICategoryService
     {
-        Task<Result<IEnumerable<Category>>> SearchCategoriesAsync();
+        Task<Result<IEnumerable<CategoryTreeView>>> SearchCategoriesAsync();
 
-        Task<Result<Category>> GetCategoryByIdAsync(int categoryId);
+        Task<Result<CategoryTreeView>> GetCategoryByIdAsync(int categoryId);
 
-        Task<Result<Category>> CreateCategoryAsync(CreateCategoryRequest request);
+        Task<Result<CategoryTreeView>> CreateCategoryAsync(CreateCategoryRequest request);
+
+        Task<Result<CategoryTreeView>> GetCategoryTree(int? rootId = null); 
     }
 }

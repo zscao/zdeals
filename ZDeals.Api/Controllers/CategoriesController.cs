@@ -7,6 +7,7 @@ using ZDeals.Api.Contract;
 using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service;
+using ZDeals.Api.Service.Mapping;
 using ZDeals.Common;
 
 namespace ZDeals.Api.Controllers
@@ -31,7 +32,7 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Category>> Create(CreateCategoryRequest request)
+        public async Task<ActionResult<CategoryTreeView>> Create(CreateCategoryRequest request)
         {
             var result = await _categoryService.CreateCategoryAsync(request);
             return Created($"api/categories/{result.Data.Id}", result);
@@ -41,6 +42,23 @@ namespace ZDeals.Api.Controllers
         public async Task<ActionResult<Result>> GetById(int categoryId)
         {
             return await _categoryService.GetCategoryByIdAsync(categoryId);
+        }
+
+        [HttpGet("list")]
+        public async Task<ActionResult<Result>> GetCategoryList()
+        {
+            var result = await _categoryService.GetCategoryTree();
+            if (result.HasError()) return result;
+
+            var list = new CategoryList { Data = result.Data.ToCategoryListView() };
+
+            return new Result<CategoryList>(list);
+        }
+
+        [HttpGet("tree")]
+        public async Task<ActionResult<Result>> GetCategoryTree()
+        {
+            return await _categoryService.GetCategoryTree();
         }
     }
 }
