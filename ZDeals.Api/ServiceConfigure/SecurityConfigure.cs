@@ -4,7 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 using System.Text;
-using ZDeals.Api.Options;
+using System.Threading.Tasks;
+using ZDeals.Identity.Options;
 
 namespace ZDeals.Api.ServiceConfigure
 {
@@ -14,8 +15,20 @@ namespace ZDeals.Api.ServiceConfigure
         {
             var jwtOptions = new JwtOptions();
             configuration.GetSection("JwtOptions").Bind(jwtOptions);
-
             services.AddSingleton(jwtOptions);
+
+            var tokenParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Secret)),
+                ValidateIssuer = true,
+                ValidIssuer = jwtOptions.Issuer,
+                ValidateAudience = false,
+                RequireExpirationTime = true,
+                ValidateLifetime = true, 
+                ClockSkew = System.TimeSpan.Zero,
+            };
+            services.AddSingleton(tokenParameters);
 
             services.AddAuthentication(options =>
             {
@@ -26,12 +39,18 @@ namespace ZDeals.Api.ServiceConfigure
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
+                options.TokenValidationParameters = tokenParameters;
+
+                options.Events = new JwtBearerEvents
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Key)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            context.Response.Headers.Add("token-expired", "true");
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
         }

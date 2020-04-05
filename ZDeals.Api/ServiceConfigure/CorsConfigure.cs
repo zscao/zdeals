@@ -20,7 +20,8 @@ namespace ZDeals.Api.ServiceConfigure
                 {
                     builder.WithOrigins(origins)
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .WithExposedHeaders("token-expired");
                 });
             });
         }

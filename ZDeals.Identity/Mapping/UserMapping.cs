@@ -1,7 +1,7 @@
 ﻿using ZDeals.Api.Contract.Models;
-using ZDeals.Data.Entities.Accounts;
+using ZDeals.Data.Entities.Identity;
 
-namespace ZDeals.Api.Service.Mapping
+namespace ZDeals.Identity.Mapping
 {
     public static class UserMapping
     {
@@ -11,6 +11,7 @@ namespace ZDeals.Api.Service.Mapping
 
             return new User
             {
+                UserId = entity.Id,
                 Username = entity.Username,
                 Nickname = entity.Nickname,
                 Role = entity.Role

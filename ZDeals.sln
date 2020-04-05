@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDeals.Data", "ZDeals.Data\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDeals.Api.Service", "ZDeals.Api.Service\ZDeals.Api.Service.csproj", "{CCB075D8-DFE7-4D66-9842-09AE6D12BF0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDeals.Storage", "ZDeals.Storage\ZDeals.Storage.csproj", "{29223A4F-B570-4AFA-A85D-19012F137974}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDeals.Storage", "ZDeals.Storage\ZDeals.Storage.csproj", "{29223A4F-B570-4AFA-A85D-19012F137974}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDeals.Identity", "ZDeals.Identity\ZDeals.Identity.csproj", "{8F43D1F3-D874-40B4-A410-1FC3901286F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{29223A4F-B570-4AFA-A85D-19012F137974}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29223A4F-B570-4AFA-A85D-19012F137974}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29223A4F-B570-4AFA-A85D-19012F137974}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F43D1F3-D874-40B4-A410-1FC3901286F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F43D1F3-D874-40B4-A410-1FC3901286F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F43D1F3-D874-40B4-A410-1FC3901286F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F43D1F3-D874-40B4-A410-1FC3901286F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

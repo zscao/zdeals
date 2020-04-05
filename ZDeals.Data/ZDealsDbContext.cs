@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ZDeals.Data.Entities.Accounts;
+using ZDeals.Data.Entities.Identity;
 using ZDeals.Data.Entities.Sales;
 
 namespace ZDeals.Data
@@ -18,6 +18,8 @@ namespace ZDeals.Data
         public DbSet<DealPictureEntity> DealPictures { get; set; }
 
         public DbSet<UserEntity> Users { get; set; }
+
+        public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -61,6 +63,12 @@ namespace ZDeals.Data
             builder.Entity<UserEntity>(u =>
             {
                 u.HasIndex(x => x.Username).IsUnique(true);
+            });
+
+            builder.Entity<RefreshTokenEntity>(t =>
+            {
+                t.HasIndex(x => x.Token).IsUnique(true);
+                t.HasOne(x => x.User).WithMany(u => u.RefreshTokens).HasForeignKey(x => x.UserId).IsRequired(true);
             });
         }
     }

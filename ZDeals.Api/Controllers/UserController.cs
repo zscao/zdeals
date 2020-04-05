@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 
 using System.Threading.Tasks;
-using ZDeals.Api.Constants;
+
 using ZDeals.Api.Contract;
 using ZDeals.Api.Contract.Requests;
-using ZDeals.Api.Contract.Responses;
-using ZDeals.Api.Helpers;
-using ZDeals.Api.Options;
-using ZDeals.Api.Service;
 using ZDeals.Common;
+using ZDeals.Common.Constants;
+using ZDeals.Identity;
+using ZDeals.Identity.Options;
 
 namespace ZDeals.Api.Controllers
 {
@@ -37,22 +36,15 @@ namespace ZDeals.Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<Result>> Login(LoginRequest request)
         {
-            var result = await _userService.AuthenticateAsync(request);
-            if (result.HasError())
-            {
-                return result;
-            }
-
-            var response = new AuthenticationResponse
-            {
-                Token = AuthenticationHelper.GenerateJWT(result.Data, _jwtOptions),
-                User = result.Data
-            };
-
-            return new Result<AuthenticationResponse>(response);
+            return await _userService.AuthenticateAsync(request.Username, request.Password);            
         }
 
 
-
+        [AllowAnonymous]
+        [HttpPost("refresh")]
+        public async Task<ActionResult<Result>> Refresh(RefreshTokenRequest request)
+        {
+            return await _userService.RefreshTokenAsync(request.Token, request.RefreshToken);
+        }
     }
 }

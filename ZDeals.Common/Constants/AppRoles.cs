@@ -1,4 +1,4 @@
-﻿namespace ZDeals.Api.Constants
+﻿namespace ZDeals.Common.Constants
 {
     public static class AppRoles
     {

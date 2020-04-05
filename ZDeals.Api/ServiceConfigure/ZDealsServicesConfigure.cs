@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using ZDeals.Api.Service;
 using ZDeals.Api.Service.Impl;
+using ZDeals.Identity;
+using ZDeals.Identity.Impl;
 using ZDeals.Storage;
 using ZDeals.Storage.FileSystem;
 
@@ -16,6 +18,7 @@ namespace ZDeals.Api.ServiceConfigure
             services.AddScoped<IStoreService, StoreService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             var storageOptions = new FileSystemStorageOptions();
             configuration.GetSection("FileSystemStorageOptions").Bind(storageOptions);

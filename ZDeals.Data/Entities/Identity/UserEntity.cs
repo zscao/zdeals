@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ZDeals.Data.Entities.Accounts
+namespace ZDeals.Data.Entities.Identity
 {
     [Table("Users")]
     public class UserEntity: EntityBase
@@ -25,5 +26,7 @@ namespace ZDeals.Data.Entities.Accounts
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedTime { get; set; }
+
+        public ICollection<RefreshTokenEntity> RefreshTokens { get; set; }
     }
 }

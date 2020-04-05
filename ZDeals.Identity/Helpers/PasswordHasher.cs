@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace ZDeals.Api.Service.Helpers
+namespace ZDeals.Identity.Helpers
 {
     // the code below was inspired by https://www.meziantou.net/how-to-store-a-password-in-a-web-application.htm 
 
