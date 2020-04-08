@@ -1,0 +1,48 @@
+﻿@page
+
+@using ZDeals.Web.Service.Models
+
+@model Deals.IndexModel
+@{
+    ViewData["Title"] = "Deals";
+}
+
+<div class="row">
+    <!--sidebar start-->
+    <div class="col-lg-3 col-md-12">
+        @await Component.InvokeAsync("MainCategory")
+    </div>
+    <!--sidebar end-->
+    <!-- product list start -->
+    <div class="col-lg-9 col-md-12">
+        <!--shop wrapper start-->
+        <div class="row no-gutters shop_wrapper">
+            @if (Model.DealResult.Deals.Count() == 0)
+            {
+                <div class="col-12">
+                    Oops! No deals are found in this category!
+                </div>
+            }
+            else
+            {
+                foreach (var deal in Model.DealResult.Deals)
+                {
+                    <div class="col-12 ">
+                        @await Html.PartialAsync("_DealListItem", deal)
+                    </div>
+                }
+
+                @if (Model.DealResult.More)
+                {
+                    <div class="col-12">
+                        <div class="page_actions">
+                            <button class="show_more">Show More</button>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <!--shop wrapper end-->
+    </div>
+    <!-- product list end -->
+</div>

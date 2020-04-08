@@ -127,16 +127,6 @@ namespace ZDeals.Data.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Code = "root",
-                            CreatedTime = new DateTime(2020, 4, 5, 20, 25, 5, 71, DateTimeKind.Local).AddTicks(3167),
-                            DisplayOrder = 0,
-                            Title = "Categories"
-                        });
                 });
 
             modelBuilder.Entity("ZDeals.Data.Entities.Sales.DealCategoryJoin", b =>
@@ -171,12 +161,12 @@ namespace ZDeals.Data.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Description")
-                        .HasColumnType("varchar(2000) CHARACTER SET utf8mb4")
-                        .HasMaxLength(2000);
+                        .HasColumnType("varchar(400) CHARACTER SET utf8mb4")
+                        .HasMaxLength(400);
 
                     b.Property<string>("Discount")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20);
 
                     b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("datetime(6)");
@@ -185,8 +175,8 @@ namespace ZDeals.Data.Migrations
                         .HasColumnType("decimal(10, 2)");
 
                     b.Property<string>("Highlight")
-                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
-                        .HasMaxLength(200);
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("PublishedDate")
                         .HasColumnType("datetime(6)");

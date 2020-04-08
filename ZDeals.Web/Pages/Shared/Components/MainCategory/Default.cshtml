@@ -1,0 +1,30 @@
+﻿
+@model ZDeals.Web.Service.Models.CategoryTreeView
+
+<aside class="sidebar_widget">
+    <div class="widget_list ">
+        <h3>Product categories</h3>
+        <ul>
+            @foreach (var cate in Model.Children)
+            {
+                if (cate.Children?.Count() > 0)
+                {
+                    <li class="widget_sub_categories">
+                        <a href="~/deals?c=@cate.Code">@cate.Title</a>
+                        <ul class="widget_dropdown_categories">
+                            @foreach (var child in cate.Children)
+                            {
+                                <li><a href="~/deals?c=@child.Code">@child.Title</a></li>
+                            }
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li><a href="#">@cate.Title</a></li>
+                }
+            }
+        </ul>
+    </div>
+
+</aside>

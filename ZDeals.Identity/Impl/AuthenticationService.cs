@@ -31,7 +31,7 @@ namespace ZDeals.Identity.Impl
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Role, user.Role ?? AppRoles.Guest),
+                    new Claim(ClaimTypes.Role, user.Role ?? ApiRoles.Guest),
                     new Claim(JwtRegisteredClaimNames.Jti, jwtId)
                 }),
                 Issuer = _jwtOptions.Issuer,

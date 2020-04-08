@@ -1,0 +1,212 @@
+@import '../_variabls.scss';
+@import './sidebar';
+
+.shop_area {
+  background: $background_color;
+  padding: 5px 0 133px;
+  @media #{$large-mobile} {
+    padding: 60px 0 110px;
+  }
+}
+
+.shop_toolbar_wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border: 1px solid $border_color;
+	padding: 8px 10px;
+	margin: 0 0 30px;
+    @media #{$large-mobile}{
+        flex-direction: column;
+        padding: 15px 10px 5px;
+    }
+}
+
+.select_option {
+	display: flex;
+	align-items: center;
+    @media #{$large-mobile}{
+      flex-direction: column;
+    }
+    & .nice-select {
+        border: 0;
+        height: 30px;
+        line-height: 29px;
+        & ul.list{
+            top: 114%;
+            right: 0;
+            width: 200px;
+            max-height: 200px;
+            overflow: auto;
+        }
+    }
+}
+
+.niceselect_option{
+    @media #{$large-mobile}{
+       margin-bottom: 16px;
+    }
+}
+
+.group_title {
+  font-size: 1.3em;
+  font-weight: 600;
+    @media #{$large-mobile}{
+       margin-bottom: 12px;
+    }
+    & p{
+        @media #{$large-mobile}{
+            padding-left: 0;
+            margin-left: 0;
+            border-left: 0;
+        }
+    }
+}
+
+.shop_wrapper{
+  margin-bottom: 60px;
+  border-top: 1px solid $grey_color;
+  border-radius: 4px;
+  // border-right: 1px solid $grey_color;
+  // background: $white;
+  & .product_thumb{
+      & a{
+          & img{
+              @media #{$large-mobile}{
+                 width: 100%;
+              }
+          }
+      }
+  }
+  & .single_product{
+      position: relative;
+      border-top: 0;
+      
+  }
+  & .col-lg-3 {
+      @media #{$desktop-device}{
+          flex: 0 0 33.333333%;
+          max-width: 33.333333%;
+      }
+  }
+}
+
+.row.shop_wrapper {
+	flex-direction: row;
+}
+
+.shop_wrapper > div {
+	-webkit-transition: all 1s ease;
+  transition: all 1s ease;
+  
+  >article {
+    color: $fonts_color6;
+    background: $white;
+    border: 1px solid $grey_color;
+    margin-bottom: 20px;
+  }
+}
+
+.deal_list {
+  padding: 0 20px;
+  .deal_img_wrapper {
+    margin: 30px 0 0 10px;
+    >.deal_type {
+      text-align: center;
+      //border: 1px solid $grey_color;
+      background: $grey_color;
+    }
+    img {
+      //border: 1px solid $grey_color;
+    }
+  }
+  .deal_detail {
+    .deal_detail_meta {
+      font-size: 0.8em;
+      color: $secondary_color10;
+
+      .deal_store {
+        float: right;
+      }
+    }
+    >h3 {
+      //padding: 6px 0;
+      font-size: 1.3em;
+      font-weight: 600;
+    }
+    .price_box {
+      .price_wrapper {
+        >span {
+          font-size: 1.4em;
+          color: $secondary_color;
+          font-weight: 500;
+        }
+        >del {
+          color: $secondary_color10;
+        }
+      }
+      .discount_rate {
+        background: $secondary_color !important;
+        color: $white !important;
+        outline: 0;
+        padding: 2px 5px;
+        margin: 0 7px;
+      }
+      .deal_highlight {
+        color: $secondary_color;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .deal_desc {
+    font-size: 12px;
+  }
+
+  .action_box {
+    padding-top: 30px;
+
+    .btn_wrapper {
+      padding: 10px 30px;
+      >button {
+        width: 100%;
+        max-width: 150px;
+        border-radius: 4px;
+        padding: 5px;
+        box-shadow: -1px 6px 19px rgba(255,192,0,0.2) !important;
+      }
+      button.btn_buynow {
+        background-color: $secondary_color8;
+        color: $black;
+        border: 1px solid $secondary_color8;
+        font-weight: 600;
+      }
+      button.btn_getcode {
+        background-color: $secondary_color6;
+        color: $black;
+        border: 1px solid $secondary_color6;
+        font-weight: 600;
+      }
+    }
+    .action_links {
+      padding: 10px 30px;
+    }
+  }
+}
+
+.page_actions {
+  text-align: center;
+  
+  >button {
+    width: 120px;
+    border-radius: 4px;
+    padding: 5px;
+    box-shadow: -1px 6px 19px rgba(255,192,0,0.2) !important;
+  }
+
+  button.show_more {
+    background-color: $secondary_color;
+    color: $white;
+    border: 1px solid $secondary_color;
+  }
+}

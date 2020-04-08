@@ -1,0 +1,12 @@
+@import '../_variabls.scss';
+
+.home_section_bg{
+  background: #F5F5F9;
+  padding: 60px 0 132px;
+  @media #{$tablet-device}{
+     padding: 60px 0 79px;
+  }
+  @media #{$large-mobile}{
+      padding: 60px 0 57px;
+  }
+}

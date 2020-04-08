@@ -1,0 +1,55 @@
+﻿
+@model ZDeals.Web.Service.Models.Deal
+
+<article>
+    <figure class="row">
+        <div class="row deal_list">
+            <div class="col-lg-2">
+                <div class="deal_img_wrapper">
+                    <img src="~/picture?pic=@Model.Picture" alt="product 1">
+                    <div class="deal_type">Coupon</div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="deal_detail">
+                    <div class="deal_detail_meta">
+                        <span class="deal_list_date">
+                            <i class="fa fa-rss"></i>
+                            4 hours ago
+                        </span>
+                        @if (Model.Store != null)
+                        {
+                            <span class="deal_store">
+                                from <a href="www.amazone.com">@Model.Store.Name</a>
+                            </span>
+                        }
+                    </div>
+                    <h3>@Model.Title</h3>
+                    <div class="price_box">
+                        <span class="price_wrapper">
+                            <span>@Model.FullPrice</span>
+                            <del>@Model.DealPrice</del>
+                        </span>
+                        <span class="discount_rate">@Model.Discount</span>
+                        <span class="deal_highlight">@Model.Highlight</span>
+                    </div>
+                </div>
+                <div class="deal_desc">@Model.Description</div>
+            </div>
+            <div class="col-lg-3 action_box">
+                <div class="btn_wrapper">
+                    <button class="btn_buynow">Buy it now</button>
+                </div>
+                <div class="action_links">
+                    <ul>
+                        <li class="wishlist">
+                            <a href="#" title="Add to wishlist">
+                                <i class="ion-android-favorite-outline"></i> Add to wishlist
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </figure>
+</article>

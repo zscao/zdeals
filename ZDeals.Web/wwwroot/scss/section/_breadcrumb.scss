@@ -1,0 +1,40 @@
+@import '../_variabls.scss';
+
+.breadcrumbs_area{
+  padding: 5px 0;
+  background: $background_color;
+}
+
+.breadcrumb_content{
+  padding: 0 10px;
+   & ul{
+       & li{
+           display: inline-block;
+           text-transform: capitalize;
+           font-size: 14px;
+           margin-right: 20px;
+           padding-right: 20px;
+           position: relative;
+           color:  $secondary_color;
+           &::before{
+               position: absolute;
+               content: ">";
+               right: -4px;
+               top: 50%;
+               transform: translatey(-50%);
+           }
+           &:last-child{
+               margin-right: 0;
+               &::before{
+                   display: none;
+               }
+           }
+           & a{
+               color: $fonts_color;
+               &:hover{
+                   color:  $secondary_color;
+               }
+           }
+       }
+   }
+}

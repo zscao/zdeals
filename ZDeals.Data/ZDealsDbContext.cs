@@ -38,13 +38,13 @@ namespace ZDeals.Data
                 e.HasOne(c => c.Parent).WithMany(c => c.Children).HasForeignKey(c => c.ParentId);
                 e.HasIndex(c => c.Code).IsUnique(true);
 
-                e.HasData(new CategoryEntity
-                {
-                    Id = 1,
-                    Code = "root",
-                    Title = "Categories",
-                    CreatedTime = System.DateTime.Now
-                });
+                //e.HasData(new CategoryEntity
+                //{
+                //    Id = 1,
+                //    Code = "root",
+                //    Title = "Categories",
+                //    CreatedTime = System.DateTime.Now
+                //});
             });
 
             builder.Entity<DealCategoryJoin>(dc =>

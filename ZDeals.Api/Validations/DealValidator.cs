@@ -10,11 +10,11 @@ namespace ZDeals.Api.Validations
         {
             RuleFor(x => x.Title).NotEmpty().MaximumLength(200);
 
-            RuleFor(x => x.HighLight).MaximumLength(200);
+            RuleFor(x => x.HighLight).MaximumLength(50);
 
-            RuleFor(x => x.Description).MaximumLength(2000);
+            RuleFor(x => x.Description).MaximumLength(400);
 
-            RuleFor(x => x.Discount).MaximumLength(100);
+            RuleFor(x => x.Discount).MaximumLength(20);
 
             RuleFor(x => x.Source).MaximumLength(400);
         }

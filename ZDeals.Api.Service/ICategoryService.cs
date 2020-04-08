@@ -15,6 +15,6 @@ namespace ZDeals.Api.Service
 
         Task<Result<CategoryTreeView>> CreateCategoryAsync(CreateCategoryRequest request);
 
-        Task<Result<CategoryTreeView>> GetCategoryTree(int? rootId = null); 
+        Task<Result<CategoryTreeView>> GetCategoryTreeAsync(int? rootId = null); 
     }
 }

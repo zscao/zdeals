@@ -1,0 +1,155 @@
+@import '../_variabls.scss';
+
+.sidebar_widget {
+  background: $white;
+  border: 1px solid $grey_color;
+  padding: 20px;
+  & .single_banner {
+    border: 0;
+    @media #{$large-mobile} {
+      margin-bottom: 0;
+    }
+    & a {
+      @media #{$large-mobile} {
+        width: 100%;
+      }
+      & img {
+        @media #{$large-mobile} {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.widget_list {
+    margin-bottom: 44px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    & h3 {
+        font-size: 14px;
+        margin-bottom: 25px;
+        padding-bottom: 8px;
+        text-transform: uppercase;
+        font-weight: 500;
+        position: relative;
+
+        @media #{$desktop-device} {
+            font-size: 13px;
+        }
+
+        &::before {
+            position: absolute;
+            content: "";
+            display: block;
+            width: 160px;
+            height: 3px;
+            background: #c40316;
+            bottom: 0;
+        }
+    }
+
+    & > ul {
+        & > li {
+            border-bottom: 1px solid #ebebeb;
+
+            &:first-child {
+                & a {
+                    padding-top: 0;
+                }
+            }
+
+            &:last-child {
+                border-bottom: 0;
+
+                & a {
+                    padding-bottom: 0;
+                }
+            }
+
+            & > a {
+                font-size: 14px;
+                display: block;
+                line-height: 25px;
+                padding: 10px 0;
+
+                &:hover {
+                    color: $secondary_color;
+                }
+            }
+
+            &.widget_sub_categories {
+                & > a {
+                    position: relative;
+
+                    &::before {
+                        content: '\f107';
+                        cursor: pointer;
+                        font-family: FontAwesome;
+                        font-size: 12px;
+                        position: absolute;
+                        right: 0;
+                        top: 50%;
+                        transform: translatey(-50%);
+                    }
+
+                    &.active {
+                        &::before {
+                            content: '\f106';
+                            cursor: pointer;
+                            font-family: FontAwesome;
+                            font-size: 12px;
+                            position: absolute;
+                            right: 0;
+                            top: 50%;
+                            transform: translatey(-50%);
+                        }
+                    }
+                }
+            }
+
+            & ul {
+                padding-left: 15px;
+
+                & li {
+                    border-bottom: 1px solid #ebebeb;
+
+                    &:first-child {
+                        border-top: 1px solid #ebebeb;
+                    }
+
+                    &:last-child {
+                        border-bottom: 0;
+                    }
+
+                    & a {
+                        padding-bottom: 10px;
+                        padding: 10px 0;
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+
+    &.banner_area {
+        padding: 0;
+        border: 0;
+    }
+
+    & .banner_thumb {
+        @media #{$tablet-device} {
+            width: 33%;
+            margin: 0 auto;
+        }
+
+        & a {
+            & img {
+                width: 100%;
+            }
+        }
+    }
+}

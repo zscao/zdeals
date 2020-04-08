@@ -12,10 +12,10 @@ namespace ZDeals.Data.Entities.Sales
         [MaxLength(200)]
         public string Title { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(50)]
         public string Highlight { get; set; }
 
-        [MaxLength(2000)]
+        [MaxLength(400)]
         public string Description { get; set; }
 
         [Required]
@@ -26,7 +26,7 @@ namespace ZDeals.Data.Entities.Sales
         [Column(TypeName = "decimal(10, 2)")]
         public decimal DealPrice { get; set; }
         
-        [MaxLength(100)]
+        [MaxLength(20)]
         public string Discount { get; set; }
 
         [Required]

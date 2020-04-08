@@ -36,7 +36,7 @@ namespace ZDeals.Identity.Impl
             var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.Username == username);
             if(user == null)
             {
-                var error = new Error(ErrorType.NotFound) { Code = Common.ErrorCodes.Accounts.UserNotFound, Message = "User not found." };
+                var error = new Error(ErrorType.NotFound) { Code = Common.ErrorCodes.Identity.UserNotFound, Message = "User not found." };
                 return new Result<User>(error);
             }
 
@@ -48,7 +48,7 @@ namespace ZDeals.Identity.Impl
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Username == request.Username);
             if (user != null)
             {
-                var error = new Error(ErrorType.Validation) { Code = Common.ErrorCodes.Accounts.UserExists, Message = "Username already used." };
+                var error = new Error(ErrorType.Validation) { Code = Common.ErrorCodes.Identity.UserExists, Message = "Username already used." };
                 return new Result<User>(error);
             }
 
@@ -81,7 +81,7 @@ namespace ZDeals.Identity.Impl
 
             if(result == PasswordVerificationResult.Failed)
             {
-                var error = new Error(ErrorType.Authentication) { Code = Common.ErrorCodes.Accounts.UserNotFound, Message = "Invalid username and password combination." };
+                var error = new Error(ErrorType.Authentication) { Code = Common.ErrorCodes.Identity.UserNotFound, Message = "Invalid username and password combination." };
                 return new Result<AuthenticationResponse>(error);
             }
 
@@ -93,7 +93,7 @@ namespace ZDeals.Identity.Impl
 
         public async Task<Result<AuthenticationResponse>> RefreshTokenAsync(string token, string refreshToken)
         {
-            var error = new Error(ErrorType.Authentication) { Code = Common.ErrorCodes.Accounts.InvalidToken, Message = "Invalid Token." };
+            var error = new Error(ErrorType.Authentication) { Code = Common.ErrorCodes.Identity.InvalidToken, Message = "Invalid Token." };
             var result = new Result<AuthenticationResponse>(error);
 
             var principal = _authenticationService.GetPrincipalFromToken(token);

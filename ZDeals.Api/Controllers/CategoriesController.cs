@@ -47,7 +47,7 @@ namespace ZDeals.Api.Controllers
         [HttpGet("list")]
         public async Task<ActionResult<Result>> GetCategoryList()
         {
-            var result = await _categoryService.GetCategoryTree();
+            var result = await _categoryService.GetCategoryTreeAsync();
             if (result.HasError()) return result;
 
             var list = new CategoryList { Data = result.Data.ToCategoryListView() };
@@ -58,7 +58,7 @@ namespace ZDeals.Api.Controllers
         [HttpGet("tree")]
         public async Task<ActionResult<Result>> GetCategoryTree()
         {
-            return await _categoryService.GetCategoryTree();
+            return await _categoryService.GetCategoryTreeAsync();
         }
     }
 }

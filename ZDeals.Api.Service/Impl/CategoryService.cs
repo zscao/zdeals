@@ -63,7 +63,7 @@ namespace ZDeals.Api.Service.Impl
             return new Result<CategoryTreeView>(category.ToCategoryTreeView());
         }
 
-        public async Task<Result<CategoryTreeView>> GetCategoryTree(int? rootId = null)
+        public async Task<Result<CategoryTreeView>> GetCategoryTreeAsync(int? rootId = null)
         {
             var categories = await _dbContext.Categories.ToListAsync();
 

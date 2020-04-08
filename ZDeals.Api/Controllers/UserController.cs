@@ -25,7 +25,7 @@ namespace ZDeals.Api.Controllers
             _jwtOptions = jwtOptions;
         }
 
-        [Authorize(Roles = AppRoles.Admin)]
+        [Authorize(Roles = ApiRoles.Admin)]
         [HttpPost]
         public async Task<ActionResult<Result>> CreateUser(CreateUserRequest request)
         {
