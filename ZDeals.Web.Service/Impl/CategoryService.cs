@@ -21,19 +21,19 @@ namespace ZDeals.Web.Service.Impl
             _dbContext = dbContext;
         }
 
-        public async Task<Result<CategoryTreeView>> GetCategoryTreeAsync(int? rootId = null)
+        public async Task<Result<CategoryTreeView>> GetCategoryTreeAsync(string rootCode = null)
         {
             var categories = await _dbContext.Categories.ToListAsync();
 
             CategoryEntity root = null;
-            if (rootId.HasValue)
+            if (!string.IsNullOrEmpty(rootCode))
             {
-                root = categories.FirstOrDefault(x => x.Id == rootId.Value);
+                root = categories.SingleOrDefault(x => x.Code == rootCode);
             }
             else
             {
                 // find the minimal id as the default root id
-                root = categories.OrderBy(x => x.Id).FirstOrDefault();
+                root = categories.OrderBy(x => x.Id).FirstOrDefault(x => x.ParentId == null);
             }
 
             if (root == null)

@@ -32,7 +32,7 @@ namespace ZDeals.Api.Service.Mapping
             };
         }
 
-        public static IEnumerable<CategoryListView> ToCategoryListView(this CategoryTreeView category)
+        public static IEnumerable<CategoryListView> ToCategoryList(this CategoryTreeView category)
         {
             return BuildChildren(category);
         }

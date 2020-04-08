@@ -31,6 +31,7 @@ namespace ZDeals.Data
             builder.Entity<DealEntity>(e =>
             {
                 e.HasOne(d => d.Store).WithMany(s => s.Deals).HasForeignKey(d => d.StoreId);
+                e.HasIndex(d => d.Title);
             });                
 
             builder.Entity<CategoryEntity>(e =>

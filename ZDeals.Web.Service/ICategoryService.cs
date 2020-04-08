@@ -7,6 +7,6 @@ namespace ZDeals.Web.Service
 {
     public interface ICategoryService
     {
-        Task<Result<CategoryTreeView>> GetCategoryTreeAsync(int? rootId = null);
+        Task<Result<CategoryTreeView>> GetCategoryTreeAsync(string rootCode = null);
     }
 }

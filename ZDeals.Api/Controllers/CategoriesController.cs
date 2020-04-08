@@ -50,7 +50,7 @@ namespace ZDeals.Api.Controllers
             var result = await _categoryService.GetCategoryTreeAsync();
             if (result.HasError()) return result;
 
-            var list = new CategoryList { Data = result.Data.ToCategoryListView() };
+            var list = new CategoryList { Data = result.Data.ToCategoryList() };
 
             return new Result<CategoryList>(list);
         }
