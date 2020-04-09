@@ -44,7 +44,7 @@ h2 {
 
 h3 {
   font-size: 30px;
-  line-height: 30px; }
+  line-height: 24px; }
 
 h4 {
   font-size: 16px;
@@ -1615,8 +1615,8 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     .deal_list .deal_detail .deal_detail_meta .deal_store {
       float: right; }
   .deal_list .deal_detail > h3 {
-    font-size: 1.3em;
-    font-weight: 600; }
+    font-size: 1.2em;
+    font-weight: 500; }
   .deal_list .deal_detail .price_box .price_wrapper > span {
     font-size: 1.4em;
     color: #c40316;

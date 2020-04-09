@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using ZDeals.Storage;
 using ZDeals.Storage.FileSystem;
 using ZDeals.Web.Service;
 using ZDeals.Web.Service.Impl;
+using ZDeals.Web.ServiceConfigure;
 
 namespace ZDeals.Web
 {
@@ -60,8 +62,9 @@ namespace ZDeals.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthorization();
+
+            app.UseTest();
 
             app.UseEndpoints(endpoints =>
             {

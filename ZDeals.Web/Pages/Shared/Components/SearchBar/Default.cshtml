@@ -8,7 +8,7 @@
     <form action="~/deals" method="GET">
         <div class="hover_category">
             <select class="select_option" name="c" id="categori2">
-                <option value="">All Categories</option>
+                @*<option value="">All Categories</option>*@
                 @foreach (var cate in Model.Categories)
                 {
                     var level = cate.Path.Count() - 1;

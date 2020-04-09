@@ -58,8 +58,8 @@ namespace ZDeals.Api.Setup
             { 
                 new CategoryEntity
                 {
-                    Title = "Categories",
-                    Code = "root",
+                    Title = "Deals",
+                    Code = Common.Constants.DefaultValues.DealsCategoryRoot,
 
                     Children = new List<CategoryEntity>
                     {

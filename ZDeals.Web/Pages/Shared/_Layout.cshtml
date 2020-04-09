@@ -88,22 +88,8 @@
         </div>
     </header>
 
-    <!--breadcrumbs area start-->
-    <div class="breadcrumbs_area">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="breadcrumb_content">
-                        <ul>
-                            <li><a href="~/">home</a></li>
-                            <li>shop list</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--breadcrumbs area end-->
+    @await Component.InvokeAsync("BreadCrumb")
+
     <!-- shop area start -->
     <div class="shop_area">
         <div class="container">

@@ -8,7 +8,6 @@ using ZDeals.Data;
 using ZDeals.Data.Entities.Sales;
 using ZDeals.Web.Service.Mapping;
 using ZDeals.Web.Service.Models;
-using ZDeals.Web.Service.Mapping;
 
 namespace ZDeals.Web.Service.Impl
 {

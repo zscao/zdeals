@@ -1,0 +1,30 @@
+﻿@using ZDeals.Web.Models;
+
+@model BreadCrumb
+
+<!--breadcrumbs area start-->
+<div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <ul>
+                        <li><a href="~/">home</a></li>
+                        @foreach (var item in Model.Items)
+                        {
+                            if (string.IsNullOrEmpty(item.Link))
+                            {
+                                <li>@item.Title</li>
+                            }
+                            else
+                            {
+                                <li><a href="@item.Link">@item.Title</a></li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--breadcrumbs area end-->

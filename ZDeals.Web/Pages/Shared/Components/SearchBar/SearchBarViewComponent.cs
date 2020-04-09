@@ -20,7 +20,7 @@ namespace ZDeals.Web.Pages.Shared.Components.SearchBar
             var result = await _categoryService.GetCategoryTreeAsync();
             var model = new SearchBarModel
             {
-                Categories = result.Data.ToCategoryList(false)
+                Categories = result.Data.ToCategoryList(true)
             };
             return View(model);
         }
