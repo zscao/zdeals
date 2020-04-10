@@ -31,7 +31,7 @@ namespace ZDeals.Api.Service.Impl
         }
         public async Task<Result<CategoryTreeView>> CreateCategoryAsync(CreateCategoryRequest request)
         {
-            var parent = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == request.ParentId);
+            var parent = await _dbContext.Categories.SingleOrDefaultAsync(x => x.Id == request.ParentId);
             if(parent == null)
             {
                 var error = new Error(ErrorType.NotFound) { Code = Sales.CategoryNotFound, Message = "Parent category does not exist." };
@@ -54,7 +54,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<CategoryTreeView>> GetCategoryByIdAsync(int categoryId)
         {
-            var category = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == categoryId);
+            var category = await _dbContext.Categories.SingleOrDefaultAsync(x => x.Id == categoryId);
             if(category == null)
             {
                 return new Result<CategoryTreeView>(new Error(ErrorType.NotFound) { Code = Sales.CategoryNotFound, Message = "Category does not exist" });

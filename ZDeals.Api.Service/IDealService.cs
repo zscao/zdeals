@@ -25,5 +25,7 @@ namespace ZDeals.Api.Service
         Task<Result<DealCategoryList>> GetCategoriesAsync(int dealId);
 
         Task<Result<DealCategoryList>> SaveCategoriesAsync(int dealId, SaveDealCategoriesRequest request);
+
+        Task<Result<Deal>> DeleteDealAsync(int dealId);
     }
 }

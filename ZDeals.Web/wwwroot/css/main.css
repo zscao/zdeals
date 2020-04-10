@@ -416,7 +416,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   padding-bottom: 0; }
 
 .header_middle {
-  padding-top: 27px; }
+  padding-top: 10px; }
   @media only screen and (min-width: 768px) and (max-width: 991px) {
     .header_middle {
       padding: 30px 0; } }
@@ -891,36 +891,36 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   .mini_cart .mini_cart_inner li {
     text-align: right; }
 
-.header_bottom .column1 {
-  flex: 0 0 21%;
-  max-width: 21%; }
-  @media only screen and (min-width: 768px) and (max-width: 991px) {
-    .header_bottom .column1 {
-      flex: 0 0 50%;
-      max-width: 50%; } }
-  @media only screen and (max-width: 767px) {
-    .header_bottom .column1 {
-      flex: 0 0 100%;
-      max-width: 100%; } }
-
-.header_bottom .column2 {
-  flex: 0 0 56%;
-  max-width: 56%; }
-  @media only screen and (min-width: 768px) and (max-width: 991px) {
-    .header_bottom .column2 {
-      display: none; } }
-
-.header_bottom .column3 {
-  flex: 0 0 23%;
-  max-width: 23%; }
-  @media only screen and (min-width: 768px) and (max-width: 991px) {
-    .header_bottom .column3 {
-      flex: 0 0 50%;
-      max-width: 50%; } }
-  @media only screen and (max-width: 767px) {
-    .header_bottom .column3 {
-      flex: 0 0 100%;
-      max-width: 100%; } }
+.header_bottom {
+  padding-bottom: 20px; }
+  .header_bottom .column1 {
+    flex: 0 0 21%;
+    max-width: 21%; }
+    @media only screen and (min-width: 768px) and (max-width: 991px) {
+      .header_bottom .column1 {
+        flex: 0 0 50%;
+        max-width: 50%; } }
+    @media only screen and (max-width: 767px) {
+      .header_bottom .column1 {
+        flex: 0 0 100%;
+        max-width: 100%; } }
+  .header_bottom .column2 {
+    flex: 0 0 56%;
+    max-width: 56%; }
+    @media only screen and (min-width: 768px) and (max-width: 991px) {
+      .header_bottom .column2 {
+        display: none; } }
+  .header_bottom .column3 {
+    flex: 0 0 23%;
+    max-width: 23%; }
+    @media only screen and (min-width: 768px) and (max-width: 991px) {
+      .header_bottom .column3 {
+        flex: 0 0 50%;
+        max-width: 50%; } }
+    @media only screen and (max-width: 767px) {
+      .header_bottom .column3 {
+        flex: 0 0 100%;
+        max-width: 100%; } }
 
 .menu_position {
   position: relative; }
@@ -1462,8 +1462,8 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
       position: absolute;
       content: "";
       display: block;
-      width: 160px;
-      height: 3px;
+      width: 90%;
+      height: 1px;
       background: #c40316;
       bottom: 0; }
   .widget_list > ul > li {
@@ -1605,15 +1605,18 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 .deal_list {
   padding: 0 20px; }
   .deal_list .deal_img_wrapper {
-    margin: 30px 0 0 10px; }
+    margin: 30px 0 20px 20px; }
     .deal_list .deal_img_wrapper > .deal_type {
       text-align: center;
       background: #ebebeb; }
+    .deal_list .deal_img_wrapper img {
+      max-width: 90%; }
   .deal_list .deal_detail .deal_detail_meta {
     font-size: 0.8em;
     color: #999; }
     .deal_list .deal_detail .deal_detail_meta .deal_store {
-      float: right; }
+      float: right;
+      margin-right: 10px; }
   .deal_list .deal_detail > h3 {
     font-size: 1.2em;
     font-weight: 500; }
@@ -1637,19 +1640,19 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   .deal_list .action_box {
     padding-top: 30px; }
     .deal_list .action_box .btn_wrapper {
-      padding: 10px 30px; }
-      .deal_list .action_box .btn_wrapper > button {
+      padding: 10px 15px; }
+      .deal_list .action_box .btn_wrapper > a, .deal_list .action_box .btn_wrapper > button {
         width: 100%;
         max-width: 150px;
         border-radius: 4px;
         padding: 5px;
         box-shadow: -1px 6px 19px rgba(255, 192, 0, 0.2) !important; }
-      .deal_list .action_box .btn_wrapper button.btn_buynow {
+      .deal_list .action_box .btn_wrapper a.btn_buynow, .deal_list .action_box .btn_wrapper button.btn_buynow {
         background-color: #FFB322;
         color: #000000;
         border: 1px solid #FFB322;
         font-weight: 600; }
-      .deal_list .action_box .btn_wrapper button.btn_getcode {
+      .deal_list .action_box .btn_wrapper a.btn_getcode, .deal_list .action_box .btn_wrapper button.btn_getcode {
         background-color: #eaca1c;
         color: #000000;
         border: 1px solid #eaca1c;

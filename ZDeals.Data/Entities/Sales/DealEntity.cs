@@ -52,5 +52,9 @@ namespace ZDeals.Data.Entities.Sales
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedTime { get; set; }
+
+        public bool Deleted { get; set; }
+
+        public DateTime? DeletedTime { get; set; }
     }
 }

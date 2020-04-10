@@ -110,7 +110,7 @@
 .deal_list {
   padding: 0 20px;
   .deal_img_wrapper {
-    margin: 30px 0 0 10px;
+    margin: 30px 0 20px 20px;
     >.deal_type {
       text-align: center;
       //border: 1px solid $grey_color;
@@ -118,6 +118,7 @@
     }
     img {
       //border: 1px solid $grey_color;
+      max-width: 90%;
     }
   }
   .deal_detail {
@@ -127,6 +128,7 @@
 
       .deal_store {
         float: right;
+        margin-right: 10px;
       }
     }
     >h3 {
@@ -167,21 +169,21 @@
     padding-top: 30px;
 
     .btn_wrapper {
-      padding: 10px 30px;
-      >button {
+      padding: 10px 15px;
+      >a, >button {
         width: 100%;
         max-width: 150px;
         border-radius: 4px;
         padding: 5px;
         box-shadow: -1px 6px 19px rgba(255,192,0,0.2) !important;
       }
-      button.btn_buynow {
+      a.btn_buynow, button.btn_buynow {
         background-color: $secondary_color8;
         color: $black;
         border: 1px solid $secondary_color8;
         font-weight: 600;
       }
-      button.btn_getcode {
+      a.btn_getcode, button.btn_getcode {
         background-color: $secondary_color6;
         color: $black;
         border: 1px solid $secondary_color6;

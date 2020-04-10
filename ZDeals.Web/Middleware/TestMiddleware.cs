@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
+
 using System;
 using System.Threading.Tasks;
-using ZDeals.Web.Helpers;
-using ZDeals.Web.Models;
-using ZDeals.Web.Service;
 
 namespace ZDeals.Web.Middleware
 {

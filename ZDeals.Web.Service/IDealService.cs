@@ -8,5 +8,7 @@ namespace ZDeals.Web.Service
     public interface IDealService
     {
         Task<Result<DealsSearchResult>> SearchDeals(string categoryCode = null, string keywords = null);
+
+        Task<Result<Deal>> GetDealById(int dealId);
     }
 }

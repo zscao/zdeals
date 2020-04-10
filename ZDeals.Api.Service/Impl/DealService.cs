@@ -30,9 +30,11 @@ namespace ZDeals.Api.Service.Impl
             int size = pageSize ?? 20;
             int number = pageNumber ?? 1;
 
-            var total = await _dbContext.Deals.CountAsync();
+            var query = _dbContext.Deals.Where(x => !x.Deleted);
 
-            var deals = await _dbContext.Deals.AsNoTracking()
+            var total = await query.CountAsync();
+
+            var deals = await query.AsNoTracking()
                 .Include(x => x.Store)
                 .OrderByDescending(x => x.Id)
                 .Skip((number - 1) * size)
@@ -53,7 +55,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> GetDealByIdAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.Include(x => x.Store).FirstOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
             {
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
@@ -88,7 +90,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Store>> GetDealStoreAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.Include(x => x.Store).FirstOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal?.Store == null)
             {
                 return new Result<Store>(new Error(ErrorType.NotFound) { Code = Sales.StoreNotFound, Message = "Store not found" });
@@ -99,7 +101,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> UpdateDealAsync(int dealId, UpdateDealRequest request)
         {
-            var deal = await _dbContext.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
             {
                 return new Result<Deal>(new Error(ErrorType.Validation) { Code = Sales.DealNotFound, Message = "Deal does not exist" });
@@ -120,9 +122,23 @@ namespace ZDeals.Api.Service.Impl
         }
 
 
+        public async Task<Result<Deal>> DeleteDealAsync(int dealId)
+        {
+            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
+            if (deal == null)
+                return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
+
+            deal.Deleted = true;
+            deal.DeletedTime = DateTime.UtcNow;
+
+            var saved = await _dbContext.SaveChangesAsync();
+
+            return new Result<Deal>(deal.ToDealModel());
+        }
+
         public async Task<Result<DealPictureList>> GetPicturesAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.Include(x => x.Pictures).FirstOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.Pictures).SingleOrDefaultAsync(x => x.Id == dealId);
             if (deal == null)
                 return new Result<DealPictureList>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "Could not find the deal" });
 
@@ -141,11 +157,11 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<DealPicture>> SavePictureAsync(int dealId, SaveDealPictureRequest request)
         {
-            var deal = await _dbContext.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
             if (deal == null)
                 return new Result<DealPicture>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "Could not find the deal" });
 
-            var picture = await _dbContext.DealPictures.FirstOrDefaultAsync(x => x.DealId == dealId && x.FileName == request.FileName);
+            var picture = await _dbContext.DealPictures.SingleOrDefaultAsync(x => x.DealId == dealId && x.FileName == request.FileName);
             if(picture != null)
             {
                 picture.Title = request.Title;
@@ -183,7 +199,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<DealCategoryList>> SaveCategoriesAsync(int dealId, SaveDealCategoriesRequest request)
         {
-            var deal = await _dbContext.Deals.Include(x => x.DealCategory).FirstOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.DealCategory).SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
                 return new Result<DealCategoryList>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "Could not find the deal" });
 
@@ -223,6 +239,7 @@ namespace ZDeals.Api.Service.Impl
 
             return store;
         }
+
 
         #endregion
     }

@@ -93,19 +93,19 @@ namespace ZDeals.Api.Setup
                         },
                         new CategoryEntity
                         {
-                            Title = "Games & Toys",
-                            Code = "games-n-toyes",
+                            Title = "Mobile & Broadband",
+                            Code = "mobile-n-broadband",
                             Children = new List<CategoryEntity>
                             {
                                 new CategoryEntity
                                 {
-                                    Title = "Board Games",
-                                    Code = "board-games",
+                                    Title = "Mobile Plans",
+                                    Code = "mobile-plans",
                                 },
                                 new CategoryEntity
                                 {
-                                    Title = "Puzzles",
-                                    Code = "puzzles",
+                                    Title = "Broadband",
+                                    Code = "broadband",
                                 }
 
                             }

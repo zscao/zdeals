@@ -40,7 +40,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Store>> GetStoreByIdAsync(int storeId)
         {
-            var store = await _dbContext.Stores.FirstOrDefaultAsync(x => x.Id == storeId);
+            var store = await _dbContext.Stores.SingleOrDefaultAsync(x => x.Id == storeId);
             if (store == null)
             {
                 return new Result<Store>(new Error(ErrorType.NotFound) { Code = Sales.StoreNotFound, Message = "Store does not exist" });
@@ -66,7 +66,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Store>> UpdateStoreAsync(int storeId, UpdateStoreRequest request)
         {
-            var store = await _dbContext.Stores.FirstOrDefaultAsync(x => x.Id == storeId);
+            var store = await _dbContext.Stores.SingleOrDefaultAsync(x => x.Id == storeId);
             if(store == null)
             {
                 return new Result<Store>(new Error(ErrorType.NotFound) { Code = Sales.StoreNotFound, Message = "Store does not exist" });

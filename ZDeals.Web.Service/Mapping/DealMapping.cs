@@ -16,7 +16,7 @@ namespace ZDeals.Web.Service.Mapping
                 Highlight = entity.Highlight,
                 Description = entity.Description,
                 DealPrice = entity.DealPrice.ToPriceWithCurrency(),
-                FullPrice = entity.FullPrice.ToPriceWithCurrency(),
+                FullPrice = entity.DealPrice < entity.FullPrice ? entity.FullPrice.ToPriceWithCurrency() : string.Empty,
                 Discount = entity.Discount,
                 PublishedDate = entity.PublishedDate,
                 ExpiryDate = entity.ExpiryDate,

@@ -64,6 +64,12 @@ namespace ZDeals.Api.Controllers
             return await _dealService.UpdateDealAsync(dealId, request);
         }
 
+        [HttpDelete("{dealId}")]
+        public async Task<ActionResult<Result>> Delete(int dealId)
+        {
+            return await _dealService.DeleteDealAsync(dealId);
+        }
+
         [HttpGet("{dealId}/store")]
         public async Task<ActionResult<Result>> GetStore(int dealId)
         {

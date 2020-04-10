@@ -22,6 +22,18 @@ namespace ZDeals.Web.Service.Impl
             _categoryService = categoryService;
         }
 
+        public async Task<Result<Deal>> GetDealById(int dealId)
+        {
+            var deal = _dbContext.Deals.SingleOrDefault(x => x.Id == dealId);
+            if(deal == null)
+            {
+                var error = new Error(ErrorType.NotFound) { Code = Common.ErrorCodes.Sales.DealNotFound, Message = "Deal not found." };
+                return new Result<Deal>(error);
+            }
+
+            return new Result<Deal>(deal.ToDealModel());
+        }
+
         public async Task<Result<DealsSearchResult>> SearchDeals(string categoryCode = null, string keywords = null)
         {
             var categoryIds = new List<int>();
