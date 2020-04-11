@@ -47,8 +47,8 @@
 
 @section Scripts {
 <script>
-    let pageSize = 2;
-    let pageNumber = 1;
+    let pageSize = @Model.DefaultPageSize;
+    let pageNumber = @Model.DefaultPageNumber;
 
     $('#btnShowMoreDeals').on('click', () => {
 

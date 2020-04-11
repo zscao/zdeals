@@ -2,11 +2,16 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
+using ZDeals.Common.Constants;
 using ZDeals.Storage;
 
 namespace ZDeals.Api.Controllers
@@ -20,7 +25,7 @@ namespace ZDeals.Api.Controllers
 
         public PicturesController(IBlobService blobService)
         {
-            blobService.Container = "test";
+            blobService.Container = DefaultValues.DealPicturesContainer;
             _blobService = blobService;
         }
 
@@ -47,22 +52,53 @@ namespace ZDeals.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadImage(IFormFile file)
         {
-            var properties = new BlobProperties
+            using (var stream = ReadImage(file, out string contentType, out string fileExtension))
             {
-                ContentType = file.ContentType,
-                Security = BlobSecurity.Public
-            };
+                var properties = new BlobProperties
+                {
+                    ContentType = contentType,
+                    Security = BlobSecurity.Public
+                };
 
-            var stream = file.OpenReadStream();
-            var fileName = Path.GetRandomFileName() + Path.GetExtension(file.FileName)?.ToLower();
+                var fileName = Path.GetRandomFileName() + fileExtension;
+                var isUploaded = await _blobService.UploadBlobAsync(fileName, stream, properties);
 
-            var isUploaded = await _blobService.UploadBlobAsync(fileName, stream, properties);
-            if (!isUploaded)
+                if (!isUploaded)
+                {
+                    return StatusCode(500, "Failed to save file.");
+                }
+
+                return Ok(new { file.ContentType, file.Length, FileName = fileName });
+            }
+        }
+
+        private Stream ReadImage(IFormFile file, out string contentType, out string fileExtension)
+        {
+            var input = file.OpenReadStream();
+            var image = Image.Load(input);
+
+            if (image.Height > DefaultValues.MaxPictureSize || image.Width > DefaultValues.MaxPictureSize)
             {
-                return StatusCode(500, "Failed to save file.");
+                image.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Size = new SixLabors.Primitives.Size(600),
+                    Mode = ResizeMode.Max
+                }));
+
+                contentType = "image/jpeg";
+                fileExtension = ".jpg";
+                var outstream = new MemoryStream();
+                image.SaveAsJpeg(outstream, new JpegEncoder());
+                outstream.Position = 0;
+
+                return outstream;
             }
 
-            return Ok(new { file.ContentType, file.Length, FileName = fileName });
+            contentType = file.ContentType;
+            fileExtension = Path.GetExtension(file.FileName);
+
+            input.Position = 0;
+            return input;
         }
     }
 }

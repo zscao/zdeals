@@ -14,7 +14,7 @@
                     <div class="deal_detail_meta">
                         <span class="deal_list_date">
                             <i class="fa fa-rss"></i>
-                            4 hours ago
+                            @Model.PublishedDateString
                         </span>
                         @if (Model.Store != null)
                         {
@@ -26,8 +26,8 @@
                     <h3>@Model.Title</h3>
                     <div class="price_box">
                         <span class="price_wrapper">
-                            <span>@Model.DealPrice</span>
-                            <del>@Model.FullPrice</del>
+                            <span>@Model.DealPriceString</span>
+                            <del>@Model.FullPriceString</del>
                         </span>
                         <span class="discount_rate">@Model.Discount</span>
                         <span class="deal_highlight">@Model.Highlight</span>

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using System;
 using System.Threading.Tasks;
-
+using ZDeals.Common.Constants;
 using ZDeals.Storage;
 
 namespace ZDeals.Web.Pages
@@ -14,7 +14,7 @@ namespace ZDeals.Web.Pages
 
         public PictureModel(IBlobService blobService)
         {
-            blobService.Container = "test";
+            blobService.Container = DefaultValues.DealPicturesContainer;
             _blobService = blobService;
         }
 

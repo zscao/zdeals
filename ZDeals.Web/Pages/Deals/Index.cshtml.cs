@@ -12,6 +12,9 @@ namespace ZDeals.Web.Pages.Deals
 {
     public class IndexModel : PageModel
     {
+        public readonly int DefaultPageSize = 10;
+        public readonly int DefaultPageNumber = 1;
+
         private readonly IDealService _dealService;
         private readonly ICategoryService _categoryService;
 
@@ -41,7 +44,7 @@ namespace ZDeals.Web.Pages.Deals
 
             ViewData["DealQuery"] = query;
 
-            var result = await _dealService.SearchDeals(query.CategoryCode, query.Keywords,2, 1);
+            var result = await _dealService.SearchDeals(query.CategoryCode, query.Keywords, DefaultPageSize, DefaultPageNumber);
             if (result.HasError())
             {
                 DealResult = new DealsSearchResult()
@@ -58,8 +61,8 @@ namespace ZDeals.Web.Pages.Deals
 
         public async Task<PartialViewResult> OnGetMore(string c, string w, int? p, int? ps)
         {
-            int pageNumber = p ?? 1;
-            int pageSize = ps ?? 2;
+            int pageNumber = p ?? DefaultPageNumber;
+            int pageSize = ps ?? DefaultPageSize;
 
             var result = await _dealService.SearchDeals(c, w, pageSize, pageNumber);
             if (result.HasError())
