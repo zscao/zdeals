@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{handler?}"
 
 @using ZDeals.Web.Service.Models
 
@@ -25,18 +25,15 @@
             }
             else
             {
-                foreach (var deal in Model.DealResult.Deals)
-                {
-                    <div class="col-12 ">
-                        @await Html.PartialAsync("_DealListItem", deal)
-                    </div>
-                }
+                <partial name="_DealListPartial" model="Model.DealResult" />
+
+                <div id="tagDealListEnd"></div>
 
                 @if (Model.DealResult.More)
                 {
                     <div class="col-12">
                         <div class="page_actions">
-                            <button class="show_more">Show More</button>
+                            <button class="show_more" id="btnShowMoreDeals">Show More</button>
                         </div>
                     </div>
                 }
@@ -47,6 +44,36 @@
     <!-- product list end -->
 </div>
 
-<div>
-    @(HttpContext.Items["test"] as string)
-</div>
+
+@section Scripts {
+<script>
+    let pageSize = 2;
+    let pageNumber = 1;
+
+    $('#btnShowMoreDeals').on('click', () => {
+
+        let searchParams = new URLSearchParams(location.search);
+
+        searchParams.set('p', ++pageNumber);
+        searchParams.set('ps', pageSize);
+
+        const search = searchParams.toString();
+        const url = `${location.origin}${location.pathname}/more?${search}`;
+
+        fetch(url)
+            .then(response => {
+                const more = response.headers.get('more-deals');
+                if (more !== 'true') $('#btnShowMoreDeals').hide();
+
+                return response.text();
+            })
+            .then(result => {
+                $('#tagDealListEnd').before(result);
+            })
+            .catch(error => {
+                
+            });
+    });
+
+</script>
+} 

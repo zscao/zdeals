@@ -1,0 +1,8 @@
+﻿@model ZDeals.Web.Service.Models.DealsSearchResult
+
+@foreach (var deal in Model.Deals)
+{
+    <div class="col-12 ">
+        @await Html.PartialAsync("_DealListItem", deal)
+    </div>
+}

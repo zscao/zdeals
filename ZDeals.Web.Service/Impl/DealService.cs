@@ -24,7 +24,7 @@ namespace ZDeals.Web.Service.Impl
 
         public async Task<Result<Deal>> GetDealById(int dealId)
         {
-            var deal = _dbContext.Deals.SingleOrDefault(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId && x.Deleted == false);
             if(deal == null)
             {
                 var error = new Error(ErrorType.NotFound) { Code = Common.ErrorCodes.Sales.DealNotFound, Message = "Deal not found." };
@@ -34,11 +34,11 @@ namespace ZDeals.Web.Service.Impl
             return new Result<Deal>(deal.ToDealModel());
         }
 
-        public async Task<Result<DealsSearchResult>> SearchDeals(string categoryCode = null, string keywords = null)
+        public async Task<Result<DealsSearchResult>> SearchDeals(string categoryCode = null, string keywords = null, int pageSize = 20, int pageNumber = 1)
         {
             var categoryIds = new List<int>();
 
-            if (!string.IsNullOrEmpty(categoryCode))
+            if (!string.IsNullOrEmpty(categoryCode) || categoryCode != Common.Constants.DefaultValues.DealsCategoryRoot)
             {
                 var cateResult = await _categoryService.GetCategoryTreeAsync(categoryCode);
                 if (cateResult.HasError())
@@ -47,17 +47,17 @@ namespace ZDeals.Web.Service.Impl
                 categoryIds = cateResult.Data.ToCategoryList(includeRootNode: true).Select(x => x.Id).ToList();
             }
 
-            IQueryable<DealEntity> query = _dbContext.Deals.Include(x => x.Store);
+            IQueryable<DealEntity> query = _dbContext.Deals.Include(x => x.Store).Where(x => !x.Deleted);
             if (categoryIds?.Count > 0) query = query.Where(x => x.DealCategory.Any(c => categoryIds.Contains(c.CategoryId)));
-
             if (!string.IsNullOrWhiteSpace(keywords)) query = query.Where(x => EF.Functions.Like(x.Title, $"%{keywords}%"));
 
-            var deals = await query.ToListAsync();
+            var skipped = pageSize * (pageNumber - 1);
+            var deals = await query.OrderByDescending(x => x.Id).Skip(skipped).Take(pageSize).ToListAsync();
 
             var result = new DealsSearchResult
             {
                 Deals = deals.Select(x => x.ToDealModel()),
-                More = deals.Count > 0
+                More = deals.Count >= pageSize
             };
 
             return new Result<DealsSearchResult>(result);

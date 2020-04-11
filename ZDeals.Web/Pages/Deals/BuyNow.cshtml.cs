@@ -20,7 +20,7 @@ namespace ZDeals.Web.Pages.Deals
         {
             var result = await _dealService.GetDealById(id);
             if (result.HasError())
-                return Redirect("deals");
+                return Redirect("/deals");
 
             return Redirect(result.Data.Source);
         }
