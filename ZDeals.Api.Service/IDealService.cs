@@ -8,7 +8,7 @@ namespace ZDeals.Api.Service
 {
     public interface IDealService
     {
-        Task<Result<PagedDeals>> SearchDealsAsync(int? pageSize, int? pageNumber);
+        Task<Result<PagedDeals>> SearchDealsAsync(SearchDealRequest request);
 
         Task<Result<Deal>> CreateDealAsync(CreateDealRequest request);
 

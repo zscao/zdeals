@@ -110,7 +110,8 @@
 .deal_list {
   padding: 0 20px;
   .deal_img_wrapper {
-    margin: 30px 0 20px 20px;
+    margin: 30px 0 20px 10px;
+    text-align: center;
     >.deal_type {
       text-align: center;
       //border: 1px solid $grey_color;
@@ -119,6 +120,7 @@
     img {
       //border: 1px solid $grey_color;
       max-width: 90%;
+      max-height: 120px;
     }
   }
   .deal_detail {

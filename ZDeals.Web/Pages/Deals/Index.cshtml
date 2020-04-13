@@ -20,7 +20,13 @@
             @if (Model.DealResult.Deals.Count() == 0)
             {
                 <div class="col-12">
-                    Oops! No deals are found in this category!
+                    <article>
+                        <figure class="row">
+                            <div class="row deal_list">
+                                Oops! No deals are available in this category at the moment!
+                            </div>
+                        </figure>
+                    </article>
                 </div>
             }
             else
@@ -46,34 +52,32 @@
 
 
 @section Scripts {
-<script>
-    let pageSize = @Model.DefaultPageSize;
-    let pageNumber = @Model.DefaultPageNumber;
+    <script>
+        let pageNumber = 1;
 
-    $('#btnShowMoreDeals').on('click', () => {
+        $('#btnShowMoreDeals').on('click', () => {
 
-        let searchParams = new URLSearchParams(location.search);
+            let searchParams = new URLSearchParams(location.search);
 
-        searchParams.set('p', ++pageNumber);
-        searchParams.set('ps', pageSize);
+            searchParams.set('p', ++pageNumber);
 
-        const search = searchParams.toString();
-        const url = `${location.origin}${location.pathname}/more?${search}`;
+            const search = searchParams.toString();
+            const url = `${location.origin}${location.pathname}/more?${search}`;
 
-        fetch(url)
-            .then(response => {
-                const more = response.headers.get('more-deals');
-                if (more !== 'true') $('#btnShowMoreDeals').hide();
+            fetch(url)
+                .then(response => {
+                    const more = response.headers.get('more-deals');
+                    if (more !== 'true') $('#btnShowMoreDeals').hide();
 
-                return response.text();
-            })
-            .then(result => {
-                $('#tagDealListEnd').before(result);
-            })
-            .catch(error => {
-                
-            });
-    });
+                    return response.text();
+                })
+                .then(result => {
+                    $('#tagDealListEnd').before(result);
+                })
+                .catch(error => {
 
-</script>
+                });
+        });
+
+    </script>
 } 

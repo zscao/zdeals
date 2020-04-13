@@ -30,9 +30,9 @@ namespace ZDeals.Api.Controllers
         /// </remarks>
         /// <response code="200">all deals in the system</response>
         [HttpGet]
-        public async Task<ActionResult<Result>> Search(int? pageSize, int? pageNumber)
+        public async Task<ActionResult<Result>> Search([FromQuery] SearchDealRequest request)
         {
-            return await _dealService.SearchDealsAsync(pageSize, pageNumber);
+            return await _dealService.SearchDealsAsync(request);
         }
 
         /// <summary>

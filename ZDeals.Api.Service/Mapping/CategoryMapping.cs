@@ -7,7 +7,7 @@ namespace ZDeals.Api.Service.Mapping
 {
     public static class CategoryMapping
     {
-        public static Category ToCategoryMode(this CategoryEntity entity)
+        public static Category ToCategoryModel(this CategoryEntity entity)
         {
             if (entity == null) return null;
 

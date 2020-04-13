@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service.Mapping;
 using ZDeals.Common;
+using ZDeals.Common.Constants;
 using ZDeals.Common.ErrorCodes;
 using ZDeals.Data;
 using ZDeals.Data.Entities.Sales;
@@ -17,20 +19,29 @@ namespace ZDeals.Api.Service.Impl
     public class DealService : IDealService
     {
         private readonly ZDealsDbContext _dbContext;
-        private readonly IStoreService _storeService;
+        private readonly ICategoryService _categoryService;
 
-        public DealService(ZDealsDbContext dbContext, IStoreService storeService)
+        public DealService(ZDealsDbContext dbContext, ICategoryService categoryService)
         {
             _dbContext = dbContext;
-            _storeService = storeService;
+            _categoryService = categoryService;
         }
 
-        public async Task<Result<PagedDeals>> SearchDealsAsync(int? pageSize, int? pageNumber)
+        public async Task<Result<PagedDeals>> SearchDealsAsync(SearchDealRequest request)
         {
-            int size = pageSize ?? 20;
-            int number = pageNumber ?? 1;
+            int size = request.PageSize ?? 10;
+            int number = request.PageNumber ?? 1;
 
-            var query = _dbContext.Deals.Where(x => !x.Deleted);
+            var query = _dbContext.Deals.AsQueryable();
+            
+            if(request.Deleted.HasValue)
+                query = query.Where(x => request.Deleted.Value);
+
+            if (!string.IsNullOrEmpty(request.Category) && request.Category != DefaultValues.DealsCategoryRoot)
+            {
+                var children = await FindCategoryChildIds(request.Category);
+                if (children.Count() > 0) query = query.Where(x => x.DealCategory.Any(c => children.Contains(c.CategoryId)));
+            }
 
             var total = await query.CountAsync();
 
@@ -101,7 +112,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> UpdateDealAsync(int dealId, UpdateDealRequest request)
         {
-            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
             {
                 return new Result<Deal>(new Error(ErrorType.Validation) { Code = Sales.DealNotFound, Message = "Deal does not exist" });
@@ -191,7 +202,7 @@ namespace ZDeals.Api.Service.Impl
 
             var list = new DealCategoryList
             {
-                Data = categories.Select(x => x.Category.ToCategoryMode())
+                Data = categories.Select(x => x.Category.ToCategoryModel())
             };
 
             return new Result<DealCategoryList>(list);
@@ -240,6 +251,14 @@ namespace ZDeals.Api.Service.Impl
             return store;
         }
 
+
+        private async Task<IEnumerable<int>> FindCategoryChildIds(string categoryCode)
+        {
+            var cateResult = await _categoryService.GetCategoryTreeAsync(categoryCode);
+            if (cateResult.HasError()) return new int[0];
+
+            return cateResult.Data.ToCategoryList().Select(x => x.Id);
+        }
 
         #endregion
     }

@@ -1605,12 +1605,14 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 .deal_list {
   padding: 0 20px; }
   .deal_list .deal_img_wrapper {
-    margin: 30px 0 20px 20px; }
+    margin: 30px 0 20px 10px;
+    text-align: center; }
     .deal_list .deal_img_wrapper > .deal_type {
       text-align: center;
       background: #ebebeb; }
     .deal_list .deal_img_wrapper img {
-      max-width: 90%; }
+      max-width: 90%;
+      max-height: 120px; }
   .deal_list .deal_detail .deal_detail_meta {
     font-size: 0.8em;
     color: #999; }
