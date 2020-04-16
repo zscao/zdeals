@@ -8,7 +8,7 @@ using System.Linq;
 using ZDeals.Common.AspNetCore.Responses;
 using ZDeals.Common.AspNetCore.Filters;
 
-namespace ZDeals.Api.ServiceConfigure
+namespace ZDeals.Identity.ServiceConfigure
 {
     public static class WebConfigure
     {

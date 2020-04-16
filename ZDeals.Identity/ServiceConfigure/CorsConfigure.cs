@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using ZDeals.Common.AspNetCore.Options;
 
-namespace ZDeals.Api.ServiceConfigure
+namespace ZDeals.Identity.ServiceConfigure
 {
     public static class CorsConfigure
     {

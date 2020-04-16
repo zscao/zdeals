@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 using ZDeals.Data;
 using ZDeals.Data.Entities.Sales;
-using ZDeals.Identity;
 
 namespace ZDeals.Api.Setup
 {
@@ -31,17 +30,6 @@ namespace ZDeals.Api.Setup
                     {
                         dbContext.Categories.AddRange(GetCategorySeedData());
                         await dbContext.SaveChangesAsync();
-                    }
-                    if(dbContext.Users.Any() == false)
-                    {
-                        var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
-                        await userService.CreateUserAsync(new Contract.Requests.CreateUserRequest
-                        {
-                            Username = "test",
-                            Nickname = "Admin TEST",
-                            Password = "Test123!",
-                            Role = "Admin"
-                        });
                     }
                 }
                 catch(Exception ex)

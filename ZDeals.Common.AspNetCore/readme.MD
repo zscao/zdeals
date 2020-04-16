@@ -1,0 +1,1 @@
+﻿# shared components for ASP.net core applications

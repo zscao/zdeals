@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZDeals.Common.Options;
 
-namespace ZDeals.Api.ServiceConfigure
+namespace ZDeals.Identity.ServiceConfigure
 {
     public static class SecurityConfigure
     {
@@ -15,6 +15,7 @@ namespace ZDeals.Api.ServiceConfigure
         {
             var jwtOptions = new JwtOptions();
             configuration.GetSection("JwtOptions").Bind(jwtOptions);
+            services.AddSingleton(jwtOptions);
 
             var tokenParameters = new TokenValidationParameters
             {
@@ -27,6 +28,7 @@ namespace ZDeals.Api.ServiceConfigure
                 ValidateLifetime = true, 
                 ClockSkew = System.TimeSpan.Zero,
             };
+            services.AddSingleton(tokenParameters);
 
             services.AddAuthentication(options =>
             {

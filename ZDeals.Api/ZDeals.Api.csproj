@@ -21,9 +21,9 @@
   <ItemGroup>
     <ProjectReference Include="..\ZDeals.Api.Contract\ZDeals.Api.Contract.csproj" />
     <ProjectReference Include="..\ZDeals.Api.Service\ZDeals.Api.Service.csproj" />
+    <ProjectReference Include="..\ZDeals.Common.AspNetCore\ZDeals.Common.AspNetCore.csproj" />
     <ProjectReference Include="..\ZDeals.Common\ZDeals.Common.csproj" />
     <ProjectReference Include="..\ZDeals.Data\ZDeals.Data.csproj" />
-    <ProjectReference Include="..\ZDeals.Identity\ZDeals.Identity.csproj" />
     <ProjectReference Include="..\ZDeals.Storage\ZDeals.Storage.csproj" />
   </ItemGroup>
 

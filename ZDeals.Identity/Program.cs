@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using ZDeals.Api.Setup;
 
-namespace ZDeals.Api
+namespace ZDeals.Identity
 {
     public class Program
     {
