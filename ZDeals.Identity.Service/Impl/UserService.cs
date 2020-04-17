@@ -7,8 +7,8 @@ using ZDeals.Identity.Contract.Requests;
 using ZDeals.Identity.Service.Helpers;
 using ZDeals.Identity.Service.Mapping;
 using ZDeals.Common;
-using ZDeals.Data;
-using ZDeals.Data.Entities.Identity;
+using ZDeals.Identity.Data;
+using ZDeals.Identity.Data.Entities;
 using ZDeals.Identity.Contract.Responses;
 using System.Security.Claims;
 using System.Linq;
@@ -20,11 +20,11 @@ namespace ZDeals.Identity.Service.Impl
 {
     public class UserService : IUserService
     {
-        private readonly ZDealsDbContext _dbContext;
+        private readonly ZIdentityDbContext _dbContext;
         private readonly IAuthenticationService _authenticationService;
         private readonly JwtOptions _jwtOptions;
 
-        public UserService(ZDealsDbContext dbContext, IAuthenticationService authenticationService, JwtOptions jwtOptions)
+        public UserService(ZIdentityDbContext dbContext, IAuthenticationService authenticationService, JwtOptions jwtOptions)
         {
             _dbContext = dbContext;
             _authenticationService = authenticationService;

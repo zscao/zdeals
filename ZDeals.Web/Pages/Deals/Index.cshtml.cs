@@ -45,7 +45,29 @@ namespace ZDeals.Web.Pages.Deals
 
             ViewData["DealQuery"] = query;
 
-            var result = await _dealService.SearchDeals(query.CategoryCode, query.Keywords, DefaultPageSize, DefaultPageNumber);
+            var data = await SearchDeals(query.CategoryCode, query.Keywords, DefaultPageSize, DefaultPageNumber);
+
+            HttpContext.Response.Headers.Add("More-Deals", data.More.ToString().ToLower());
+
+            DealResult = data;
+        }
+
+
+        public async Task<PartialViewResult> OnGetMore(string c, string w, int? p)
+        {
+            int pageNumber = p ?? DefaultPageNumber;
+
+            var data = await SearchDeals(c, w, DefaultPageSize, pageNumber);
+
+            HttpContext.Response.Headers.Add("More-Deals", data.More.ToString().ToLower());
+
+            return Partial("_DealListPartial", data);
+        }
+
+
+        private async Task<DealsSearchResult> SearchDeals(string categoryCode, string keywords, int pageSize, int pageNumber)
+        {
+            var result = await _dealService.SearchDeals(categoryCode, keywords, pageSize, pageNumber);
             if (result.HasError())
             {
                 DealResult = new DealsSearchResult()
@@ -55,35 +77,14 @@ namespace ZDeals.Web.Pages.Deals
             }
             else
             {
-                foreach(var deal in result.Data.Deals)
+                foreach (var deal in result.Data.Deals)
                 {
-                    if(!string.IsNullOrEmpty(deal.Picture))
+                    if (!string.IsNullOrEmpty(deal.Picture))
                         deal.Picture = $"{_pictureStorageOptions.GetPictureUrl}/{DefaultValues.DealPicturesContainer}/{deal.Picture}";
                 }
             }
 
-            HttpContext.Response.Headers.Add("More-Deals", result.Data.More.ToString().ToLower());
-
-            DealResult = result.Data;
-        }
-
-
-        public async Task<PartialViewResult> OnGetMore(string c, string w, int? p)
-        {
-            int pageNumber = p ?? DefaultPageNumber;
-
-            var result = await _dealService.SearchDeals(c, w, DefaultPageSize, pageNumber);
-            if (result.HasError())
-            {
-                DealResult = new DealsSearchResult()
-                {
-                    Deals = new List<Deal>()
-                };
-            }
-
-            HttpContext.Response.Headers.Add("More-Deals", result.Data.More.ToString().ToLower());
-
-            return Partial("_DealListPartial", result.Data);
+            return result.Data;
         }
 
     }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using ZDeals.Data;
-using ZDeals.Data.Entities.Sales;
+using ZDeals.Data.Entities;
 
 namespace ZDeals.Api.Setup
 {

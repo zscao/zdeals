@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ZDeals.Data.Entities.Identity
+namespace ZDeals.Identity.Data.Entities
 {
     [Table("Users")]
     public class UserEntity: EntityBase

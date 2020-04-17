@@ -10,8 +10,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ZDeals.Common\ZDeals.Common.csproj" />
-    <ProjectReference Include="..\ZDeals.Data\ZDeals.Data.csproj" />
     <ProjectReference Include="..\ZDeals.Identity.Contract\ZDeals.Identity.Contract.csproj" />
+    <ProjectReference Include="..\ZDeals.Identity.Data\ZDeals.Identity.Data.csproj" />
   </ItemGroup>
 
 </Project>

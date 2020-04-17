@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ZDeals.Api.Contract.Models;
-using ZDeals.Data.Entities.Sales;
+using ZDeals.Data.Entities;
 
 namespace ZDeals.Api.Service.Mapping
 {

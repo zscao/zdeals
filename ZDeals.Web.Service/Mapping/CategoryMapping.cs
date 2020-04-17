@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ZDeals.Data.Entities.Sales;
+using ZDeals.Data.Entities;
 using ZDeals.Web.Service.Models;
 
 namespace ZDeals.Web.Service.Mapping

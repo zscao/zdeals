@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage", "Storage", "{55DA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDeals.Storage.Picture", "ZDeals.Storage.Picture\ZDeals.Storage.Picture.csproj", "{8EEB8A72-6683-4ACC-9541-60C1CCE4F32B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDeals.Identity.Data", "ZDeals.Identity.Data\ZDeals.Identity.Data.csproj", "{30DE7E62-EFDC-46FF-965A-CAF30DB78776}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{8EEB8A72-6683-4ACC-9541-60C1CCE4F32B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EEB8A72-6683-4ACC-9541-60C1CCE4F32B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EEB8A72-6683-4ACC-9541-60C1CCE4F32B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30DE7E62-EFDC-46FF-965A-CAF30DB78776}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30DE7E62-EFDC-46FF-965A-CAF30DB78776}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30DE7E62-EFDC-46FF-965A-CAF30DB78776}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30DE7E62-EFDC-46FF-965A-CAF30DB78776}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +128,7 @@ Global
 		{D6A564CC-8709-47F8-AC13-028388D8D2BF} = {FFF65AB8-D6C2-45D7-B6E3-4C151DA7A508}
 		{BAD38E5C-8E6E-4F0F-9E18-5F069625D103} = {B007235A-6C85-4CBE-AC03-8283C77CE56D}
 		{8EEB8A72-6683-4ACC-9541-60C1CCE4F32B} = {55DADC26-9C87-4039-9DC9-9710ADCF1102}
+		{30DE7E62-EFDC-46FF-965A-CAF30DB78776} = {FFF65AB8-D6C2-45D7-B6E3-4C151DA7A508}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C239870C-C90F-4014-9DB6-E2DAD84DDE2B}

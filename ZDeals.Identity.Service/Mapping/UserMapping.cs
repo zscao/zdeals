@@ -1,5 +1,5 @@
 ﻿using ZDeals.Identity.Contract.Models;
-using ZDeals.Data.Entities.Identity;
+using ZDeals.Identity.Data.Entities;
 
 namespace ZDeals.Identity.Service.Mapping
 {

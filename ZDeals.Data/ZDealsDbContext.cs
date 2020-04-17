@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ZDeals.Data.Entities.Identity;
-using ZDeals.Data.Entities.Sales;
+using ZDeals.Data.Entities;
 
 namespace ZDeals.Data
 {
@@ -16,10 +15,6 @@ namespace ZDeals.Data
         public DbSet<CategoryEntity> Categories { get; set; }
         public DbSet<DealCategoryJoin> DealCategories { get; set; }
         public DbSet<DealPictureEntity> DealPictures { get; set; }
-
-        public DbSet<UserEntity> Users { get; set; }
-
-        public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -59,17 +54,6 @@ namespace ZDeals.Data
             {
                 dp.HasKey(e => new { e.FileName, e.DealId });
                 dp.HasOne(e => e.Deal).WithMany(e => e.Pictures).HasForeignKey(e => e.DealId).IsRequired(true);
-            });
-
-            builder.Entity<UserEntity>(u =>
-            {
-                u.HasIndex(x => x.Username).IsUnique(true);
-            });
-
-            builder.Entity<RefreshTokenEntity>(t =>
-            {
-                t.HasIndex(x => x.Token).IsUnique(true);
-                t.HasOne(x => x.User).WithMany(u => u.RefreshTokens).HasForeignKey(x => x.UserId).IsRequired(true);
             });
         }
     }

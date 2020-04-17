@@ -9,7 +9,7 @@ using ZDeals.Api.Service.Mapping;
 using ZDeals.Common;
 using ZDeals.Common.ErrorCodes;
 using ZDeals.Data;
-using ZDeals.Data.Entities.Sales;
+using ZDeals.Data.Entities;
 
 namespace ZDeals.Api.Service.Impl
 {

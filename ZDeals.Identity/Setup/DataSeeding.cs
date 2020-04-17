@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-using ZDeals.Data;
+using ZDeals.Identity.Data;
 using ZDeals.Identity;
 
 namespace ZDeals.Api.Setup
@@ -15,7 +15,7 @@ namespace ZDeals.Api.Setup
         public static async Task<IHost> SeedDataAsync(this IHost host)
         {
             using (var scope = host.Services.CreateScope())
-            using (var dbContext = scope.ServiceProvider.GetRequiredService<ZDealsDbContext>())
+            using (var dbContext = scope.ServiceProvider.GetRequiredService<ZIdentityDbContext>())
             {
                 try
                 {

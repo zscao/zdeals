@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using ZDeals.Common;
 using ZDeals.Data;
-using ZDeals.Data.Entities.Sales;
+using ZDeals.Data.Entities;
 using ZDeals.Web.Service.Mapping;
 using ZDeals.Web.Service.Models;
 

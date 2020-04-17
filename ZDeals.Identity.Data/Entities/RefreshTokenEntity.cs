@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ZDeals.Data.Entities.Identity
+namespace ZDeals.Identity.Data.Entities
 {
     [Table("RefreshTokens")]
     public class RefreshTokenEntity: EntityBase
