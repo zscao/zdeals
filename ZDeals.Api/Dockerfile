@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["ZDeals.Web/ZDeals.Web.csproj", "ZDeals.Web/"]
-RUN dotnet restore "ZDeals.Web/ZDeals.Web.csproj"
+COPY ["ZDeals.Api/ZDeals.Api.csproj", "ZDeals.Api/"]
+RUN dotnet restore "ZDeals.Api/ZDeals.Api.csproj"
 COPY . .
-WORKDIR "/src/ZDeals.Web"
-RUN dotnet build "ZDeals.Web.csproj" -c Release -o /app/build
+WORKDIR "/src/ZDeals.Api"
+RUN dotnet build "ZDeals.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ZDeals.Web.csproj" -c Release -o /app/publish
+RUN dotnet publish "ZDeals.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ZDeals.Web.dll"]
+ENTRYPOINT ["dotnet", "ZDeals.Api.dll"]
