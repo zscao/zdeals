@@ -14,7 +14,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.1" />
   </ItemGroup>
   
@@ -24,7 +23,6 @@
     <ProjectReference Include="..\ZDeals.Common.AspNetCore\ZDeals.Common.AspNetCore.csproj" />
     <ProjectReference Include="..\ZDeals.Common\ZDeals.Common.csproj" />
     <ProjectReference Include="..\ZDeals.Data\ZDeals.Data.csproj" />
-    <ProjectReference Include="..\ZDeals.Storage\ZDeals.Storage.csproj" />
   </ItemGroup>
 
 

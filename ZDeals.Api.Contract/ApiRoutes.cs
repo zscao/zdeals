@@ -49,13 +49,5 @@
             //public const string CreateCategory = BaseUrl + "categories";
 
         }
-
-        public static class Pictures
-        {
-            public const string Base = BaseUrl + "pictures";
-
-            //public const string GetImageById = BaseUrl + "pictures/{pictureId}";
-            //public const string CreateImage = BaseUrl + "pictures";
-        }
     }
 }

@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using ZDeals.Common.Constants;
 using ZDeals.Web.Models;
+using ZDeals.Web.Options;
 using ZDeals.Web.Service;
 using ZDeals.Web.Service.Models;
 
@@ -16,12 +17,12 @@ namespace ZDeals.Web.Pages.Deals
         const int DefaultPageNumber = 1;
 
         private readonly IDealService _dealService;
-        private readonly ICategoryService _categoryService;
+        private readonly PictureStorageOptions _pictureStorageOptions;
 
-        public IndexModel(IDealService dealService, ICategoryService categoryService)
+        public IndexModel(IDealService dealService, PictureStorageOptions pictureStorageOptions)
         {
             _dealService = dealService;
-            _categoryService = categoryService;
+            _pictureStorageOptions = pictureStorageOptions;
         }
 
         public DealsSearchResult DealResult { get; private set; }
@@ -51,6 +52,14 @@ namespace ZDeals.Web.Pages.Deals
                 {
                     Deals = new List<Deal>()
                 };
+            }
+            else
+            {
+                foreach(var deal in result.Data.Deals)
+                {
+                    if(!string.IsNullOrEmpty(deal.Picture))
+                        deal.Picture = $"{_pictureStorageOptions.GetPictureUrl}/{DefaultValues.DealPicturesContainer}/{deal.Picture}";
+                }
             }
 
             HttpContext.Response.Headers.Add("More-Deals", result.Data.More.ToString().ToLower());

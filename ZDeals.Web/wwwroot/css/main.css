@@ -1608,7 +1608,8 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     margin-bottom: 20px; }
 
 .deal_list {
-  padding: 0 20px; }
+  padding: 0 20px;
+  width: 100%; }
   .deal_list .deal_img_wrapper {
     margin: 30px 0 20px 10px;
     text-align: center; }

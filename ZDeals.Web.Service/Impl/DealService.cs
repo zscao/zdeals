@@ -56,7 +56,7 @@ namespace ZDeals.Web.Service.Impl
 
             var result = new DealsSearchResult
             {
-                Deals = deals.Select(x => x.ToDealModel()),
+                Deals = deals.Select(x => x.ToDealModel()).ToList(),
                 More = deals.Count >= pageSize
             };
 

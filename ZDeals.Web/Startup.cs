@@ -4,9 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
-using ZDeals.Storage;
-using ZDeals.Storage.FileSystem;
+using ZDeals.Web.Options;
 using ZDeals.Web.Service;
 using ZDeals.Web.Service.Impl;
 using ZDeals.Web.ServiceConfigure;
@@ -33,13 +31,9 @@ namespace ZDeals.Web
             services.AddScoped<IDealService, DealService>();
             services.AddScoped<ICategoryService, CategoryService>();
 
-            var storageOptions = new FileSystemStorageOptions();
-            Configuration.GetSection("FileSystemStorageOptions").Bind(storageOptions);
-
-            services.AddScoped<IBlobService>(options =>
-            {
-                return new FileSystemBlobService(storageOptions);
-            });
+            var pictureStorageOptions = new PictureStorageOptions();
+            Configuration.GetSection("PictureStorageOptions").Bind(pictureStorageOptions);
+            services.AddSingleton(pictureStorageOptions);
 
             services.AddRazorPages();
         }

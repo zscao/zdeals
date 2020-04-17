@@ -10,37 +10,37 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-using ZDeals.Api.Contract;
 using ZDeals.Common.Constants;
-using ZDeals.Storage;
 
-namespace ZDeals.Api.Controllers
+namespace ZDeals.Storage.Picture.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(ApiRoutes.Pictures.Base)]
+    [Route("api/{controller}")]
     public class PicturesController : ControllerBase
     {
         private readonly IBlobService _blobService;
 
         public PicturesController(IBlobService blobService)
         {
-            blobService.Container = DefaultValues.DealPicturesContainer;
             _blobService = blobService;
         }
 
         [AllowAnonymous]
-        [HttpGet("{pictureId}")]
-        public async Task<IActionResult> GetImage(string pictureId)
+        [HttpGet("{container}/{pictureId}")]
+        public async Task<IActionResult> GetImage(string container, string pictureId)
         {
+            if (string.IsNullOrEmpty(container) || string.IsNullOrEmpty(pictureId))
+                return NotFound();
+
             try
             {
-                var descriptor = await _blobService.GetBlobDescriptorAsync(pictureId);
+                var descriptor = await _blobService.GetBlobDescriptorAsync(container, pictureId);
                 if (string.IsNullOrEmpty(descriptor?.Url))
                 {
                     return NotFound();
                 }
-                var blob = await _blobService.GetBlobAsync(pictureId);
+                var blob = await _blobService.GetBlobAsync(container, pictureId);
                 return File(blob, descriptor.ContentType);
             }
             catch(Exception ex)
@@ -49,9 +49,11 @@ namespace ZDeals.Api.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        [HttpPost("{container}")]
+        public async Task<IActionResult> UploadImage(string container, IFormFile file)
         {
+            if (string.IsNullOrEmpty(container)) return BadRequest("Container can't be empty");
+
             using (var stream = ReadImage(file, out string contentType, out string fileExtension))
             {
                 var properties = new BlobProperties
@@ -61,7 +63,7 @@ namespace ZDeals.Api.Controllers
                 };
 
                 var fileName = Path.GetRandomFileName() + fileExtension;
-                var isUploaded = await _blobService.UploadBlobAsync(fileName, stream, properties);
+                var isUploaded = await _blobService.UploadBlobAsync(container, fileName, stream, properties);
 
                 if (!isUploaded)
                 {
