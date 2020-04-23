@@ -2,7 +2,7 @@
 
 namespace ZDeals.Identity.Contract.Responses
 {
-    public class AuthenticationResponse
+    public class JwtResponse
     {
         public User User { get; set; }
         public string Token { get; set; }

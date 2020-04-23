@@ -10,10 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\scss\section\_shop.css" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="compilerconfig.json" />
   </ItemGroup>
 
@@ -25,6 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\ZDeals.Common\ZDeals.Common.csproj" />
     <ProjectReference Include="..\ZDeals.Data\ZDeals.Data.csproj" />
+    <ProjectReference Include="..\ZDeals.Identity.Data\ZDeals.Identity.Data.csproj" />
+    <ProjectReference Include="..\ZDeals.Identity.Service\ZDeals.Identity.Service.csproj" />
     <ProjectReference Include="..\ZDeals.Web.Service\ZDeals.Web.Service.csproj" />
   </ItemGroup>
 

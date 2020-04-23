@@ -6,9 +6,9 @@ namespace ZDeals.Web.ServiceConfigure
 {
     public static class MiddlewareConfigure
     {
-        public static IApplicationBuilder UseTest(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseGuestSignIn(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<TestMiddleware>();
+            return builder.UseMiddleware<GuestSignInMiddleware>();
         }
     }
 }

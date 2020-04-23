@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
+using ZDeals.Common;
 using ZDeals.Identity.Contract.Models;
 using ZDeals.Identity.Contract.Requests;
-using ZDeals.Identity.Contract.Responses;
-using ZDeals.Common;
 
 namespace ZDeals.Identity
 {
@@ -13,8 +12,7 @@ namespace ZDeals.Identity
 
         Task<Result<User>> GetUserByName(string username);
 
-        Task<Result<AuthenticationResponse>> AuthenticateAsync(string username, string password);
+        Task<Result<User>> AuthenticateAsync(string username, string password);
 
-        Task<Result<AuthenticationResponse>> RefreshTokenAsync(string token, string refreshToken);
     }
 }

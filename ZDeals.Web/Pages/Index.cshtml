@@ -4,166 +4,173 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="row">
-    <!--sidebar start-->
-    <div class="col-lg-3 col-md-12">
-        <aside class="sidebar_widget">
-            <div class="widget_list ">
-                <h3>Product categories</h3>
-                <ul>
-                    <li><a href="#">Cameras & Camcoders</a></li>
-                    <li><a href="#">Games & Consoles</a></li>
-                    <li><a href="#">Headphone & Speaker</a></li>
-                    <li><a href="#">Movies & Video Games</a></li>
-                    <li><a href="#">Smartphone</a> </li>
-                    <li><a href="#">Uncategorized</a></li>
-                </ul>
-            </div>
+<!-- shop area start -->
+<div class="shop_area">
+    <div class="container">
 
-        </aside>
-    </div>
-    <!--sidebar end-->
-    <!-- product list start -->
-    <div class="col-lg-9 col-md-12">
-        <!--shop toolbar start-->
-        <div class="shop_toolbar_wrapper">
-            <div class="group_title">
-                <p>Latest Offers</p>
-            </div>
-            <div class=" niceselect_option">
-                <form class="select_option" action="#">
-                    <select name="orderby" id="short">
+        <div class="row">
+            <!--sidebar start-->
+            <div class="col-lg-3 col-md-12">
+                <aside class="sidebar_widget">
+                    <div class="widget_list ">
+                        <h3>Product categories</h3>
+                        <ul>
+                            <li><a href="#">Cameras & Camcoders</a></li>
+                            <li><a href="#">Games & Consoles</a></li>
+                            <li><a href="#">Headphone & Speaker</a></li>
+                            <li><a href="#">Movies & Video Games</a></li>
+                            <li><a href="#">Smartphone</a> </li>
+                            <li><a href="#">Uncategorized</a></li>
+                        </ul>
+                    </div>
 
-                        <option selected value="1">Sort by average rating</option>
-                        <option value="2">Sort by popularity</option>
-                        <option value="3">Sort by newness</option>
-                        <option value="4">Sort by price: low to high</option>
-                        <option value="5">Sort by price: high to low</option>
-                        <option value="6">Product Name: Z</option>
-                    </select>
-                </form>
+                </aside>
             </div>
-        </div>
-        <!--shop toolbar end-->
-        <!--shop wrapper start-->
-        <div class="row no-gutters shop_wrapper">
-            <div class="col-12 ">
-                <article>
-                    <figure class="row">
-                        <div class="row deal_list">
-                            <div class="col-lg-2">
-                                <div class="deal_img_wrapper">
-                                    <a href="#">
-                                        <img src="~/img/product/product1.jpg" alt="product 1">
-                                    </a>
-                                    <div class="deal_type">Coupon</div>
-                                </div>
-                            </div>
-                            <div class="col-lg-7">
-                                <div class="deal_detail">
-                                    <div class="deal_detail_meta">
-                                        <span class="deal_list_date">
-                                            <i class="fa fa-rss"></i>
-                                            4 hours ago
-                                        </span>
-                                        <span class="deal_store">
-                                            from <a href="www.amazone.com">Amazon</a>
-                                        </span>
-                                    </div>
-                                    <h3>
-                                        <a href="#">Donec tempus pretium arcu et faucibus commodo</a>
-                                    </h3>
-                                    <div class="price_box">
-                                        <span class="price_wrapper">
-                                            <span>$599.99</span>
-                                            <del>$499.99</del>
-                                        </span>
-                                        <span class="discount_rate">-20%</span>
-                                        <span class="deal_highlight">Take it and get 20% cashback</span>
-                                    </div>
-                                </div>
-                                <div class="deal_desc">
-                                    Panasonic.com has their Panasonic Portable Oral Irrigator/Dental Water Flosser (EW-DJ10-A) for
-                                    $49.99 - $30 w/ coupon code REDEALS = $19.99. Shipping is free. Thanks Discombobulated Our ...
-                                </div>
-                            </div>
-                            <div class="col-lg-3 action_box">
-                                <div class="btn_wrapper">
-                                    <button class="btn_buynow">Buy it now</button>
-                                </div>
-                                <div class="action_links">
-                                    <ul>
-                                        <li class="wishlist">
-                                            <a href="#" title="Add to wishlist">
-                                                <i class="ion-android-favorite-outline"></i> Add to wishlist
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </figure>
-                </article>
-            </div>
+            <!--sidebar end-->
+            <!-- product list start -->
+            <div class="col-lg-9 col-md-12">
+                <!--shop toolbar start-->
+                <div class="shop_toolbar_wrapper">
+                    <div class="group_title">
+                        <p>Latest Offers</p>
+                    </div>
+                    <div class=" niceselect_option">
+                        <form class="select_option" action="#">
+                            <select name="orderby" id="short">
 
-            <div class="col-12 ">
-                <article>
-                    <figure class="row">
-                        <div class="row deal_list">
-                            <div class="col-lg-2">
-                                <div class="deal_img_wrapper">
-                                    <a href="#">
-                                        <img src="~/img/product/product1.jpg" alt="product 1">
-                                    </a>
-                                    <div class="deal_type">Coupon</div>
-                                </div>
-                            </div>
-                            <div class="col-lg-7">
-                                <div class="deal_detail">
-                                    <div class="deal_detail_meta">
-                                        <span class="deal_list_date">
-                                            <i class="fa fa-clock"></i>
-                                            4 days ago
-                                        </span>
-                                        <span class="deal_list_timeleft">
-                                            <i class="fa fa-hourglass"></i>
-                                            5 days left
-                                        </span>
-                                    </div>
-                                    <h3>
-                                        <a href="#">Vitamin C Serum for Face with Hyaluronic Acid, 20% C + E Professional Topical Facial Skin Care Helps Repair Sun Damage, Fade Age Spots, Dark Circles, Wrinkles & Fine Lines BEST ORGANIC - 1 oz.</a>
-                                    </h3>
-                                    <div class="price_box">
-                                        <span class="price_wrapper">
-                                            <span>$599.99</span>
-                                            <del>$499.99</del>
-                                        </span>
-                                        <span class="discount_rate">-20%</span>
-                                        <span class="deal_highlight">Take it and get 20% cashback</span>
-                                    </div>
-                                </div>
-                                <div class="deal_desc">
-                                    Panasonic.com has their Panasonic Portable Oral Irrigator/Dental Water Flosser (EW-DJ10-A) for
-                                    $49.99 - $30 w/ coupon code REDEALS = $19.99. Shipping is free. Thanks Discombobulated Our ...
-                                </div>
-                            </div>
-                            <div class="col-lg-3 action_box">
-                                <div class="btn_wrapper">
-                                    <button class="btn_getcode">Reveal Coupon</button>
-                                </div>
-                            </div>
-                        </div>
-                    </figure>
-                </article>
-            </div>
-
-            <div class="col-12">
-                <div class="page_actions">
-                    <button class="show_more">Show More</button>
+                                <option selected value="1">Sort by average rating</option>
+                                <option value="2">Sort by popularity</option>
+                                <option value="3">Sort by newness</option>
+                                <option value="4">Sort by price: low to high</option>
+                                <option value="5">Sort by price: high to low</option>
+                                <option value="6">Product Name: Z</option>
+                            </select>
+                        </form>
+                    </div>
                 </div>
+                <!--shop toolbar end-->
+                <!--shop wrapper start-->
+                <div class="row no-gutters shop_wrapper">
+                    <div class="col-12 ">
+                        <article>
+                            <figure class="row">
+                                <div class="row deal_list">
+                                    <div class="col-lg-2">
+                                        <div class="deal_img_wrapper">
+                                            <a href="#">
+                                                <img src="~/img/product/product1.jpg" alt="product 1">
+                                            </a>
+                                            <div class="deal_type">Coupon</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <div class="deal_detail">
+                                            <div class="deal_detail_meta">
+                                                <span class="deal_list_date">
+                                                    <i class="fa fa-rss"></i>
+                                                    4 hours ago
+                                                </span>
+                                                <span class="deal_store">
+                                                    from <a href="www.amazone.com">Amazon</a>
+                                                </span>
+                                            </div>
+                                            <h3>
+                                                <a href="#">Donec tempus pretium arcu et faucibus commodo</a>
+                                            </h3>
+                                            <div class="price_box">
+                                                <span class="price_wrapper">
+                                                    <span>$599.99</span>
+                                                    <del>$499.99</del>
+                                                </span>
+                                                <span class="discount_rate">-20%</span>
+                                                <span class="deal_highlight">Take it and get 20% cashback</span>
+                                            </div>
+                                        </div>
+                                        <div class="deal_desc">
+                                            Panasonic.com has their Panasonic Portable Oral Irrigator/Dental Water Flosser (EW-DJ10-A) for
+                                            $49.99 - $30 w/ coupon code REDEALS = $19.99. Shipping is free. Thanks Discombobulated Our ...
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 action_box">
+                                        <div class="btn_wrapper">
+                                            <button class="btn_buynow">Buy it now</button>
+                                        </div>
+                                        <div class="action_links">
+                                            <ul>
+                                                <li class="wishlist">
+                                                    <a href="#" title="Add to wishlist">
+                                                        <i class="ion-android-favorite-outline"></i> Add to wishlist
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </figure>
+                        </article>
+                    </div>
+
+                    <div class="col-12 ">
+                        <article>
+                            <figure class="row">
+                                <div class="row deal_list">
+                                    <div class="col-lg-2">
+                                        <div class="deal_img_wrapper">
+                                            <a href="#">
+                                                <img src="~/img/product/product1.jpg" alt="product 1">
+                                            </a>
+                                            <div class="deal_type">Coupon</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <div class="deal_detail">
+                                            <div class="deal_detail_meta">
+                                                <span class="deal_list_date">
+                                                    <i class="fa fa-clock"></i>
+                                                    4 days ago
+                                                </span>
+                                                <span class="deal_list_timeleft">
+                                                    <i class="fa fa-hourglass"></i>
+                                                    5 days left
+                                                </span>
+                                            </div>
+                                            <h3>
+                                                <a href="#">Vitamin C Serum for Face with Hyaluronic Acid, 20% C + E Professional Topical Facial Skin Care Helps Repair Sun Damage, Fade Age Spots, Dark Circles, Wrinkles & Fine Lines BEST ORGANIC - 1 oz.</a>
+                                            </h3>
+                                            <div class="price_box">
+                                                <span class="price_wrapper">
+                                                    <span>$599.99</span>
+                                                    <del>$499.99</del>
+                                                </span>
+                                                <span class="discount_rate">-20%</span>
+                                                <span class="deal_highlight">Take it and get 20% cashback</span>
+                                            </div>
+                                        </div>
+                                        <div class="deal_desc">
+                                            Panasonic.com has their Panasonic Portable Oral Irrigator/Dental Water Flosser (EW-DJ10-A) for
+                                            $49.99 - $30 w/ coupon code REDEALS = $19.99. Shipping is free. Thanks Discombobulated Our ...
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 action_box">
+                                        <div class="btn_wrapper">
+                                            <button class="btn_getcode">Reveal Coupon</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </figure>
+                        </article>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="page_actions">
+                            <button class="show_more">Show More</button>
+                        </div>
+                    </div>
+                </div>
+                <!--shop wrapper end-->
             </div>
+            <!-- product list end -->
         </div>
-        <!--shop wrapper end-->
     </div>
-    <!-- product list end -->
 </div>
+<!-- shop area end -->

@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Threading.Tasks;
 
-using ZDeals.Identity.Contract;
-using ZDeals.Identity.Contract.Requests;
 using ZDeals.Common;
 using ZDeals.Common.Constants;
-using ZDeals.Common.Options;
 using ZDeals.Identity;
+using ZDeals.Identity.Contract;
+using ZDeals.Identity.Contract.Requests;
 
 namespace ZDeals.Api.Controllers
 {
@@ -18,18 +17,23 @@ namespace ZDeals.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly JwtOptions _jwtOptions;
-        public UsersController(IUserService userService, JwtOptions jwtOptions)
+        private readonly IJwtService _jwtService;
+
+        public UsersController(IUserService userService, IJwtService jwtService)
         {
             _userService = userService;
-            _jwtOptions = jwtOptions;
+            _jwtService = jwtService; ;
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<Result>> Login(LoginRequest request)
         {
-            return await _userService.AuthenticateAsync(request.Username, request.Password);            
+            var authResult = await _userService.AuthenticateAsync(request.Username, request.Password);
+            if (authResult.HasError())
+                return authResult;
+
+            return await _jwtService.GenerateJwtTokenAsync(authResult.Data);
         }
 
 
@@ -37,7 +41,7 @@ namespace ZDeals.Api.Controllers
         [HttpPost("refresh")]
         public async Task<ActionResult<Result>> Refresh(RefreshTokenRequest request)
         {
-            return await _userService.RefreshTokenAsync(request.Token, request.RefreshToken);
+            return await _jwtService.RefreshTokenAsync(request.Token, request.RefreshToken);
         }
 
         [Authorize(Roles = ApiRoles.Admin)]

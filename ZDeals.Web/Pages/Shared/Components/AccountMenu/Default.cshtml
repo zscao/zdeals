@@ -1,0 +1,24 @@
+﻿
+@model ZDeals.Web.Pages.Shared.Components.AccountMenu.AccountMenuData
+<!-- account control menu start -->
+
+@if (Model.IsAuthenticate)
+{
+    <div class="mini_cart_wrapper">
+        <a href="javascript:void(0)">
+            <i class="fa fa-user"></i>
+            <span class="cart_price">@Model.NickName<i class="ion-ios-arrow-down"></i></span>
+            <span class="cart_count">2</span>
+        </a>
+        <div class="mini_cart">
+            <div class="mini_cart_inner">
+                <ul>
+                    <li>My Profile</li>
+                    <li>Message Center</li>
+                    <li>Subscription Settings</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+<!-- account control menu end -->

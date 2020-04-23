@@ -1,0 +1,38 @@
+﻿@model ZDeals.Web.Pages.Shared.Components.CookieConsent.CookieConsentData
+
+@if (Model.ShowBanner) {
+    <div id="cookieConsent" class="cookie-consent">
+        <div class="row">
+            <div class="col-10">
+                Use this space to summarize your privacy and cookie use policy.
+            </div>
+            <div class="col-2 text-right">
+                <button type="button" data-dismiss="alert" data-cookie-consent-url="@(Url.Page("Cookie"))/Consent" data-verification-token="@Model.RequestValidationToken">
+                    <span aria-hidden="true">Accept</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function () {
+            var button = document.querySelector("#cookieConsent button[data-cookie-consent-url]");
+            if (!button) return;
+
+            button.addEventListener("click", () => {
+                const url = button.dataset.cookieConsentUrl;
+                if (!url) return;
+
+                $.post({
+                    url,
+                    headers: {
+                        RequestVerificationToken: button.dataset.verificationToken
+                    }
+                })
+                .done(data => {
+                    if (data && data.cookie) document.cookie = data.cookie;
+                    $('#cookieConsent').hide();
+                })
+            }, false);
+        })();
+    </script>
+}

@@ -1692,3 +1692,122 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   @media only screen and (max-width: 767px) {
     .home_section_bg {
       padding: 60px 0 57px; } }
+
+.cookie-consent {
+  position: fixed;
+  bottom: 0;
+  width: 100%; }
+  .cookie-consent > div {
+    padding: .5rem 1.25rem;
+    color: #856404;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba; }
+
+* {
+  box-sizing: border-box; }
+
+/* 17. login page css here */
+.login_page_bg {
+  background: #F5F5F9;
+  padding: 60px 0 133px; }
+  @media only screen and (max-width: 767px) {
+    .login_page_bg {
+      padding: 60px 0 110px; } }
+
+.account_form h2 {
+  font-size: 28px;
+  text-transform: capitalize;
+  font-weight: 500;
+  line-height: 22px;
+  margin-bottom: 30px; }
+  @media only screen and (max-width: 767px) {
+    .account_form h2 {
+      font-size: 24px;
+      margin-bottom: 20px; } }
+
+.account_form form {
+  border: 1px solid #ebebeb;
+  padding: 23px 20px 29px;
+  border-radius: 5px;
+  background: #ffffff; }
+
+.account_form label {
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+  line-height: 12px;
+  margin-bottom: 12px; }
+  .account_form label:hover {
+    color: #c40316; }
+
+.account_form input {
+  border: 1px solid #ebebeb;
+  height: 40px;
+  max-width: 100%;
+  padding: 0 20px;
+  background: none;
+  width: 100%; }
+
+.account_form button {
+  background: #c40316;
+  border: 0;
+  color: #ffffff;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  height: 34px;
+  line-height: 21px;
+  padding: 5px 20px;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  margin-left: 20px;
+  border-radius: 20px; }
+  .account_form button:hover {
+    background: #222222; }
+
+.login_submit label input[type="checkbox"] {
+  width: 15px;
+  height: 13px;
+  margin-right: 3px; }
+
+.login_submit {
+  text-align: right; }
+  @media only screen and (min-width: 768px) and (max-width: 991px) {
+    .login_submit {
+      text-align: left; } }
+  @media only screen and (max-width: 767px) {
+    .login_submit {
+      text-align: left; } }
+  .login_submit a {
+    font-size: 13px;
+    float: left;
+    line-height: 39px; }
+    .login_submit a:hover {
+      color: #c40316; }
+    @media only screen and (min-width: 768px) and (max-width: 991px) {
+      .login_submit a {
+        float: none;
+        line-height: 18px;
+        display: block;
+        margin-bottom: 20px; } }
+    @media only screen and (max-width: 767px) {
+      .login_submit a {
+        float: none;
+        line-height: 18px;
+        display: block;
+        margin-bottom: 20px; } }
+
+.account_form p {
+  margin-bottom: 20px; }
+
+@media only screen and (max-width: 767px) {
+  .account_form.register {
+    margin-top: 58px; } }
+
+@media only screen and (max-width: 767px) {
+  .account_form.register button {
+    margin-left: 0; } }
+
+/*login page css end */

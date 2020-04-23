@@ -7,10 +7,11 @@ using ZDeals.Api.Contract;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service;
 using ZDeals.Common;
+using ZDeals.Common.Constants;
 
 namespace ZDeals.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = ApiRoles.Admin )]
     [ApiController]
     [Route(ApiRoutes.Stores.Base)]
     public class StoresController : ControllerBase

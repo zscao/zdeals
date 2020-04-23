@@ -10,3 +10,16 @@
       padding: 60px 0 57px;
   }
 }
+
+.cookie-consent {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
+    > div {
+        padding: .5rem 1.25rem;
+        color: #856404;
+        background-color: #fff3cd;
+        border: 1px solid #ffeeba;
+    }
+}

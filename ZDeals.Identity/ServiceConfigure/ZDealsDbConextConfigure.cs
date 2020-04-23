@@ -10,7 +10,7 @@ namespace ZDeals.Identity.ServiceConfigure
         {
             services.AddDbContext<Data.ZIdentityDbContext>(options =>
             {
-                options.UseMySql(configuration.GetConnectionString("ZDealsLocal"));
+                options.UseMySql(configuration.GetConnectionString("ZDealsIdentity"));
             });
         }
     }

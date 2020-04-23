@@ -14,7 +14,7 @@ namespace ZDeals.Web.Pages
 
         public void OnGet()
         {
-
+            var user = HttpContext.User;
         }
     }
 }

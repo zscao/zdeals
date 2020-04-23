@@ -9,10 +9,11 @@ using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service;
 using ZDeals.Api.Service.Mapping;
 using ZDeals.Common;
+using ZDeals.Common.Constants;
 
 namespace ZDeals.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = ApiRoles.Admin)]
     [ApiController]
     [Route(ApiRoutes.Categories.Base)]
     public class CategoriesController : ControllerBase
