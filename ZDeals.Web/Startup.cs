@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Globalization;
 using ZDeals.Identity;
 using ZDeals.Identity.Data;
@@ -46,7 +47,15 @@ namespace ZDeals.Web
             services.AddScoped<ICategoryService, CategoryService>();
 
             var pictureStorageOptions = new PictureStorageOptions();
-            Configuration.GetSection("PictureStorageOptions").Bind(pictureStorageOptions);
+            var url = Environment.GetEnvironmentVariable("PICTURE_STORAGE_URL");
+            if (!string.IsNullOrEmpty(url))
+            {
+                pictureStorageOptions.GetPictureUrl = url;
+            }
+            else
+            {
+                Configuration.GetSection("PictureStorageOptions").Bind(pictureStorageOptions);
+            }
             services.AddSingleton(pictureStorageOptions);
 
             services.Configure<CookiePolicyOptions>(options =>
