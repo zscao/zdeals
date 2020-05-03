@@ -14,8 +14,12 @@ namespace ZDeals.Web.Service.Models
         public decimal DealPrice { get; set; }
         public string Discount { get; set; }
 
-        public DateTime PublishedDate { get; set; }
+        public DateTime CreatedTime { get; set; }
+
         public DateTime? ExpiryDate { get; set; }
+        public DateTime? VerifiedTime { get; set; }
+
+        public string VerifiedBy { get; set; }
 
         public Store Store { get; set; }
 
@@ -39,11 +43,11 @@ namespace ZDeals.Web.Service.Models
             }
         }
 
-        public string PublishedDateString
+        public string CreatedTimeString
         {
             get
             {
-                var span = DateTime.Now - PublishedDate;
+                var span = DateTime.UtcNow - CreatedTime;
                 if (span.TotalHours < 24)
                     return span.TotalHours.ToString("0 hours ago");
                 else

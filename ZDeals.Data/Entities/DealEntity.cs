@@ -28,9 +28,6 @@ namespace ZDeals.Data.Entities
         
         [MaxLength(20)]
         public string Discount { get; set; }
-
-        [Required]
-        public DateTime PublishedDate { get; set; }
         
         public DateTime? ExpiryDate { get; set; }
 
@@ -56,5 +53,10 @@ namespace ZDeals.Data.Entities
         public bool Deleted { get; set; }
 
         public DateTime? DeletedTime { get; set; }
+
+        public DateTime? VerifiedTime { get; set; }
+
+        [MaxLength(50)]
+        public string VerifiedBy { get; set; }
     }
 }

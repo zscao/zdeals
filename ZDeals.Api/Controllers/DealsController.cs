@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
 using ZDeals.Api.Contract.Requests;
+using ZDeals.Api.Helpers;
 using ZDeals.Api.Service;
 using ZDeals.Common;
 using ZDeals.Common.Constants;
@@ -19,7 +20,7 @@ namespace ZDeals.Api.Controllers
         private readonly IDealService _dealService;
 
         public DealsController(IDealService dealService)
-        {
+        {            
             _dealService = dealService;
         }
 
@@ -69,6 +70,13 @@ namespace ZDeals.Api.Controllers
         public async Task<ActionResult<Result>> Delete(int dealId)
         {
             return await _dealService.DeleteDealAsync(dealId);
+        }
+
+        [HttpPost("{dealId}/verify")]
+        public async Task<ActionResult<Result>> Verify(int dealId)
+        {
+            _dealService.RequestContext = this.GetRequestContext();
+            return await _dealService.VerifyDealAsync(dealId);
         }
 
         [HttpGet("{dealId}/store")]

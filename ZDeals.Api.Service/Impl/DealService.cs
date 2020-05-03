@@ -16,7 +16,7 @@ using ZDeals.Data.Entities;
 
 namespace ZDeals.Api.Service.Impl
 {
-    public class DealService : IDealService
+    public class DealService : ServiceWithContext, IDealService
     {
         private readonly ZDealsDbContext _dbContext;
         private readonly ICategoryService _categoryService;
@@ -87,7 +87,6 @@ namespace ZDeals.Api.Service.Impl
                 FullPrice = request.FullPrice,
                 DealPrice = request.DealPrice,
                 Discount = request.Discount,
-                PublishedDate = request.PublishedDate,
                 ExpiryDate = request.ExpiryDate,
                 Source = request.Source,
                 Store = store,
@@ -124,9 +123,11 @@ namespace ZDeals.Api.Service.Impl
             deal.Discount = request.Discount;
             deal.FullPrice = request.FullPrice;
             deal.DealPrice = request.DealPrice;
-
-            deal.PublishedDate = request.PublishedDate;
             deal.ExpiryDate = request.ExpiryDate;
+
+            // if the deal is change, then needs to be verify again
+            deal.VerifiedBy = null;
+            deal.VerifiedTime = null;
 
             var saved = await _dbContext.SaveChangesAsync();
             return new Result<Deal>(deal.ToDealModel());
@@ -141,6 +142,20 @@ namespace ZDeals.Api.Service.Impl
 
             deal.Deleted = true;
             deal.DeletedTime = DateTime.UtcNow;
+
+            var saved = await _dbContext.SaveChangesAsync();
+
+            return new Result<Deal>(deal.ToDealModel());
+        }
+
+        public async Task<Result<Deal>> VerifyDealAsync(int dealId)
+        {
+            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
+            if(deal == null)
+                return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
+
+            deal.VerifiedTime = DateTime.UtcNow;
+            deal.VerifiedBy = this.RequestContext?.Username;
 
             var saved = await _dbContext.SaveChangesAsync();
 

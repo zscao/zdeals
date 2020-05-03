@@ -13,8 +13,10 @@ namespace ZDeals.Api.Contract.Models
         public decimal DealPrice { get; set; }
         public string Discount { get; set; }
 
-        public DateTime PublishedDate { get; set; }
         public DateTime? ExpiryDate { get; set; }
+        public DateTime? VerifiedTime { get; set; }
+
+        public string VerifiedBy { get; set; }
 
         public Store Store { get; set; }
 
