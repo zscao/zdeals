@@ -22,18 +22,20 @@ namespace ZDeals.Api.Service.Impl
             _dbContext = dbContext;
         }
 
-        public async Task<Result<PagedStores>> SearchDealsAsync()
+        public async Task<Result<PagedStores>> SearchStoresAsync()
         {
             var total = await _dbContext.Stores.CountAsync();
             var stores = await _dbContext.Stores.AsNoTracking().ToListAsync();
 
             var paged = new PagedStores
             {
-                Data = stores.Select(x => x.ToStoreModel()),
+                Data = stores.Select(x => x.ToStoreModel()).ToList(),
                 TotalCount = total,
                 PageSize = total,
                 PageNumber = 1
             };
+
+            paged.Data = paged.Data.OrderBy(x => x.Name);
 
             return new Result<PagedStores> { Data = paged };
         }

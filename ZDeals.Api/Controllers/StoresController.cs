@@ -27,7 +27,7 @@ namespace ZDeals.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<Result>> Search()
         {
-            return await _storeService.SearchDealsAsync();
+            return await _storeService.SearchStoresAsync();
         }
 
 

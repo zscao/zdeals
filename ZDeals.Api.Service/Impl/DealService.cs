@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Query;
+
 using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service.Mapping;
@@ -48,6 +49,12 @@ namespace ZDeals.Api.Service.Impl
 
             if (!string.IsNullOrEmpty(request.Keywords))
                 query = query.Where(x => EF.Functions.Like(x.Title, $"%{request.Keywords.Trim()}%"));
+
+            if (!string.IsNullOrEmpty(request.Store))
+            {
+                if (int.TryParse(request.Store, out int storeId))
+                    query = query.Where(x => x.StoreId == storeId);
+            }
 
             var total = await query.CountAsync();
 
