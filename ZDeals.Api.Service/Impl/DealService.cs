@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.EntityFrameworkCore.Query;
 using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service.Mapping;
@@ -35,13 +35,19 @@ namespace ZDeals.Api.Service.Impl
             var query = _dbContext.Deals.AsQueryable();
             
             if(request.Deleted.HasValue)
-                query = query.Where(x => request.Deleted.Value);
+                query = query.Where(x => x.Deleted == request.Deleted.Value);
+
+            if (request.Verified.HasValue)
+                query = query.Where(x => x.VerifiedTime.HasValue == request.Verified.Value);
 
             if (!string.IsNullOrEmpty(request.Category) && request.Category != DefaultValues.DealsCategoryRoot)
             {
                 var children = await FindCategoryChildIds(request.Category);
                 if (children.Count() > 0) query = query.Where(x => x.DealCategory.Any(c => children.Contains(c.CategoryId)));
             }
+
+            if (!string.IsNullOrEmpty(request.Keywords))
+                query = query.Where(x => EF.Functions.Like(x.Title, $"%{request.Keywords.Trim()}%"));
 
             var total = await query.CountAsync();
 
