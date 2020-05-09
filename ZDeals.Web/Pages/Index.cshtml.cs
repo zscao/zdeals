@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace ZDeals.Web.Pages
 {
@@ -12,9 +14,9 @@ namespace ZDeals.Web.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            var user = HttpContext.User;
+            return RedirectToPage("Deals/Index");
         }
     }
 }

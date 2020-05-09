@@ -47,7 +47,11 @@ namespace ZDeals.Web.Service.Impl
                 categoryIds = cateResult.Data.ToCategoryList(includeRootNode: true).Select(x => x.Id).ToList();
             }
 
-            IQueryable<DealEntity> query = _dbContext.Deals.Include(x => x.Store).Where(x => !x.Deleted);
+            IQueryable<DealEntity> query = 
+                _dbContext.Deals
+                    .Include(x => x.Store)
+                    .Where(x => !x.Deleted && x.VerifiedTime < System.DateTime.UtcNow && (x.ExpiryDate == null || x.ExpiryDate > System.DateTime.UtcNow));
+
             if (categoryIds?.Count > 0) query = query.Where(x => x.DealCategory.Any(c => categoryIds.Contains(c.CategoryId)));
             if (!string.IsNullOrWhiteSpace(keywords)) query = query.Where(x => EF.Functions.Like(x.Title, $"%{keywords}%"));
 

@@ -18,7 +18,7 @@
 
 <body>
     <header>
-        <div class="main_header">
+        <div class="main_header header_padding">
             <div class="container">
 
                 <!-- header middle start -->
@@ -33,12 +33,12 @@
                         <!-- logo end -->
                         <!-- search bar start -->
                         <div class="column2 col-lg-6 col-md-12">
-                            @*@await Component.InvokeAsync("SearchBar")*@
-                            @await Component.InvokeAsync("MainMenu")
+                            @await Component.InvokeAsync("SearchBar")
+                            @*@await Component.InvokeAsync("MainMenu")*@
                         </div>
                         <!-- search bar end -->
                         <!-- account section start -->
-                        <div class="column3 col-lg-3">
+                        <div class="column3 col-lg-3 col-md-6">
                             <div class="header_configure_area header_configure_four">
                                 <!-- favourite items start -->
                                 <div class="header_wishlist">
@@ -56,18 +56,17 @@
                 </div>
                 <!-- header middle end -->
 
-                <div class="header_bottom">
+                @*<div class="header_bottom">
                     <div class="row align-items-center">
                         <div class="column1 col-lg-3 col-md-6"></div>
 
                         <div class="column2 col-lg-6">
-                            @*@await Component.InvokeAsync("MainMenu")*@
                             @await Component.InvokeAsync("SearchBar")
                         </div>
 
                         <div class="column3 col-lg-3 col-md-6"></div>
                     </div>
-                </div>
+                </div>*@
 
             </div>
         </div>

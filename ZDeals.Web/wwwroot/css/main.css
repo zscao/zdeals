@@ -21,7 +21,7 @@ html, body {
   height: 100%; }
 
 body {
-  line-height: 24px;
+  /* line-height: 24px; */
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -413,7 +413,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     padding-bottom: 25px; } }
 
 .main_header.header_padding {
-  padding-bottom: 0; }
+  padding-bottom: 40px; }
 
 .header_middle {
   padding-top: 10px; }
@@ -691,7 +691,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
       justify-content: center; } }
 
 .header_wishlist {
-  margin-right: 40px; }
+  /*margin-right: 40px;*/ }
   @media only screen and (min-width: 992px) and (max-width: 1199px) {
     .header_wishlist {
       margin-right: 30px; } }

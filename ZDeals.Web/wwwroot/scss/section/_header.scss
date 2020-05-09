@@ -8,7 +8,7 @@
     padding-bottom: 25px;
   }
   &.header_padding {
-    padding-bottom: 0;
+    padding-bottom: 40px;
   }
 }
 
@@ -313,7 +313,7 @@
 }
 
 .header_wishlist {
-  margin-right: 40px;
+  /*margin-right: 40px;*/
   @media #{$desktop-device} {
     margin-right: 30px;
   }
