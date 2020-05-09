@@ -8,10 +8,15 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ZDeals.Web.Pages
+namespace ZDeals.Web.Pages.Cookie
 {
-    public class CookieModel : PageModel
+    public class IndexModel : PageModel
     {
+        public void OnGet()
+        {
+
+        }
+
         public async Task<IActionResult> OnPostConsentAsync()
         {
             var consentFeature = HttpContext.Features.Get<ITrackingConsentFeature>();
@@ -35,5 +40,19 @@ namespace ZDeals.Web.Pages
             var result = new { Cookie = consentFeature.CreateConsentCookie() };
             return new OkObjectResult(result);
         }
+
+        public PartialViewResult OnGetConsent()
+        {
+            var consentFeature = HttpContext.Features.Get<ITrackingConsentFeature>();
+
+            var model = new CooikeConsent { ShowBanner = !consentFeature?.CanTrack ?? false };
+            return Partial("_Consent", model);
+        }
+    }
+
+
+    public class CooikeConsent
+    {
+        public bool ShowBanner { get; set; }
     }
 }

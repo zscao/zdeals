@@ -175,6 +175,22 @@ namespace ZDeals.Api.Service.Impl
             return new Result<Deal>(deal.ToDealModel());
         }
 
+        public async Task<Result<Deal>> RecycleDealAsync(int dealId)
+        {
+            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
+            if (deal == null)
+                return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
+
+            deal.DeletedTime = DateTime.UtcNow;
+            deal.Deleted = false;
+            deal.VerifiedBy = null;
+            deal.VerifiedTime = null;
+
+            var saved = await _dbContext.SaveChangesAsync();
+
+            return new Result<Deal>(deal.ToDealModel());
+        }
+
         public async Task<Result<DealPictureList>> GetPicturesAsync(int dealId)
         {
             var deal = await _dbContext.Deals.Include(x => x.Pictures).SingleOrDefaultAsync(x => x.Id == dealId);

@@ -29,5 +29,7 @@ namespace ZDeals.Api.Service
         Task<Result<Deal>> DeleteDealAsync(int dealId);
 
         Task<Result<Deal>> VerifyDealAsync(int dealId);
+
+        Task<Result<Deal>> RecycleDealAsync(int dealId);
     }
 }

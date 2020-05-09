@@ -87,7 +87,8 @@
 
     <!-- footer end -->
 
-    @await Component.InvokeAsync("CookieConsent")
+    @*@await Component.InvokeAsync("CookieConsent")*@
+    <div id="cookie-consent"></div>
 
 
     <script src="~/js/jquery.min.js"></script>
@@ -96,6 +97,11 @@
     <script src="~/js/niceselect.min.js"></script>
 
     <script src="~/js/main.js"></script>
+
+    <script>
+        // load the cookie consent notification
+        $("#cookie-consent").load("/Cookie/Consent");
+    </script>
 
     @RenderSection("Scripts", required: false)
 

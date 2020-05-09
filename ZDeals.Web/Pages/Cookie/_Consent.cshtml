@@ -1,0 +1,39 @@
+﻿@model ZDeals.Web.Pages.Cookie.CooikeConsent
+
+@if (Model.ShowBanner)
+{
+    <div id="cookieConsent" class="cookie-consent">
+        <div class="row">
+            <div class="col-10">
+                Use this space to summarize your privacy and cookie use policy.
+            </div>
+            <div class="col-2 text-right">
+                <form id="cookie-consent-form" action="/Cookie/Consent" method="POST">
+                    @Html.AntiForgeryToken()
+                    <button type="submit">Accept</button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+    <script>
+        (function () {
+
+            $("#cookie-consent-form").submit(function(e) {
+                e.preventDefault();
+
+                const form = $(this);
+                const url = form.attr("action");
+                const method = form.attr("method");
+                if (!url) return;
+
+                $.ajax({ url, method, data: form.serialize() }).done(data => {
+                    if (data && data.cookie) {
+                        document.cookie = data.cookie;
+                        $('#cookieConsent').hide();
+                    }
+                })
+            })
+        })();
+    </script>
+}

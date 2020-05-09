@@ -79,6 +79,13 @@ namespace ZDeals.Api.Controllers
             return await _dealService.VerifyDealAsync(dealId);
         }
 
+        [HttpPost("{dealId}/recycle")]
+        public async Task<ActionResult<Result>> Recycle(int dealId)
+        {
+            _dealService.RequestContext = this.GetRequestContext();
+            return await _dealService.RecycleDealAsync(dealId);
+        }
+
         [HttpGet("{dealId}/store")]
         public async Task<ActionResult<Result>> GetStore(int dealId)
         {

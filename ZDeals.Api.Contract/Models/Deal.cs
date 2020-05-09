@@ -18,6 +18,9 @@ namespace ZDeals.Api.Contract.Models
 
         public string VerifiedBy { get; set; }
 
+        public bool deleted { get; set; }
+        public DateTime? DeletedTime { get; set; }
+
         public Store Store { get; set; }
 
         public string Source { get; set; }

@@ -66,6 +66,8 @@ namespace ZDeals.Web
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
+            services.AddAntiforgery(options => options.HeaderName = "CSRF-TOKEN");
+
             services.AddRazorPages();
         }
 

@@ -21,6 +21,8 @@ namespace ZDeals.Api.Service.Mapping
                 VerifiedTime = entity.VerifiedTime,
                 VerifiedBy = entity.VerifiedBy,
                 ExpiryDate = entity.ExpiryDate,
+                deleted = entity.Deleted,
+                DeletedTime = entity.DeletedTime,
                 Store = entity.Store?.ToStoreModel(),
                 Source = entity.Source,
             };
