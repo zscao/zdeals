@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using System;
 using ZDeals.Common.AspNetCore.Options;
 
 namespace ZDeals.Identity.ServiceConfigure
@@ -12,7 +12,9 @@ namespace ZDeals.Identity.ServiceConfigure
         {
             var corsOptions = new CorsOptions();
             configuration.GetSection("CorsOptions").Bind(corsOptions);
-            var origins = corsOptions.AllowedOrigins?.Split(new char[] { ',', ';' }, System.StringSplitOptions.RemoveEmptyEntries) ?? new[] { "*" };
+
+            var allowed = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS") ?? corsOptions.AllowedOrigins;
+            var origins = allowed?.Split(new char[] { ',', ';' }, System.StringSplitOptions.RemoveEmptyEntries) ?? new[] { "*" };
 
             services.AddCors(options =>
             {
