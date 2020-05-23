@@ -72,7 +72,9 @@ namespace ZDeals.Web.Pages.Deals
             {
                 DealResult = new DealsSearchResult()
                 {
-                    Deals = new List<Deal>()
+                    Deals = new List<Deal>(),
+                    CategoryCode = categoryCode,
+                    Keywords = keywords
                 };
             }
             else

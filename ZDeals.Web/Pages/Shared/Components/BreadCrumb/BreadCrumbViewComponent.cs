@@ -24,13 +24,14 @@ namespace ZDeals.Web.Pages.Shared.Components.BreadCrumb
 
             var request = HttpContext.Request;
             var url = request.Path.Value.ToLower();
-            if (url.Equals("/deals"))
+            if (url.Equals("/deals") || url.StartsWith("/deals/"))
             {
                 string code = null;
                 if (request.Query.TryGetValue("c", out StringValues values))
                 {
                     code = values.ToString();
                 }
+                if (string.IsNullOrEmpty(code)) code = Common.Constants.DefaultValues.DealsCategoryRoot;
 
                 breadCrumb = await GetBreadCrumb(code);
             }

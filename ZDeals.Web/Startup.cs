@@ -11,6 +11,8 @@ using System.Globalization;
 using ZDeals.Identity;
 using ZDeals.Identity.Data;
 using ZDeals.Identity.Service.Impl;
+using ZDeals.Net;
+using ZDeals.Net.Impl;
 using ZDeals.Web.Options;
 using ZDeals.Web.Service;
 using ZDeals.Web.Service.Impl;
@@ -45,6 +47,7 @@ namespace ZDeals.Web
 
             services.AddScoped<IDealService, DealService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IPageService, PageService>();
 
             var pictureStorageOptions = new PictureStorageOptions();
             var url = Environment.GetEnvironmentVariable("PICTURE_STORAGE_URL");

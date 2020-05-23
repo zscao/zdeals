@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,6 +21,21 @@ namespace ZDeals.Web.Service.Impl
         {
             _dbContext = dbContext;
             _categoryService = categoryService;
+        }
+
+        public async Task<Result<Deal>> MarkDealExpired(int dealId)
+        {
+            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
+            if (deal == null)
+            {
+                var error = new Error(ErrorType.NotFound) { Code = Common.ErrorCodes.Sales.DealNotFound, Message = "Deal does not exist." };
+                return new Result<Deal>(error);
+            }
+
+            deal.ExpiryDate = DateTime.UtcNow;
+            await _dbContext.SaveChangesAsync();
+
+            return new Result<Deal>(deal.ToDealModel());
         }
 
         public async Task<Result<Deal>> GetDealById(int dealId)
@@ -61,6 +77,8 @@ namespace ZDeals.Web.Service.Impl
             var result = new DealsSearchResult
             {
                 Deals = deals.Select(x => x.ToDealModel()).ToList(),
+                CategoryCode = categoryCode,
+                Keywords = keywords,
                 More = deals.Count >= pageSize
             };
 

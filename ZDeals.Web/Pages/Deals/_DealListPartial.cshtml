@@ -3,6 +3,48 @@
 @foreach (var deal in Model.Deals)
 {
     <div class="col-12 ">
-        @await Html.PartialAsync("_DealListItem", deal)
+        <article>
+            <figure class="row">
+                <div class="row deal_list">
+                    <div class="col-lg-3 col-xl-2">
+                        <div class="deal_img_wrapper">
+                            <img src="@deal.Picture" alt="deal">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xl-8">
+                        <div class="deal_detail">
+                            <div class="deal_detail_meta">
+                                <span class="deal_list_date">
+                                    <i class="fa fa-rss"></i>
+                                    @deal.CreatedTimeString
+                                </span>
+                                @if (deal.Store != null)
+                                {
+                                    <span class="deal_store">
+                                        from <a href="@deal.Store.Website" target="_blank">@deal.Store.Name</a>
+                                    </span>
+                                }
+                            </div>
+                            <h3>@deal.Title</h3>
+                            <div class="price_box">
+                                <span class="price_wrapper">
+                                    <span>@deal.DealPriceString</span>
+                                    <del>@deal.FullPriceString</del>
+                                </span>
+                                <span class="discount_rate">@deal.Discount</span>
+                                <span class="deal_highlight">@deal.Highlight</span>
+                            </div>
+                        </div>
+                        <div class="deal_desc">@deal.Description</div>
+                    </div>
+                    <div class="col-lg-3 col-xl-2 action_box">
+                        <div class="btn_wrapper">
+                            <a class="btn btn_buynow" href="~/deals/buynow?id=@deal.Id&c=@Model.CategoryCode" target="_blank">Buy it now</a>
+                        </div>
+                    </div>
+                </div>
+            </figure>
+        </article>
+
     </div>
 }

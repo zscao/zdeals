@@ -10,5 +10,7 @@ namespace ZDeals.Web.Service
         Task<Result<DealsSearchResult>> SearchDeals(string categoryCode, string keywords, int pageSize, int pageNumber);
 
         Task<Result<Deal>> GetDealById(int dealId);
+
+        Task<Result<Deal>> MarkDealExpired(int dealId);
     }
 }
