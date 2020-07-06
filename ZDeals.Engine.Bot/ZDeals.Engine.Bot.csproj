@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Abot" Version="2.0.56" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZDeals.Engine.Core\ZDeals.Engine.Core.csproj" />
+    <ProjectReference Include="..\ZDeals.Engine.Crawlers\ZDeals.Engine.Crawlers.csproj" />
+    <ProjectReference Include="..\ZDeals.Engine.Message\ZDeals.Engine.Message.csproj" />
+  </ItemGroup>
+
+</Project>
