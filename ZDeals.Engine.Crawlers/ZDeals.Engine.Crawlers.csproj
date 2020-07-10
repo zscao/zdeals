@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ZDeals.Engine.Core\ZDeals.Engine.Core.csproj" />
+    <ProjectReference Include="..\ZDeals.Engine.Message\ZDeals.Engine.Message.csproj" />
   </ItemGroup>
 
 </Project>

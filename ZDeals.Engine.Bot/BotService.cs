@@ -40,16 +40,22 @@ namespace ZDeals.Engine.Bot
                 crawler.PageParsed += Crawler_PageParsed;
         }
 
-        private void Crawler_PageParsed(object sender, PageParsedEventArgs e)
+        private async void Crawler_PageParsed(object sender, PageParsedEventArgs e)
         {
             _logger.LogInformation($"Page parsed: {e.PageUri}");
-            _publishEndpoint.Publish<PageParsed>(new PageParsed
+            try
             {
-                Url = e.PageUri.ToString(),
-                ParseTime = DateTime.Now
-            })
-            .GetAwaiter()
-            .GetResult();
+                await _publishEndpoint.Publish<PageParsed>(new PageParsed
+                {
+                    Uri = e.PageUri,
+                    ParsedTime = DateTime.Now,
+                    Product = e.Product
+                });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError("Failed to publish PageParsed event.", ex);
+            }
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -73,16 +79,16 @@ namespace ZDeals.Engine.Bot
                     await _crawler.StartCrawling(_option.StartUrl, _cts);
                     _logger.LogInformation($"Crawler {type.FullName} finished.");
                 }
-                catch(TaskCanceledException ex)
-                {
-                    _logger.LogWarning("Crawling task is cancelled.", ex);
-                    return;
-                }
-                catch(OperationCanceledException ex)
-                {
-                    _logger.LogWarning("Crawling operation is cancelled.", ex);
-                    return;
-                }
+                //catch(TaskCanceledException ex)
+                //{
+                //    _logger.LogWarning("Crawling task is cancelled.", ex);
+                //    return;
+                //}
+                //catch(OperationCanceledException ex)
+                //{
+                //    _logger.LogWarning("Crawling operation is cancelled.", ex);
+                //    return;
+                //}
                 catch (Exception ex)
                 {
                     _logger.LogError("Error when crawling. ", ex);

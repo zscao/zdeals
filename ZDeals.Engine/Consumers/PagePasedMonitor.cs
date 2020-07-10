@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.Logging;
 
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using ZDeals.Engine.Message.Events;
@@ -22,7 +23,8 @@ namespace ZDeals.Engine.Consumers
         {
             var message = context.Message;
 
-            _logger.LogInformation($"Received PageParsed event: {message.Url} {message.ParseTime}");
+            _logger.LogInformation($"Received PageParsed event: {message.Uri} {message.ParsedTime}");
+            _logger.LogInformation(JsonSerializer.Serialize(message.Product));
 
             return Task.CompletedTask;
         }

@@ -2,9 +2,9 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-using ZDeals.Engine.Parser.Consumers;
+using ZDeals.Engine.Repo.Consumers;
 
-namespace ZDeals.Engine.Parser.Startup
+namespace ZDeals.Engine.Repo.Startup
 {
     static class MassTransitConfigure
     {
@@ -12,19 +12,20 @@ namespace ZDeals.Engine.Parser.Startup
         {
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<TestPageParser>();
+                x.AddConsumer<ProductRepository>();
 
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
                     cfg.UseHealthCheck(context);
                     cfg.Host("ubuntuvm");
 
-                    cfg.ReceiveEndpoint("page_parse_queue", e =>
+                    cfg.ReceiveEndpoint("product_repository_queue", e =>
                     {
-                        e.ConfigureConsumer<TestPageParser>(context);
+                        e.ConfigureConsumer<ProductRepository>(context);
                     });
                 }));
             });
+
             services.AddMassTransitHostedService();
 
             return services;

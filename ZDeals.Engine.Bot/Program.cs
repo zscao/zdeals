@@ -39,11 +39,12 @@ namespace ZDeals.Engine.Bot
             Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
-                services.AddTransient<ICrawler, CentreComCrawler>();
+                services.AddTransient<ICrawler, ClearanceCrawler>();
                 services.AddSingleton<CrawlerOption<ICrawler>>(service => 
                     new CrawlerOption<ICrawler> 
                     { 
-                        StartUrl = "https://www.centrecom.com.au/newproducts", 
+                        StartUrl = "https://www.centrecom.com.au/clearance", 
+                        //StartUrl = "https://www.centrecom.com.au/thermaltake-tt-premium-pure-20-argb-edition-led-fan",
                         Timeout = new TimeSpan(1, 0, 0) 
                     });
                 //services.AddTransient<ICrawler, TestCrawler>();
