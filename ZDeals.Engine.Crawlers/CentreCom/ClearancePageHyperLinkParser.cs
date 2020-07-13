@@ -7,7 +7,7 @@ using ZDeals.Engine.Core.Helpers;
 
 namespace ZDeals.Engine.Crawlers.CentreCom
 {
-    class ClearanceHyperLinkParser : IHtmlParser
+    class ClearancePageHyperLinkParser : IHtmlParser
     {
         public IEnumerable<HyperLink> GetLinks(CrawledPage crawledPage)
         {

@@ -1,13 +1,9 @@
-﻿
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 
 using System;
 using System.Threading.Tasks;
 
 using ZDeals.Engine.Bot.Startup;
-using ZDeals.Engine.Core;
-using ZDeals.Engine.Crawlers.CentreCom;
 
 namespace ZDeals.Engine.Bot
 {
@@ -19,9 +15,9 @@ namespace ZDeals.Engine.Bot
 
             try
             {
-                await CreateHostBuilder(args).RunConsoleAsync();
+                await CreateHostBuilder(args).Build().RunAsync();
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 Console.WriteLine("App is cancelled by the user.");
             }
@@ -34,21 +30,11 @@ namespace ZDeals.Engine.Bot
         }
 
 
-
         static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
-                services.AddTransient<ICrawler, ClearanceCrawler>();
-                services.AddSingleton<CrawlerOption<ICrawler>>(service => 
-                    new CrawlerOption<ICrawler> 
-                    { 
-                        StartUrl = "https://www.centrecom.com.au/clearance", 
-                        //StartUrl = "https://www.centrecom.com.au/thermaltake-tt-premium-pure-20-argb-edition-led-fan",
-                        Timeout = new TimeSpan(1, 0, 0) 
-                    });
-                //services.AddTransient<ICrawler, TestCrawler>();
-                services.AddHostedService<BotService<ICrawler>>();
+                services.AddCrawlers(hostContext.Configuration);
 
                 services.SetupMassTransit();
             });

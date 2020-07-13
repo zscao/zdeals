@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ZDeals.Engine.Bot.Startup
 {
-    static class MassTransitConfiguration
+    static class MassTransitConfigure
     {
-        public static IServiceCollection SetupMassTransit(this IServiceCollection services)
+        internal static IServiceCollection SetupMassTransit(this IServiceCollection services)
         {
             services.AddMassTransit(x =>
             {

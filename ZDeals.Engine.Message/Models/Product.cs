@@ -13,7 +13,7 @@
         /// <summary>
         /// the URL of images
         /// </summary>
-        public string[] images { get; set; }
+        public string[] Images { get; set; }
 
 
         public string Manufacturer { get; set; }

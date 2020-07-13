@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abot" Version="2.0.56" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.0.0" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.5" />
@@ -17,6 +16,12 @@
     <ProjectReference Include="..\ZDeals.Engine.Core\ZDeals.Engine.Core.csproj" />
     <ProjectReference Include="..\ZDeals.Engine.Crawlers\ZDeals.Engine.Crawlers.csproj" />
     <ProjectReference Include="..\ZDeals.Engine.Message\ZDeals.Engine.Message.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

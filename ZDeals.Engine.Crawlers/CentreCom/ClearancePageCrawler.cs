@@ -11,36 +11,34 @@ using ZDeals.Engine.Core;
 
 namespace ZDeals.Engine.Crawlers.CentreCom
 {
-    public class ClearanceCrawler: ICrawler
+    public class ClearancePageCrawler: ICrawler
     {
-        private readonly WebCrawler _crawler;
-        private readonly ILogger<ClearanceCrawler> _logger;
+        private readonly ILogger<ClearancePageCrawler> _logger;
 
-        private bool _foundProduct = false;
-
-        public ClearanceCrawler(ILogger<ClearanceCrawler> logger)
+        public ClearancePageCrawler(ILogger<ClearancePageCrawler> logger)
         {
             _logger = logger;
 
-            var config = new CrawlConfiguration
-            {
-                MaxPagesToCrawl = 10_000,
-                MinCrawlDelayPerDomainMilliSeconds = 3000
-            };
-
-            var hyperLinkParser = new ClearanceHyperLinkParser();
-            _crawler = new PoliteWebCrawler(config, null, null, null, null, hyperLinkParser, null, null, null);
-            _crawler.PageCrawlCompleted += Crawler_PageCrawlCompleted;
-            _crawler.ShouldCrawlPageDecisionMaker = ShouldCrawlPage;
         }
 
         public event EventHandler<PageParsedEventArgs> PageParsed;
 
         public async Task StartCrawling(string startUrl, CancellationTokenSource cancellationTokenSource)
         {
+            var config = new CrawlConfiguration
+            {
+                MaxPagesToCrawl = 2000,
+                MinCrawlDelayPerDomainMilliSeconds = 3000
+            };
+            
             try
             {
-                var result = await _crawler.CrawlAsync(new Uri(startUrl), cancellationTokenSource);
+                var hyperLinkParser = new ClearancePageHyperLinkParser();
+                var crawler = new PoliteWebCrawler(config, null, null, null, null, hyperLinkParser, null, null, null);
+                crawler.PageCrawlCompleted += Crawler_PageCrawlCompleted;
+
+                var result = await crawler.CrawlAsync(new Uri(startUrl), cancellationTokenSource);
+
                 _logger.LogInformation($"Completed CentreCom. Time elapsed: {result.Elapsed}s.");
             }
             catch(OperationCanceledException ex)
@@ -49,7 +47,7 @@ namespace ZDeals.Engine.Crawlers.CentreCom
             }
             catch(Exception ex)
             {
-                _logger.LogError("Error when crawling.", ex);
+                _logger.LogError($"Error when crawling {startUrl}.", ex);
             }
         }
 
@@ -57,23 +55,16 @@ namespace ZDeals.Engine.Crawlers.CentreCom
         {
             _logger.LogInformation("Status: {status}  Url: {url}", e.CrawledPage.HttpResponseMessage.StatusCode, e.CrawledPage.Uri);
 
-            var pageParser = new ProductParser();
-            var product = pageParser.Parse(e.CrawledPage.AngleSharpHtmlDocument, e.CrawledPage.Uri);
+            var productParser = new ProductParser();
+            var product = productParser.Parse(e.CrawledPage.AngleSharpHtmlDocument, e.CrawledPage.Uri);
             if (product != null)
             {
-                _foundProduct = true;
-
                 PageParsed?.Invoke(this, new PageParsedEventArgs
                 {
                     PageUri = e.CrawledPage.Uri,
                     Product = product
                 });
             }
-        }
-
-        private CrawlDecision ShouldCrawlPage(PageToCrawl page, CrawlContext context)
-        {
-            return new CrawlDecision { Allow = !_foundProduct, Reason = "Found one", ShouldStopCrawl = _foundProduct,  };
         }
     }
 

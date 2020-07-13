@@ -31,16 +31,11 @@ namespace ZDeals.Engine.Crawlers.CentreCom
             var priceString = offers.GetContentByItemProp("price");
             if (string.IsNullOrWhiteSpace(priceString)) return null;
 
-            var style = NumberStyles.Number | NumberStyles.AllowCurrencySymbol;
-            var provider = new CultureInfo("en-AU");
-            if (decimal.TryParse(priceString, style, provider, out decimal price) == false) return null;
+            var priceResult = PriceHelper.ParsePrice(priceString);
+            if(priceResult.Success == false) return null;
 
             var fullPriceString = document.QuerySelector(".prod_price_rrp > span")?.InnerHtml;
-
-            decimal fullPrice = 0;
-            if (!string.IsNullOrWhiteSpace(fullPriceString))
-                decimal.TryParse(fullPriceString, style, provider, out fullPrice);
-
+            var fullPriceResult = PriceHelper.ParsePrice(fullPriceString);
 
             // get description and highlight
             var desc = metaData.GetContentByItemProp("description") ?? "";
@@ -76,11 +71,11 @@ namespace ZDeals.Engine.Crawlers.CentreCom
             {
                 Title = title,
                 PriceCurrency = priceCurrency,
-                SalePrice = price,
-                FullPrice = fullPrice,
+                SalePrice = priceResult.Value,
+                FullPrice = fullPriceResult.Value,
                 Description = description.ToArray(),
                 HighLight = highlights,
-                images = images.ToArray(),
+                Images = images.ToArray(),
                 Category = category,
                 Manufacturer = metaData.GetContentByItemProp("manufacturer"),
                 Brand = metaData.GetContentByItemProp("brand"),

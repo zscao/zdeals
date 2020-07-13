@@ -36,8 +36,7 @@ namespace ZDeals.Engine.Bot
             _publishEndpoint = publishEndpoint;
             _logger = loggerFactory.CreateLogger<BotService<T>>();
 
-            if(crawler != null)
-                crawler.PageParsed += Crawler_PageParsed;
+            _crawler.PageParsed += Crawler_PageParsed;
         }
 
         private async void Crawler_PageParsed(object sender, PageParsedEventArgs e)
@@ -63,11 +62,6 @@ namespace ZDeals.Engine.Bot
             _cts = new CancellationTokenSource(_option.Timeout);
 
             var type = typeof(T);
-            if(_crawler == null)
-            {
-                _logger.LogError($"Cannot resolve service type {type.FullName}.");
-                return Task.CompletedTask;
-            }
 
             _runningTask = Task.Run(async () =>
             {
@@ -75,9 +69,14 @@ namespace ZDeals.Engine.Bot
 
                 try
                 {
-                    // do work
-                    await _crawler.StartCrawling(_option.StartUrl, _cts);
-                    _logger.LogInformation($"Crawler {type.FullName} finished.");
+                    var urls = _option.StartUrl.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var url in urls)
+                    {
+                        if (string.IsNullOrWhiteSpace(url)) continue;
+                        // do work
+                        await _crawler.StartCrawling(url, _cts);
+                        _logger.LogInformation($"Crawler {type.FullName} finished crawling {url}.");
+                    }
                 }
                 //catch(TaskCanceledException ex)
                 //{
@@ -108,7 +107,7 @@ namespace ZDeals.Engine.Bot
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            if (_runningTask == null) return Task.CompletedTask;
+            if (_runningTask == null || _cts == null) return Task.CompletedTask;
 
             _logger.LogInformation("Cancelling crawler ...");
             try
