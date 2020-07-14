@@ -34,6 +34,8 @@ namespace ZDeals.Engine.Bot
             Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
+                services.AddEngineDbContext(hostContext.Configuration);
+
                 services.AddCrawlers(hostContext.Configuration);
 
                 services.SetupMassTransit();

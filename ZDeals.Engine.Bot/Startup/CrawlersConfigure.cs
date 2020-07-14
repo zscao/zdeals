@@ -1,4 +1,8 @@
 ﻿
+using Abot2.Core;
+
+using GreenPipes.Internals.Extensions;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,6 +11,9 @@ using System.Linq;
 
 using ZDeals.Engine.Bot.Settings;
 using ZDeals.Engine.Core;
+using ZDeals.Engine.Schedulers;
+using ZDeals.Engine.Schedulers.Impl;
+using ZDeals.Engine.Schedulers.Repo;
 
 namespace ZDeals.Engine.Bot.Startup
 {
@@ -15,18 +22,41 @@ namespace ZDeals.Engine.Bot.Startup
 
         internal static IServiceCollection AddCrawlers(this IServiceCollection services, IConfiguration configuration)
         {
-            var setting = new CrawlersSetting();
-            configuration.GetSection("Crawlers").Bind(setting);
+            services.AddScheduler();
 
-            foreach (var crawler in setting.Items)
+            var setting = new BotSetting();
+            configuration.GetSection("Bot").Bind(setting);
+            services.AddCrawlers(setting);
+
+            return services;
+        }
+
+
+        static IServiceCollection AddScheduler(this IServiceCollection services)
+        {
+            services.AddTransient<IPagesToCrawlRepository, FifoPagesToCrawlRepository>();
+            services.AddTransient<ICrawledUrlRepository, InMemoryCrawledUrlRepository>();
+
+            services.AddTransient<IScheduledPageRepo, ScheduledPageRepo>();
+
+            services.AddTransient<ISiteScheduler, MySqlScheduler>();
+
+            return services;
+        }
+
+        static IServiceCollection AddCrawlers(this IServiceCollection services, BotSetting setting)
+        {
+            if (setting?.Crawlers == null) return services;
+
+            foreach (var crawler in setting.Crawlers)
             {
                 var crawlerType = Type.GetType(crawler.Type);
-                if (crawlerType == null || crawlerType.IsClass == false)
+                if (crawlerType == null)
                 {
                     Console.WriteLine($"Can't resolve crawler {crawler.Type}");
                     continue;
                 }
-                else if(crawlerType.IsSubclassOf(typeof(ICrawler)) == false)
+                else if (crawlerType.IsConcreteAndAssignableTo<ICrawler>() == false)
                 {
                     Console.WriteLine($"{crawlerType.FullName} is not a crawler.");
                     continue;
@@ -41,6 +71,8 @@ namespace ZDeals.Engine.Bot.Startup
                 var genericServiceType = typeof(BotService<>);
                 var serviceType = genericServiceType.MakeGenericType(crawlerType);
                 services.AddGenericHostedService(serviceType);
+
+                Console.WriteLine($"Registered crawler {crawlerType.FullName}");
             }
 
             return services;

@@ -1,24 +1,28 @@
-﻿using Abot2.Crawler;
+﻿using Abot2.Core;
+using Abot2.Crawler;
 using Abot2.Poco;
 
 using Microsoft.Extensions.Logging;
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 using ZDeals.Engine.Core;
+using ZDeals.Engine.Schedulers;
 
 namespace ZDeals.Engine.Crawlers.Scorptec
 {
     public class ProductFeedCrawler: ICrawler
     {
+        private readonly IScheduler _scheduler;
         private readonly ILogger<ProductFeedCrawler> _logger;
 
-        public ProductFeedCrawler(ILogger<ProductFeedCrawler> logger)
+        public ProductFeedCrawler(ISiteScheduler scheduler, ILogger<ProductFeedCrawler> logger)
         {
+            scheduler.SiteCode = "www.scorptec.com.au";
+
+            _scheduler = scheduler;
             _logger = logger;
 
         }
@@ -29,14 +33,14 @@ namespace ZDeals.Engine.Crawlers.Scorptec
         {
             var config = new CrawlConfiguration
             {
-                MaxPagesToCrawl = 5,
+                MaxPagesToCrawl = 2000,
                 MinCrawlDelayPerDomainMilliSeconds = 3000
             };
 
             try
             {
                 var hyperLinkParser = new ProductFeedHyperLinkParser(_logger);
-                var crawler = new PoliteWebCrawler(config, null, null, null, null, hyperLinkParser, null, null, null);
+                var crawler = new PoliteWebCrawler(config, null, null, _scheduler, null, hyperLinkParser, null, null, null);
 
                 crawler.PageCrawlCompleted += Crawler_PageCrawlCompleted;
 

@@ -1,4 +1,5 @@
-﻿using Abot2.Crawler;
+﻿using Abot2.Core;
+using Abot2.Crawler;
 using Abot2.Poco;
 
 using Microsoft.Extensions.Logging;
@@ -8,17 +9,21 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ZDeals.Engine.Core;
+using ZDeals.Engine.Schedulers;
 
 namespace ZDeals.Engine.Crawlers.CentreCom
 {
     public class ClearancePageCrawler: ICrawler
     {
+        private readonly IScheduler _scheduler;
         private readonly ILogger<ClearancePageCrawler> _logger;
 
-        public ClearancePageCrawler(ILogger<ClearancePageCrawler> logger)
+        public ClearancePageCrawler(ISiteScheduler scheduler, ILogger<ClearancePageCrawler> logger)
         {
-            _logger = logger;
+            scheduler.SiteCode = "www.centrecom.com.au";
 
+            _scheduler = scheduler;
+            _logger = logger;
         }
 
         public event EventHandler<PageParsedEventArgs> PageParsed;
@@ -27,14 +32,14 @@ namespace ZDeals.Engine.Crawlers.CentreCom
         {
             var config = new CrawlConfiguration
             {
-                MaxPagesToCrawl = 2000,
+                MaxPagesToCrawl = 1000,
                 MinCrawlDelayPerDomainMilliSeconds = 3000
             };
             
             try
             {
                 var hyperLinkParser = new ClearancePageHyperLinkParser();
-                var crawler = new PoliteWebCrawler(config, null, null, null, null, hyperLinkParser, null, null, null);
+                var crawler = new PoliteWebCrawler(config, null, null, _scheduler, null, hyperLinkParser, null, null, null);
                 crawler.PageCrawlCompleted += Crawler_PageCrawlCompleted;
 
                 var result = await crawler.CrawlAsync(new Uri(startUrl), cancellationTokenSource);

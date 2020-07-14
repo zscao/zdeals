@@ -7,13 +7,10 @@
   <ItemGroup>
     <PackageReference Include="Abot" Version="2.0.56" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZDeals.Engine.Core\ZDeals.Engine.Core.csproj" />
-    <ProjectReference Include="..\ZDeals.Engine.Message\ZDeals.Engine.Message.csproj" />
-    <ProjectReference Include="..\ZDeals.Engine.Schedulers\ZDeals.Engine.Schedulers.csproj" />
+    <ProjectReference Include="..\ZDeals.Engine.Data\ZDeals.Engine.Data.csproj" />
   </ItemGroup>
 
 </Project>

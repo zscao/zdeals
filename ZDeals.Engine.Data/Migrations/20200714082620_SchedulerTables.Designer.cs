@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZDeals.Engine.Data;
 
 namespace ZDeals.Engine.Data.Migrations
 {
     [DbContext(typeof(EngineDbContext))]
-    partial class EngineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200714082620_SchedulerTables")]
+    partial class SchedulerTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,37 +83,6 @@ namespace ZDeals.Engine.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("ZDeals.Engine.Data.Entities.QueuedPageEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRetry")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("LastRequest")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ParentUrl")
-                        .HasColumnType("varchar(400) CHARACTER SET utf8mb4")
-                        .HasMaxLength(400);
-
-                    b.Property<string>("SiteCode")
-                        .IsRequired()
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("varchar(400) CHARACTER SET utf8mb4")
-                        .HasMaxLength(400);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("QueuedPages");
                 });
 
             modelBuilder.Entity("ZDeals.Engine.Data.Entities.VisitedPageEntity", b =>

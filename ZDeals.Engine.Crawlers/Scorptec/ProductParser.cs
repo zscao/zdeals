@@ -45,9 +45,9 @@ namespace ZDeals.Engine.Crawlers.Scorptec
                 }
                 else if (type == "Product")
                 {
+                    decimal price = 0;
                     var offers = token.offers;
-                    if (offers?.price == null) break;
-                    if (decimal.TryParse(offers.price.Value, out decimal price) == false) break;
+                    if (offers?.price != null) decimal.TryParse(offers.price.Value, out price);
 
                     product.SalePrice = price;
                     product.PriceCurrency = offers.priceCurrency ?? "AUD";

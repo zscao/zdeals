@@ -2,10 +2,10 @@
 
 namespace ZDeals.Engine.Bot.Settings
 {
-    class CrawlersSetting
+    class BotSetting
     {
         public string Message { get; set; }
-        public List<CrawlerOptions> Items { get; set; }
+        public List<CrawlerOptions> Crawlers { get; set; }
     }
 
     class CrawlerOptions

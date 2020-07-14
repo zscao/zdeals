@@ -16,6 +16,7 @@
     <ProjectReference Include="..\ZDeals.Engine.Core\ZDeals.Engine.Core.csproj" />
     <ProjectReference Include="..\ZDeals.Engine.Crawlers\ZDeals.Engine.Crawlers.csproj" />
     <ProjectReference Include="..\ZDeals.Engine.Message\ZDeals.Engine.Message.csproj" />
+    <ProjectReference Include="..\ZDeals.Engine.Schedulers\ZDeals.Engine.Schedulers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
