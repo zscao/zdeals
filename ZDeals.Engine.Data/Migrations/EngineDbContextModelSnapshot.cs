@@ -82,61 +82,6 @@ namespace ZDeals.Engine.Data.Migrations
 
                     b.ToTable("Products");
                 });
-
-            modelBuilder.Entity("ZDeals.Engine.Data.Entities.QueuedPageEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRetry")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("LastRequest")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ParentUrl")
-                        .HasColumnType("varchar(400) CHARACTER SET utf8mb4")
-                        .HasMaxLength(400);
-
-                    b.Property<string>("SiteCode")
-                        .IsRequired()
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("varchar(400) CHARACTER SET utf8mb4")
-                        .HasMaxLength(400);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("QueuedPages");
-                });
-
-            modelBuilder.Entity("ZDeals.Engine.Data.Entities.VisitedPageEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("LastVisitedTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("varchar(400) CHARACTER SET utf8mb4")
-                        .HasMaxLength(400);
-
-                    b.Property<int>("UrlHash")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UrlHash");
-
-                    b.ToTable("VisitedPages");
-                });
 #pragma warning restore 612, 618
         }
     }

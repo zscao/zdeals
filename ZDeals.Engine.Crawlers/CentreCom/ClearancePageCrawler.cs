@@ -1,5 +1,4 @@
-﻿using Abot2.Core;
-using Abot2.Crawler;
+﻿using Abot2.Crawler;
 using Abot2.Poco;
 
 using Microsoft.Extensions.Logging;
@@ -9,20 +8,15 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ZDeals.Engine.Core;
-using ZDeals.Engine.Schedulers;
 
 namespace ZDeals.Engine.Crawlers.CentreCom
 {
     public class ClearancePageCrawler: ICrawler
     {
-        private readonly IScheduler _scheduler;
         private readonly ILogger<ClearancePageCrawler> _logger;
 
-        public ClearancePageCrawler(ISiteScheduler scheduler, ILogger<ClearancePageCrawler> logger)
+        public ClearancePageCrawler(ILogger<ClearancePageCrawler> logger)
         {
-            scheduler.SiteCode = "www.centrecom.com.au";
-
-            _scheduler = scheduler;
             _logger = logger;
         }
 
@@ -32,14 +26,14 @@ namespace ZDeals.Engine.Crawlers.CentreCom
         {
             var config = new CrawlConfiguration
             {
-                MaxPagesToCrawl = 1000,
+                MaxPagesToCrawl = 10,
                 MinCrawlDelayPerDomainMilliSeconds = 3000
             };
             
             try
             {
                 var hyperLinkParser = new ClearancePageHyperLinkParser();
-                var crawler = new PoliteWebCrawler(config, null, null, _scheduler, null, hyperLinkParser, null, null, null);
+                var crawler = new PoliteWebCrawler(config, null, null, null, null, hyperLinkParser, null, null, null);
                 crawler.PageCrawlCompleted += Crawler_PageCrawlCompleted;
 
                 var result = await crawler.CrawlAsync(new Uri(startUrl), cancellationTokenSource);
@@ -58,7 +52,7 @@ namespace ZDeals.Engine.Crawlers.CentreCom
 
         private void Crawler_PageCrawlCompleted(object sender, PageCrawlCompletedArgs e)
         {
-            _logger.LogInformation("Status: {status}  Url: {url}", e.CrawledPage.HttpResponseMessage.StatusCode, e.CrawledPage.Uri);
+            _logger.LogInformation("Status: {status}  Url: {url}", e.CrawledPage.HttpResponseMessage?.StatusCode, e.CrawledPage.Uri);
 
             var productParser = new ProductParser();
             var product = productParser.Parse(e.CrawledPage.AngleSharpHtmlDocument, e.CrawledPage.Uri);

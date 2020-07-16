@@ -11,9 +11,6 @@ using System.Linq;
 
 using ZDeals.Engine.Bot.Settings;
 using ZDeals.Engine.Core;
-using ZDeals.Engine.Schedulers;
-using ZDeals.Engine.Schedulers.Impl;
-using ZDeals.Engine.Schedulers.Repo;
 
 namespace ZDeals.Engine.Bot.Startup
 {
@@ -21,25 +18,10 @@ namespace ZDeals.Engine.Bot.Startup
     {
 
         internal static IServiceCollection AddCrawlers(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddScheduler();
-
+        {            
             var setting = new BotSetting();
             configuration.GetSection("Bot").Bind(setting);
             services.AddCrawlers(setting);
-
-            return services;
-        }
-
-
-        static IServiceCollection AddScheduler(this IServiceCollection services)
-        {
-            services.AddTransient<IPagesToCrawlRepository, FifoPagesToCrawlRepository>();
-            services.AddTransient<ICrawledUrlRepository, InMemoryCrawledUrlRepository>();
-
-            services.AddTransient<IScheduledPageRepo, ScheduledPageRepo>();
-
-            services.AddTransient<ISiteScheduler, MySqlScheduler>();
 
             return services;
         }
