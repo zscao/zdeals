@@ -11,7 +11,7 @@ using System.Linq;
 
 using ZDeals.Engine.Bot.Settings;
 using ZDeals.Engine.Core;
-using ZDeals.Engine.Crawlers.DecisionMakers;
+using ZDeals.Engine.Core.Components;
 
 namespace ZDeals.Engine.Bot.Startup
 {
@@ -20,7 +20,8 @@ namespace ZDeals.Engine.Bot.Startup
 
         internal static IServiceCollection AddCrawlers(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<ICrawlDecisionMaker, VisitedDecisionMaker>();
+            services.AddTransient<ICrawlDecisionMaker, VisitedPageDecisionMaker>();
+            services.AddTransient<IStoreScheduler, StoreScheduler>();
 
             var setting = new BotSetting();
             configuration.GetSection("Bot").Bind(setting);
@@ -41,7 +42,7 @@ namespace ZDeals.Engine.Bot.Startup
                     Console.WriteLine($"Can't resolve crawler {crawler.Type}");
                     continue;
                 }
-                else if (crawlerType.IsConcreteAndAssignableTo<ICrawler>() == false)
+                else if (crawlerType.IsConcreteAndAssignableTo<IPageCrawler>() == false)
                 {
                     Console.WriteLine($"{crawlerType.FullName} is not a crawler.");
                     continue;
@@ -50,7 +51,7 @@ namespace ZDeals.Engine.Bot.Startup
 
                 var genericOptionType = typeof(CrawlerOption<>);
                 var optionType = genericOptionType.MakeGenericType(crawlerType);
-                var option = Activator.CreateInstance(optionType, new object[] { crawler.StartUrl, TimeSpan.Parse(crawler.Timeout) });
+                var option = Activator.CreateInstance(optionType, new object[] { crawler.StartUrl, crawler.Store, TimeSpan.Parse(crawler.Timeout) });
                 services.AddGenericSingleton(option);
 
                 var genericServiceType = typeof(BotService<>);

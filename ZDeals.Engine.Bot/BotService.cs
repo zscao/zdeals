@@ -12,7 +12,7 @@ using ZDeals.Engine.Message.Events;
 
 namespace ZDeals.Engine.Bot
 {
-    class BotService<T> : IHostedService where T: ICrawler
+    class BotService<T> : IHostedService where T: IPageCrawler
     {
         private readonly T _crawler;
         private readonly CrawlerOption<T> _option;
@@ -71,7 +71,7 @@ namespace ZDeals.Engine.Bot
                     {
                         if (string.IsNullOrWhiteSpace(url)) continue;
                         // do work
-                        await _crawler.StartCrawling(url, _cts);
+                        await _crawler.StartCrawling(url, _option.Store, _cts);
                         _logger.LogInformation($"Crawler {type.FullName} finished crawling {url}.");
                     }
                 }

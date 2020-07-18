@@ -8,7 +8,7 @@ using ZDeals.Engine.Core;
 
 namespace ZDeals.Engine.Bot
 {
-    class TestCrawler : ICrawler
+    class TestCrawler : IPageCrawler
     {
         private readonly ILogger<TestCrawler> _logger;
 
@@ -18,7 +18,7 @@ namespace ZDeals.Engine.Bot
         {
             _logger = logger;
         }
-        public Task StartCrawling(string url, CancellationTokenSource cts)
+        public Task StartCrawling(string url, string store, CancellationTokenSource cts)
         {
             _logger.LogInformation($"Start crawling {url}");
             return Task.Delay(new TimeSpan(0, 0, 5), cts.Token);

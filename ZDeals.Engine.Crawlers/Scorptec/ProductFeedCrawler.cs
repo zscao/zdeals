@@ -12,7 +12,7 @@ using ZDeals.Engine.Core;
 
 namespace ZDeals.Engine.Crawlers.Scorptec
 {
-    public class ProductFeedCrawler: ICrawler
+    public class ProductFeedCrawler: IPageCrawler
     {
         private readonly ICrawlDecisionMaker _crawlDecisionMaker;
         private readonly ILogger<ProductFeedCrawler> _logger;
@@ -26,7 +26,7 @@ namespace ZDeals.Engine.Crawlers.Scorptec
 
         public event EventHandler<PageCrawledEventArgs> OnPageCrawled;
 
-        public async Task StartCrawling(string startUrl, CancellationTokenSource cts)
+        public async Task StartCrawling(string startUrl, string store, CancellationTokenSource cts)
         {
             var config = new CrawlConfiguration
             {

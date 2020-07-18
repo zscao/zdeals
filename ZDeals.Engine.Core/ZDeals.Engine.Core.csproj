@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Abot" Version="2.0.56" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZDeals.Engine.Data\ZDeals.Engine.Data.csproj" />
     <ProjectReference Include="..\ZDeals.Engine.Message\ZDeals.Engine.Message.csproj" />
   </ItemGroup>
 

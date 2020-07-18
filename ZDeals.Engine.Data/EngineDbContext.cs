@@ -15,6 +15,8 @@ namespace ZDeals.Engine.Data
 
         public DbSet<VisitedPageEntity> VisitedPages { get; set; }
 
+        public DbSet<TrackedPageEntity> TrackedPages { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

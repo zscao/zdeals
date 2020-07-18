@@ -6,9 +6,9 @@ using ZDeals.Engine.Message.Events;
 
 namespace ZDeals.Engine.Core
 {
-    public interface ICrawler
+    public interface IPageCrawler
     {
-        Task StartCrawling(string url, CancellationTokenSource cts);
+        Task StartCrawling(string url, string store, CancellationTokenSource cts);
 
         event EventHandler<PageCrawledEventArgs> OnPageCrawled;
     }

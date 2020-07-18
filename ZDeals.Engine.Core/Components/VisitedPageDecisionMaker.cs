@@ -8,14 +8,14 @@ using System.Linq;
 using ZDeals.Engine.Data;
 using ZDeals.Engine.Message.Events;
 
-namespace ZDeals.Engine.Crawlers.DecisionMakers
+namespace ZDeals.Engine.Core.Components
 {
-    public class VisitedDecisionMaker : CrawlDecisionMaker
+    public class VisitedPageDecisionMaker : CrawlDecisionMaker
     {
         private readonly EngineDbContext _dbContext;
-        private readonly ILogger<VisitedDecisionMaker> _logger;
+        private readonly ILogger<VisitedPageDecisionMaker> _logger;
 
-        public VisitedDecisionMaker(EngineDbContext dbContext, ILogger<VisitedDecisionMaker> logger)
+        public VisitedPageDecisionMaker(EngineDbContext dbContext, ILogger<VisitedPageDecisionMaker> logger)
         {
             _dbContext = dbContext;
             _logger = logger;

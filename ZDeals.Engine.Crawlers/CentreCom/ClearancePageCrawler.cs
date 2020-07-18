@@ -12,20 +12,22 @@ using ZDeals.Engine.Core;
 
 namespace ZDeals.Engine.Crawlers.CentreCom
 {
-    public class ClearancePageCrawler: ICrawler
-    { 
+    public class ClearancePageCrawler: IPageCrawler
+    {
         private readonly ICrawlDecisionMaker _crawlDecisionMaker;
+        private readonly IStoreScheduler _scheduler;
         private readonly ILogger<ClearancePageCrawler> _logger;
 
-        public ClearancePageCrawler(ICrawlDecisionMaker crawlDecisionMaker, ILogger<ClearancePageCrawler> logger)
+        public ClearancePageCrawler(ICrawlDecisionMaker crawlDecisionMaker, IStoreScheduler scheduler, ILogger<ClearancePageCrawler> logger)
         {
             _crawlDecisionMaker = crawlDecisionMaker;
+            _scheduler = scheduler;
             _logger = logger;
         }
 
         public event EventHandler<PageCrawledEventArgs> OnPageCrawled;
 
-        public async Task StartCrawling(string startUrl, CancellationTokenSource cancellationTokenSource)
+        public async Task StartCrawling(string startUrl, string store, CancellationTokenSource cancellationTokenSource)
         {
             var config = new CrawlConfiguration
             {
@@ -35,9 +37,10 @@ namespace ZDeals.Engine.Crawlers.CentreCom
             
             try
             {
+                _scheduler.AddTrackedPages(store);
                 var hyperLinkParser = new ClearancePageHyperLinkParser();
 
-                var crawler = new PoliteWebCrawler(config, _crawlDecisionMaker, null, null, null, hyperLinkParser, null, null, null);
+                var crawler = new PoliteWebCrawler(config, _crawlDecisionMaker, null, _scheduler, null, hyperLinkParser, null, null, null);
                 crawler.PageCrawlCompleted += Crawler_PageCrawlCompleted;
 
                 var result = await crawler.CrawlAsync(new Uri(startUrl), cancellationTokenSource);

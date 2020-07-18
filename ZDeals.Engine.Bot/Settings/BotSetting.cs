@@ -11,6 +11,7 @@ namespace ZDeals.Engine.Bot.Settings
     class CrawlerOptions
     {
         public string Type { get; set; }
+        public string Store { get; set; }
         public string StartUrl { get; set; }
         public string Timeout { get; set; }
     }
