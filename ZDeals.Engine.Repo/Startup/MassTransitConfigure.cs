@@ -12,7 +12,8 @@ namespace ZDeals.Engine.Repo.Startup
         {
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<ProductRepository>();
+                x.AddConsumer<ProductRepo>();
+                x.AddConsumer<VisitedPageRepo>();
 
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
@@ -21,7 +22,12 @@ namespace ZDeals.Engine.Repo.Startup
 
                     cfg.ReceiveEndpoint("product_repository_queue", e =>
                     {
-                        e.ConfigureConsumer<ProductRepository>(context);
+                        e.ConfigureConsumer<ProductRepo>(context);
+                    });
+
+                    cfg.ReceiveEndpoint("visited_page_repository_queue", e =>
+                    {
+                        e.ConfigureConsumer<VisitedPageRepo>(context);
                     });
                 }));
             });

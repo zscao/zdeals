@@ -13,6 +13,8 @@ namespace ZDeals.Engine.Data
 
         public DbSet<ProductEntity> Products { get; set; }
 
+        public DbSet<VisitedPageEntity> VisitedPages { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

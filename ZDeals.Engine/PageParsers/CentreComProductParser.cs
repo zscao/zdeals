@@ -1,19 +1,19 @@
-﻿using AngleSharp.Dom;
+﻿
+using AngleSharp.Dom;
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 using ZDeals.Engine.Core.Helpers;
 using ZDeals.Engine.Message.Models;
 
-namespace ZDeals.Engine.Crawlers.CentreCom
+namespace ZDeals.Engine.PageParsers
 {
-    class ProductParser
+    class CentreComProductParser: IProductParser
     {
-        public Product Parse(IDocument document, Uri pageUri)
+        public Product Parse(IDocument document)
         {
             if (document == null) return null;
 
@@ -52,16 +52,6 @@ namespace ZDeals.Engine.Crawlers.CentreCom
             if (!string.IsNullOrEmpty(image))
             {
                 images.Add(image);
-            }
-            else
-            {
-                var slideImageNodes = document.QuerySelectorAll("#gallery-1 > a.rsImg[href]");
-                foreach (var node in slideImageNodes)
-                {
-                    var src = node.GetAttribute("href");
-                    if (!string.IsNullOrEmpty(src))
-                        images.Add(UriHelper.MakeUri(pageUri, src).ToString());
-                }
             }
 
             // get category

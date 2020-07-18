@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,7 +12,7 @@ namespace ZDeals.Engine.Bot
     {
         private readonly ILogger<TestCrawler> _logger;
 
-        public event EventHandler<PageParsedEventArgs> PageParsed;
+        public event EventHandler<PageCrawledEventArgs> OnPageCrawled;
 
         public TestCrawler(ILogger<TestCrawler> logger)
         {

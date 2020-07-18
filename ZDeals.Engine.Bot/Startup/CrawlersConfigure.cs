@@ -11,6 +11,7 @@ using System.Linq;
 
 using ZDeals.Engine.Bot.Settings;
 using ZDeals.Engine.Core;
+using ZDeals.Engine.Crawlers.DecisionMakers;
 
 namespace ZDeals.Engine.Bot.Startup
 {
@@ -18,7 +19,9 @@ namespace ZDeals.Engine.Bot.Startup
     {
 
         internal static IServiceCollection AddCrawlers(this IServiceCollection services, IConfiguration configuration)
-        {            
+        {
+            services.AddTransient<ICrawlDecisionMaker, VisitedDecisionMaker>();
+
             var setting = new BotSetting();
             configuration.GetSection("Bot").Bind(setting);
             services.AddCrawlers(setting);

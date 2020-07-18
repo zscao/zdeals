@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ZDeals.Engine.Message.Models;
+using ZDeals.Engine.Message.Events;
 
 namespace ZDeals.Engine.Core
 {
@@ -11,14 +10,12 @@ namespace ZDeals.Engine.Core
     {
         Task StartCrawling(string url, CancellationTokenSource cts);
 
-        event EventHandler<PageParsedEventArgs> PageParsed;
+        event EventHandler<PageCrawledEventArgs> OnPageCrawled;
     }
 
 
-    public class PageParsedEventArgs
+    public class PageCrawledEventArgs
     {
-        public Uri PageUri { get; set; }
-
-        public Product Product { get; set; }
+        public PageCrawled Page { get; set; }
     }
 }

@@ -29,7 +29,7 @@ namespace ZDeals.Engine
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("TaskCenter is running.");
-                await _bus.Send(new Message.Commands.ParsePage
+                await _bus.Send(new Message.Commands.CrawlPage
                 {
                     Url = "https://www.centrecom.com.au/clearance" //  $"http://localhost/deals/{_count ++}"
                 });

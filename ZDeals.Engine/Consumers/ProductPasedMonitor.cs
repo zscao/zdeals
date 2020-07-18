@@ -9,17 +9,17 @@ using ZDeals.Engine.Message.Events;
 
 namespace ZDeals.Engine.Consumers
 {
-    class PagePasedMonitor : IConsumer<PageParsed>
+    class ProductPasedMonitor : IConsumer<ProductParsed>
     {
-        private readonly ILogger<PagePasedMonitor> _logger;
-        public PagePasedMonitor(ILogger<PagePasedMonitor> logger)
+        private readonly ILogger<ProductPasedMonitor> _logger;
+        public ProductPasedMonitor(ILogger<ProductPasedMonitor> logger)
         {
             _logger = logger;
 
             _logger.LogInformation("PageParseMonitor created.");
         }
 
-        public Task Consume(ConsumeContext<PageParsed> context)
+        public Task Consume(ConsumeContext<ProductParsed> context)
         {
             var message = context.Message;
 

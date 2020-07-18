@@ -1,4 +1,5 @@
-﻿using Abot2.Crawler;
+﻿using Abot2.Core;
+using Abot2.Crawler;
 using Abot2.Poco;
 
 using Microsoft.Extensions.Logging;
@@ -12,28 +13,31 @@ using ZDeals.Engine.Core;
 namespace ZDeals.Engine.Crawlers.CentreCom
 {
     public class ClearancePageCrawler: ICrawler
-    {
+    { 
+        private readonly ICrawlDecisionMaker _crawlDecisionMaker;
         private readonly ILogger<ClearancePageCrawler> _logger;
 
-        public ClearancePageCrawler(ILogger<ClearancePageCrawler> logger)
+        public ClearancePageCrawler(ICrawlDecisionMaker crawlDecisionMaker, ILogger<ClearancePageCrawler> logger)
         {
+            _crawlDecisionMaker = crawlDecisionMaker;
             _logger = logger;
         }
 
-        public event EventHandler<PageParsedEventArgs> PageParsed;
+        public event EventHandler<PageCrawledEventArgs> OnPageCrawled;
 
         public async Task StartCrawling(string startUrl, CancellationTokenSource cancellationTokenSource)
         {
             var config = new CrawlConfiguration
             {
-                MaxPagesToCrawl = 10,
+                MaxPagesToCrawl = 100,
                 MinCrawlDelayPerDomainMilliSeconds = 3000
             };
             
             try
             {
                 var hyperLinkParser = new ClearancePageHyperLinkParser();
-                var crawler = new PoliteWebCrawler(config, null, null, null, null, hyperLinkParser, null, null, null);
+
+                var crawler = new PoliteWebCrawler(config, _crawlDecisionMaker, null, null, null, hyperLinkParser, null, null, null);
                 crawler.PageCrawlCompleted += Crawler_PageCrawlCompleted;
 
                 var result = await crawler.CrawlAsync(new Uri(startUrl), cancellationTokenSource);
@@ -54,14 +58,24 @@ namespace ZDeals.Engine.Crawlers.CentreCom
         {
             _logger.LogInformation("Status: {status}  Url: {url}", e.CrawledPage.HttpResponseMessage?.StatusCode, e.CrawledPage.Uri);
 
-            var productParser = new ProductParser();
-            var product = productParser.Parse(e.CrawledPage.AngleSharpHtmlDocument, e.CrawledPage.Uri);
-            if (product != null)
+            if(e.CrawledPage.HttpResponseMessage?.StatusCode == System.Net.HttpStatusCode.OK && e.CrawledPage != null)
             {
-                PageParsed?.Invoke(this, new PageParsedEventArgs
+                var page = e.CrawledPage;
+                
+                OnPageCrawled?.Invoke(this, new PageCrawledEventArgs
                 {
-                    PageUri = e.CrawledPage.Uri,
-                    Product = product
+                    Page = new Message.Events.PageCrawled
+                    {
+                        Uri = page.Uri,
+                        ParentUri = page.ParentUri,
+                        CrawledTime = DateTime.Now,
+                        Content = new Message.Events.PageContent
+                        {
+                            Charset = page.Content?.Charset,
+                            Text = page.Content?.Text
+                        },
+                        IsRoot = page.IsRoot
+                    }
                 });
             }
         }

@@ -32,7 +32,7 @@ namespace ZDeals.Engine.Crawlers.Scorptec
                 var document = new XmlDocument();
                 document.LoadXml(xml.Trim());
 
-                var regex = new Regex(@"/product/Monitors/[\w\d]+/[\w\d-]+");
+                var regex = new Regex(@"/product/Monitors/[\w\d-]+");
 
                 var nodes = document.DocumentElement.ChildNodes;
                 Parallel.For(0, nodes.Count, i =>

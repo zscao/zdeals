@@ -2,17 +2,16 @@
 
 using Newtonsoft.Json.Linq;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using ZDeals.Engine.Message.Models;
 
-namespace ZDeals.Engine.Crawlers.Scorptec
+namespace ZDeals.Engine.PageParsers
 {
-    class ProductParser
+    class ScorptecProductParser: IProductParser
     {
-        public Product Parse(IDocument document, Uri pageUri)
+        public Product Parse(IDocument document)
         {
             if (document == null) return null;
 

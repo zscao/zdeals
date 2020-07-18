@@ -1,4 +1,5 @@
-﻿using Abot2.Crawler;
+﻿using Abot2.Core;
+using Abot2.Crawler;
 using Abot2.Poco;
 
 using Microsoft.Extensions.Logging;
@@ -13,28 +14,30 @@ namespace ZDeals.Engine.Crawlers.Scorptec
 {
     public class ProductFeedCrawler: ICrawler
     {
+        private readonly ICrawlDecisionMaker _crawlDecisionMaker;
         private readonly ILogger<ProductFeedCrawler> _logger;
 
-        public ProductFeedCrawler(ILogger<ProductFeedCrawler> logger)
+        public ProductFeedCrawler(ICrawlDecisionMaker crawlDecisionMaker, ILogger<ProductFeedCrawler> logger)
         {
+            _crawlDecisionMaker = crawlDecisionMaker;
             _logger = logger;
 
         }
 
-        public event EventHandler<PageParsedEventArgs> PageParsed;
+        public event EventHandler<PageCrawledEventArgs> OnPageCrawled;
 
         public async Task StartCrawling(string startUrl, CancellationTokenSource cts)
         {
             var config = new CrawlConfiguration
             {
-                MaxPagesToCrawl = 2000,
+                MaxPagesToCrawl = 20,
                 MinCrawlDelayPerDomainMilliSeconds = 3000
             };
 
             try
             {
                 var hyperLinkParser = new ProductFeedHyperLinkParser(_logger);
-                var crawler = new PoliteWebCrawler(config, null, null, null, null, hyperLinkParser, null, null, null);
+                var crawler = new PoliteWebCrawler(config, _crawlDecisionMaker, null, null, null, hyperLinkParser, null, null, null);
 
                 crawler.PageCrawlCompleted += Crawler_PageCrawlCompleted;
 
@@ -54,22 +57,42 @@ namespace ZDeals.Engine.Crawlers.Scorptec
 
         private void Crawler_PageCrawlCompleted(object sender, PageCrawlCompletedArgs e)
         {
-            var page = e.CrawledPage;
-            _logger.LogInformation("Status: {status}, Url: {url}", page.HttpResponseMessage.StatusCode, page.Uri);
+            _logger.LogInformation("Status: {status}  Url: {url}", e.CrawledPage.HttpResponseMessage?.StatusCode, e.CrawledPage.Uri);
 
-            if (page.Uri.LocalPath.EndsWith(".xml")) return;
-
-            var productParser = new ProductParser();
-            var product = productParser.Parse(page.AngleSharpHtmlDocument, page.Uri);
-
-            if(product != null)
+            if (e.CrawledPage.HttpResponseMessage?.StatusCode == System.Net.HttpStatusCode.OK && e.CrawledPage != null)
             {
-                PageParsed?.Invoke(this, new PageParsedEventArgs
+                var page = e.CrawledPage;
+
+                OnPageCrawled?.Invoke(this, new PageCrawledEventArgs
                 {
-                    PageUri = e.CrawledPage.Uri,
-                    Product = product
+                    Page = new Message.Events.PageCrawled
+                    {
+                        Uri = page.Uri,
+                        ParentUri = page.ParentUri,
+                        CrawledTime = DateTime.Now,
+                        Content = new Message.Events.PageContent
+                        {
+                            Charset = page.Content?.Charset,
+                            Text = page.Content?.Text
+                        },
+                        IsRoot = page.IsRoot
+                    }
                 });
             }
+
+            //if (page.Uri.LocalPath.EndsWith(".xml")) return;
+
+            //var productParser = new ProductParser();
+            //var product = productParser.Parse(page.AngleSharpHtmlDocument, page.Uri);
+
+            //if(product != null)
+            //{
+            //    PageParsed?.Invoke(this, new PageCrawledEventArgs
+            //    {
+            //        PageUri = e.CrawledPage.Uri,
+            //        Product = product
+            //    });
+            //}
 
         }
     }

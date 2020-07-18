@@ -1,6 +1,6 @@
 ﻿namespace ZDeals.Engine.Message.Commands
 {
-    public class ParsePage
+    public class CrawlPage
     {
         public string Url { get; set; }
     }

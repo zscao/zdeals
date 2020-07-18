@@ -36,24 +36,21 @@ namespace ZDeals.Engine.Bot
             _publishEndpoint = publishEndpoint;
             _logger = loggerFactory.CreateLogger<BotService<T>>();
 
-            _crawler.PageParsed += Crawler_PageParsed;
+            //_crawler.PageParsed += Crawler_PageParsed;
+            _crawler.OnPageCrawled += Crawler_OnPageCrawled;
         }
 
-        private async void Crawler_PageParsed(object sender, PageParsedEventArgs e)
+        private async void Crawler_OnPageCrawled(object sender, PageCrawledEventArgs e)
         {
-            _logger.LogInformation($"Page parsed: {e.PageUri}");
+            _logger.LogInformation($"Page crawled: {e.Page.Uri}");
+
             try
             {
-                await _publishEndpoint.Publish<PageParsed>(new PageParsed
-                {
-                    Uri = e.PageUri,
-                    ParsedTime = DateTime.Now,
-                    Product = e.Product
-                });
+                await _publishEndpoint.Publish(e.Page);
             }
             catch(Exception ex)
             {
-                _logger.LogError("Failed to publish PageParsed event.", ex);
+                _logger.LogError($"Failed to publish PageCrawled event for {e.Page.Uri}", ex);
             }
         }
 
