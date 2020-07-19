@@ -8,14 +8,13 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ZDeals.Engine.Core;
-using ZDeals.Engine.Message.Events;
 
 namespace ZDeals.Engine.Bot
 {
     class BotService<T> : IHostedService where T: IPageCrawler
     {
         private readonly T _crawler;
-        private readonly CrawlerOption<T> _option;
+        private readonly GenericCrawlerOption<T> _option;
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
         private readonly IPublishEndpoint _publishEndpoint;
 
@@ -25,7 +24,7 @@ namespace ZDeals.Engine.Bot
         private CancellationTokenSource _cts;
         private Task _runningTask;
 
-        public BotService(T crawler, CrawlerOption<T> option, 
+        public BotService(T crawler, GenericCrawlerOption<T> option, 
             IHostApplicationLifetime hostApplicationLifetime, 
             IPublishEndpoint publishEndpoint, 
             ILoggerFactory loggerFactory)
@@ -36,7 +35,6 @@ namespace ZDeals.Engine.Bot
             _publishEndpoint = publishEndpoint;
             _logger = loggerFactory.CreateLogger<BotService<T>>();
 
-            //_crawler.PageParsed += Crawler_PageParsed;
             _crawler.OnPageCrawled += Crawler_OnPageCrawled;
         }
 
@@ -56,35 +54,32 @@ namespace ZDeals.Engine.Bot
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _cts = new CancellationTokenSource(_option.Timeout);
-
-            var type = typeof(T);
+            _cts = new CancellationTokenSource(_option.Timeout);            
 
             _runningTask = Task.Run(async () =>
             {
+                var type = typeof(T);
                 _logger.LogInformation($"Starting Crawler {type.FullName}");
 
                 try
                 {
-                    var urls = _option.StartUrl.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var url in urls)
-                    {
-                        if (string.IsNullOrWhiteSpace(url)) continue;
-                        // do work
-                        await _crawler.StartCrawling(url, _option.Store, _cts);
-                        _logger.LogInformation($"Crawler {type.FullName} finished crawling {url}.");
-                    }
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    // do work
+                    await _crawler.StartCrawling(_option, _cts);
+                    _logger.LogInformation($"Crawler {type.FullName} has finished crawling {_option.Store}.");
+
                 }
-                //catch(TaskCanceledException ex)
-                //{
-                //    _logger.LogWarning("Crawling task is cancelled.", ex);
-                //    return;
-                //}
-                //catch(OperationCanceledException ex)
-                //{
-                //    _logger.LogWarning("Crawling operation is cancelled.", ex);
-                //    return;
-                //}
+                catch (TaskCanceledException ex)
+                {
+                    _logger.LogWarning("Crawling task is cancelled.", ex);
+                    return;
+                }
+                catch (OperationCanceledException ex)
+                {
+                    _logger.LogWarning("Crawling operation is cancelled.", ex);
+                    return;
+                }
                 catch (Exception ex)
                 {
                     _logger.LogError("Error when crawling. ", ex);

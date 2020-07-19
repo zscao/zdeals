@@ -49,9 +49,17 @@ namespace ZDeals.Engine.Bot.Startup
                 }
                 services.AddGenericTransient(crawlerType);
 
-                var genericOptionType = typeof(CrawlerOption<>);
+                var genericOptionType = typeof(GenericCrawlerOption<>);
                 var optionType = genericOptionType.MakeGenericType(crawlerType);
-                var option = Activator.CreateInstance(optionType, new object[] { crawler.StartUrl, crawler.Store, TimeSpan.Parse(crawler.Timeout) });
+                var option = Activator.CreateInstance(optionType, 
+                    new object[] 
+                    { 
+                        crawler.StartUrl, 
+                        crawler.Store, 
+                        TimeSpan.Parse(crawler.Timeout), 
+                        crawler.MaxPagesToCrawl, 
+                        crawler.MinCrawlDelaySeconds 
+                    });
                 services.AddGenericSingleton(option);
 
                 var genericServiceType = typeof(BotService<>);

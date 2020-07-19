@@ -8,7 +8,7 @@ namespace ZDeals.Engine.Core
 {
     public interface IPageCrawler
     {
-        Task StartCrawling(string url, string store, CancellationTokenSource cts);
+        Task StartCrawling(CrawlerOption option, CancellationTokenSource cts);
 
         event EventHandler<PageCrawledEventArgs> OnPageCrawled;
     }

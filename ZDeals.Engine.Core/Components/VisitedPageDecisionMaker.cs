@@ -26,7 +26,7 @@ namespace ZDeals.Engine.Core.Components
             var decision = base.ShouldCrawlPage(pageToCrawl, crawlContext);
             if (decision.Allow == false) return decision;
 
-            _logger.LogWarning($"Checking page {pageToCrawl.Uri}");
+            _logger.LogDebug($"Checking page {pageToCrawl.Uri}");
 
             var visited = _dbContext.VisitedPages.FirstOrDefault(x => x.Url == pageToCrawl.Uri.AbsoluteUri);
             if(visited != null)

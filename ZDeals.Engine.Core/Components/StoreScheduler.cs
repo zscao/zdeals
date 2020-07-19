@@ -43,8 +43,6 @@ namespace ZDeals.Engine.Core.Components
             if(_crawledPages.TryAdd(url, 0))
             {
                 _pages.Enqueue(page);
-
-                _logger.LogDebug($"Added into scheduler: {url}");
             }
         }
 
@@ -77,6 +75,7 @@ namespace ZDeals.Engine.Core.Components
 
         public void AddTrackedPages(string store)
         {
+            _logger.LogDebug($"Adding tracked pages from {store}");
             if (string.IsNullOrEmpty(store)) return;
 
             var tracked = _dbContext.TrackedPages.Where(x => x.Store == store);
