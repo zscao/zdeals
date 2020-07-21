@@ -37,15 +37,17 @@ namespace ZDeals.Engine.Repo.Consumers
                     // change unknown to known type
                     if (visited.ContentType == VisitedPageContentType.Unknown && page.ContentType != VisitedPageContentType.Unknown)
                     {
-                        visited.ContentType = page.ContentType;
-                        await _dbContext.SaveChangesAsync();
+                        visited.ContentType = page.ContentType;                        
                     }
                     // change index to product
                     else if (visited.ContentType == VisitedPageContentType.Index && page.ContentType == VisitedPageContentType.Product)
                     {
                         visited.ContentType = page.ContentType;
-                        await _dbContext.SaveChangesAsync();
                     }
+
+                    visited.LastVisitedTime = page.VisitedTime;
+                    await _dbContext.SaveChangesAsync();
+
                     return;
                 }
 

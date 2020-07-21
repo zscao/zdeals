@@ -20,7 +20,11 @@ namespace ZDeals.Engine.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
+            builder.Entity<PriceHistoryEntity>(e =>
+            {
+                e.HasKey(p => new { p.ProductId, p.Sequence });
+                e.HasOne(p => p.Product).WithMany(pr => pr.PriceHistory).HasForeignKey(p => p.ProductId);
+            });
         }
     }
 }

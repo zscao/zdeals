@@ -12,8 +12,8 @@ namespace ZDeals.Engine.Repo.Startup
         {
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<ProductRepo>();
-                x.AddConsumer<VisitedPageRepo>();
+                x.AddConsumer<ProductRepo>(c => c.UseConcurrentMessageLimit(1));
+                x.AddConsumer<VisitedPageRepo>(c => c.UseConcurrentMessageLimit(1));
 
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {

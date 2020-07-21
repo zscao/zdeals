@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -48,10 +49,11 @@ namespace ZDeals.Engine.Data.Entities
         public string Url { get; set; }
 
         [Required]
-        public DateTime ParsedTime { get; set; }
+        public DateTime CreatedTime { get; set; }
 
         [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime CreatedTime { get; set; }
+        public DateTime UpdatedTime { get; set; }
+
+        public virtual ICollection<PriceHistoryEntity> PriceHistory { get; set; }
     }
 }

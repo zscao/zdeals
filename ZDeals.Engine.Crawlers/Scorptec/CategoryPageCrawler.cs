@@ -7,13 +7,12 @@ using ZDeals.Engine.Core.Components;
 
 namespace ZDeals.Engine.Crawlers.Scorptec
 {
-    public class ProductFeedCrawler: PageCrawler
+    public class CategoryPageCrawler: PageCrawler
     {
-        public ProductFeedCrawler(ICrawlDecisionMaker crawlDecisionMaker, IStoreScheduler scheduler, ILogger<ProductFeedCrawler> logger)
+        public CategoryPageCrawler(ICrawlDecisionMaker crawlDecisionMaker, IStoreScheduler scheduler, ILogger<ProductFeedCrawler> logger)
             : base(crawlDecisionMaker, scheduler, logger)
         {
-            HtmlParser = new ProductFeedHyperLinkParser();
+            HtmlParser = new CategoryPageHyperLinkParser();
         }
-
     }
 }

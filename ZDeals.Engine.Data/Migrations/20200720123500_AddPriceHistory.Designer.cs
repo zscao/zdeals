@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZDeals.Engine.Data;
 
 namespace ZDeals.Engine.Data.Migrations
 {
     [DbContext(typeof(EngineDbContext))]
-    partial class EngineDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200720123500_AddPriceHistory")]
+    partial class AddPriceHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,6 +47,10 @@ namespace ZDeals.Engine.Data.Migrations
                     b.Property<string>("Brand")
                         .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
                         .HasMaxLength(20);
+
+                    b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .HasColumnType("varchar(2000) CHARACTER SET utf8mb4")
@@ -88,9 +94,6 @@ namespace ZDeals.Engine.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
                         .HasMaxLength(200);
-
-                    b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Url")
                         .HasColumnType("varchar(400) CHARACTER SET utf8mb4")

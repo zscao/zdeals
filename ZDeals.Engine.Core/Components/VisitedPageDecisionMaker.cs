@@ -3,6 +3,7 @@ using Abot2.Poco;
 
 using Microsoft.Extensions.Logging;
 
+using System;
 using System.Linq;
 
 using ZDeals.Engine.Data;
@@ -31,7 +32,7 @@ namespace ZDeals.Engine.Core.Components
             var visited = _dbContext.VisitedPages.FirstOrDefault(x => x.Url == pageToCrawl.Uri.AbsoluteUri);
             if(visited != null)
             {
-                if (visited.ContentType != VisitedPageContentType.Index)
+                if(visited.ContentType == VisitedPageContentType.Unknown || (visited.ContentType == VisitedPageContentType.Product && visited.LastVisitedTime.AddDays(5) < DateTime.Today))
                 {
                     decision.Allow = false;
                     decision.Reason = "Visited";
