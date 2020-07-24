@@ -36,7 +36,7 @@ namespace ZDeals.Engine.Repo.Consumers
 
                 try
                 {
-                    var product = _dbContext.Products.Include(p => p.PriceHistory).FirstOrDefault(x => x.Url == message.Uri.AbsoluteUri);
+                   var product = _dbContext.Products.Include(p => p.PriceHistory).FirstOrDefault(x => x.Url == message.Uri.AbsoluteUri);
                     if (product == null)
                     {
                         product = new ProductEntity
@@ -65,14 +65,14 @@ namespace ZDeals.Engine.Repo.Consumers
                     {
 
                         var history = product.PriceHistory.OrderBy(x => x.Sequence).LastOrDefault();
-                        if (history == null || Math.Abs(product.SalePrice - history.Price) > 0.01m)
+                        if (history == null || Math.Abs(p.SalePrice - history.Price) > 0.01m)
                         {
                             product.PriceHistory.Add(new PriceHistoryEntity
                             {
                                 ProductId = product.Id,
-                                Price = product.SalePrice,
+                                Price = p.SalePrice,
                                 Sequence = (history?.Sequence ?? 0) + 1,
-                                UpdatedDate = product.UpdatedTime
+                                UpdatedDate = message.ParsedTime
                             });
                         }
 
