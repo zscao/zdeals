@@ -45,7 +45,7 @@ namespace ZDeals.Web.Pages.Deals
 
             ViewData["DealQuery"] = query;
 
-            var data = await SearchDeals(query.CategoryCode, query.Keywords, DefaultPageSize, DefaultPageNumber);
+            var data = await SearchDeals(query.CategoryCode, query.Keywords, DefaultPageNumber);
 
             HttpContext.Response.Headers.Add("More-Deals", data.More.ToString().ToLower());
 
@@ -57,7 +57,7 @@ namespace ZDeals.Web.Pages.Deals
         {
             int pageNumber = p ?? DefaultPageNumber;
 
-            var data = await SearchDeals(c, w, DefaultPageSize, pageNumber);
+            var data = await SearchDeals(c, w, pageNumber);
 
             HttpContext.Response.Headers.Add("More-Deals", data.More.ToString().ToLower());
 
@@ -65,15 +65,21 @@ namespace ZDeals.Web.Pages.Deals
         }
 
 
-        private async Task<DealsSearchResult> SearchDeals(string categoryCode, string keywords, int pageSize, int pageNumber)
+        private async Task<DealsSearchResult> SearchDeals(string categoryCode, string keywords, int pageNumber)
         {
-            var result = await _dealService.SearchDeals(categoryCode, keywords, pageSize, pageNumber);
+            var result = await _dealService.SearchDeals(new DealsSearchRequest
+            {
+                Category = categoryCode,
+                Keywords = keywords,
+                Store = null,
+                PageNumber = pageNumber
+            });
             if (result.HasError())
             {
                 DealResult = new DealsSearchResult()
                 {
                     Deals = new List<Deal>(),
-                    CategoryCode = categoryCode,
+                    Category = categoryCode,
                     Keywords = keywords
                 };
             }

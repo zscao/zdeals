@@ -14,6 +14,8 @@ namespace ZDeals.Web.Service.Impl
 {
     public class DealService : IDealService
     {
+        const int PageSize = 20;
+
         private readonly ZDealsDbContext _dbContext;
         private readonly ICategoryService _categoryService;
 
@@ -50,13 +52,13 @@ namespace ZDeals.Web.Service.Impl
             return new Result<Deal>(deal.ToDealModel());
         }
 
-        public async Task<Result<DealsSearchResult>> SearchDeals(string categoryCode = null, string keywords = null, int pageSize = 20, int pageNumber = 1)
+        public async Task<Result<DealsSearchResult>> SearchDeals(DealsSearchRequest request)
         {
             var categoryIds = new List<int>();
 
-            if (!string.IsNullOrEmpty(categoryCode) || categoryCode != Common.Constants.DefaultValues.DealsCategoryRoot)
+            if (!string.IsNullOrEmpty(request?.Category) && request.Category != Common.Constants.DefaultValues.DealsCategoryRoot)
             {
-                var cateResult = await _categoryService.GetCategoryTreeAsync(categoryCode);
+                var cateResult = await _categoryService.GetCategoryTreeAsync(request.Category);
                 if (cateResult.HasError())
                     return new Result<DealsSearchResult>(cateResult.Errors);
 
@@ -69,20 +71,47 @@ namespace ZDeals.Web.Service.Impl
                     .Where(x => !x.Deleted && x.VerifiedTime < System.DateTime.UtcNow && (x.ExpiryDate == null || x.ExpiryDate > System.DateTime.UtcNow));
 
             if (categoryIds?.Count > 0) query = query.Where(x => x.DealCategory.Any(c => categoryIds.Contains(c.CategoryId)));
-            if (!string.IsNullOrWhiteSpace(keywords)) query = query.Where(x => EF.Functions.Like(x.Title, $"%{keywords}%"));
+            if (!string.IsNullOrWhiteSpace(request?.Keywords)) query = query.Where(x => EF.Functions.Like(x.Title, $"%{request.Keywords}%"));
 
-            var skipped = pageSize * (pageNumber - 1);
-            var deals = await query.OrderByDescending(x => x.Id).Skip(skipped).Take(pageSize).ToListAsync();
+            // get filters 
+            var storeFilter = GetStoreFilter(query.Select(x => x.Store.Name).Distinct().ToList());
+
+
+            // apply filters
+            if (!string.IsNullOrEmpty(request?.Store))
+            {
+                var stores = request.Store.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if(stores.Length > 0)
+                {
+                    query = query.Where(x => stores.Contains(x.Store.Name));
+                }
+            }
+
+            var pageNumber = request?.PageNumber ?? 1;
+            var skipped = PageSize * (pageNumber - 1);
+            var deals = await query.OrderByDescending(x => x.Id).Skip(skipped).Take(PageSize).ToListAsync();            
 
             var result = new DealsSearchResult
             {
                 Deals = deals.Select(x => x.ToDealModel()).ToList(),
-                CategoryCode = categoryCode,
-                Keywords = keywords,
-                More = deals.Count >= pageSize
+                Category = request?.Category,
+                Keywords = request.Keywords,
+                More = deals.Count >= PageSize,
+                Filters = new List<DealFilter>() { storeFilter }
             };
 
             return new Result<DealsSearchResult>(result);
+        }
+
+        private DealFilter GetStoreFilter(IEnumerable<string> stores )
+        {
+            return new DealFilter
+            {
+                Code = "store",
+                Title = "Store",
+                FilterType = FilterType.MultipleSelection,
+                Items = stores.Select(x => new FilterItem { Name = x, Value = x })
+            };
         }
     }
 }

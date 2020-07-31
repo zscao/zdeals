@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.6" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
   </ItemGroup>
@@ -16,6 +16,10 @@
     <ProjectReference Include="..\ZDeals.Common.AspNetCore\ZDeals.Common.AspNetCore.csproj" />
     <ProjectReference Include="..\ZDeals.Common\ZDeals.Common.csproj" />
     <ProjectReference Include="..\ZDeals.Storage\ZDeals.Storage.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
 

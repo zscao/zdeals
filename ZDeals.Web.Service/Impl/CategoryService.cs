@@ -48,6 +48,21 @@ namespace ZDeals.Web.Service.Impl
             return new Result<CategoryTreeView>(result);
         }
 
+        public async Task<Result<IEnumerable<CategoryListView>>> GetCategoryListAsync(string rootCode = null)
+        {
+            var tree = await GetCategoryTreeAsync(rootCode);
+            if (tree.HasError())
+            {
+                return new Result<IEnumerable<CategoryListView>>(tree.Errors);
+            }
+
+            return new Result<IEnumerable<CategoryListView>>
+            {
+                Data = tree.Data.ToCategoryList(false)
+            };
+        }
+
+
         private IEnumerable<CategoryTreeView> BuildCategoryTree(IEnumerable<CategoryEntity> categories, CategoryTreeView parent = null)
         {
             if (categories == null) return null;
@@ -65,5 +80,7 @@ namespace ZDeals.Web.Service.Impl
 
             return result;
         }
+
+
     }
 }
