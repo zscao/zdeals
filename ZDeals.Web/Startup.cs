@@ -46,6 +46,7 @@ namespace ZDeals.Web
             });
 
             services.AddScoped<IDealService, DealService>();
+            services.AddScoped<IDealSearchService, DealSearchService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPageService, PageService>();
 

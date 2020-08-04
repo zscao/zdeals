@@ -16,10 +16,10 @@ namespace ZDeals.Web.Pages.Deals
         const int DefaultPageSize = 10;
         const int DefaultPageNumber = 1;
 
-        private readonly IDealService _dealService;
+        private readonly IDealSearchService _dealService;
         private readonly PictureStorageOptions _pictureStorageOptions;
 
-        public IndexModel(IDealService dealService, PictureStorageOptions pictureStorageOptions)
+        public IndexModel(IDealSearchService dealService, PictureStorageOptions pictureStorageOptions)
         {
             _dealService = dealService;
             _pictureStorageOptions = pictureStorageOptions;
@@ -72,7 +72,7 @@ namespace ZDeals.Web.Pages.Deals
                 Category = categoryCode,
                 Keywords = keywords,
                 Store = null,
-                PageNumber = pageNumber
+                Page = pageNumber
             });
             if (result.HasError())
             {

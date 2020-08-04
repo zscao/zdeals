@@ -16,6 +16,8 @@ namespace ZDeals.Web.Service.Models
     {
         public string Value { get; set; }
         public string Name { get; set; }
+
+        public bool Selected { get; set; }
     }
 
     public enum FilterType

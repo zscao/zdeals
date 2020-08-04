@@ -11,6 +11,7 @@ namespace ZDeals.Web.Api.ServiceConfigure
         public static void AddZDealsServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IDealService, DealService>();
+            services.AddScoped<IDealSearchService, DealSearchService>();
             services.AddScoped<ICategoryService, CategoryService>();
 
 
