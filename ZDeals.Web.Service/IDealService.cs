@@ -16,6 +16,6 @@ namespace ZDeals.Web.Service
         /// </summary>
         /// <param name="dealId"></param>
         /// <returns></returns>
-        Task<Result<Deal>> Visit(int dealId);
+        Task<Result<Deal>> Visit(int dealId, string clientIp);
     }
 }

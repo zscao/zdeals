@@ -14,11 +14,13 @@ namespace ZDeals.Web.Api.Controllers
     public class DealsController : ControllerBase
     {
         private readonly IDealSearchService _dealSearchService;
+        private readonly IDealService _dealService;
         private readonly PictureStorageOptions _pictureStorageOptions;
 
-        public DealsController(IDealSearchService dealSearchService, PictureStorageOptions pictureStorageOptions)
+        public DealsController(IDealSearchService dealSearchService, IDealService dealService, PictureStorageOptions pictureStorageOptions)
         {
             _dealSearchService = dealSearchService;
+            _dealService = dealService;
             _pictureStorageOptions = pictureStorageOptions;
         }
 
@@ -43,6 +45,16 @@ namespace ZDeals.Web.Api.Controllers
             if (string.IsNullOrEmpty(_pictureStorageOptions.GetPictureUrl) == false)
                 data.Deals.SetPictureAbsoluteUrl(_pictureStorageOptions);
            
+            return result;
+        }
+
+        [HttpPost("visit/{id}")]
+        public async Task<ActionResult<Result>> Visit(int id)
+        {
+            var clientIp = HttpContext.Connection.RemoteIpAddress;
+
+            var result = await _dealService.Visit(id, clientIp.ToString());
+
             return result;
         }
     }

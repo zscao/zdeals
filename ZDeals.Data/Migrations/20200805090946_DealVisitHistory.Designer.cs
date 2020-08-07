@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZDeals.Data;
 
 namespace ZDeals.Data.Migrations
 {
     [DbContext(typeof(ZDealsDbContext))]
-    partial class ZDealsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200805090946_DealVisitHistory")]
+    partial class DealVisitHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,9 +110,6 @@ namespace ZDeals.Data.Migrations
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50);
 
-                    b.Property<DateTime?>("LastVisitedTime")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("Source")
                         .HasColumnType("varchar(400) CHARACTER SET utf8mb4")
                         .HasMaxLength(400);
@@ -122,11 +121,6 @@ namespace ZDeals.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
                         .HasMaxLength(200);
-
-                    b.Property<int>("TotalVisited")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<string>("VerifiedBy")
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")

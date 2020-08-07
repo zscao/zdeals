@@ -33,6 +33,11 @@ namespace ZDeals.Common
             return Errors?.Any(x => x.Type == type) ?? false;
         }
 
+        public bool HasError(int errorCode)
+        {
+            return Errors?.Any(x => x.Code == errorCode) ?? false;
+        }
+
     }
 
     public class Result<T>: Result

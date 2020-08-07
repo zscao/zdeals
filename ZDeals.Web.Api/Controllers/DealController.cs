@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
 using System.Threading.Tasks;
 
 using ZDeals.Web.Service;
@@ -20,14 +19,18 @@ namespace ZDeals.Web.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Index(string id)
         {
-            var home = "https://www.google.com";
+            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
 
-            if(int.TryParse(id, out int dealId) == false) return new RedirectResult(home);
+            if (int.TryParse(id, out int dealId) == false) return new RedirectResult(baseUrl);
 
-            var result = await _dealService.Visit(dealId);
-            if (result.HasError() || string.IsNullOrEmpty(result.Data?.Source)) return new RedirectResult(home);
 
-            return new RedirectResult(result.Data.Source);            
+            var clientIp = HttpContext.Connection.RemoteIpAddress;
+            var result = await _dealService.Visit(dealId, clientIp.ToString());
+            if (result.HasError() || string.IsNullOrEmpty(result.Data?.Source)) return new RedirectResult(baseUrl);
+
+            return new RedirectResult(result.Data.Source);
+
+
         }
     }
 }

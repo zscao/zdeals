@@ -22,5 +22,6 @@
         Validation = 1,
         Authentication = 2,
         NotFound = 3,
+        BadRequest = 4,
     }
 }

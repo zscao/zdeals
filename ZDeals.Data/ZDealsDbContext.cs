@@ -16,6 +16,8 @@ namespace ZDeals.Data
         public DbSet<DealCategoryJoin> DealCategories { get; set; }
         public DbSet<DealPictureEntity> DealPictures { get; set; }
 
+        public DbSet<VisitHistoryEntity> DealVisitHistory { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<StoreEntity>(e =>
@@ -25,8 +27,12 @@ namespace ZDeals.Data
 
             builder.Entity<DealEntity>(e =>
             {
-                e.HasOne(d => d.Store).WithMany(s => s.Deals).HasForeignKey(d => d.StoreId);
                 e.HasIndex(d => d.Title);
+                e.HasOne(d => d.Store).WithMany(s => s.Deals).HasForeignKey(d => d.StoreId);
+
+                e.HasMany(d => d.VisitHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
+
+                e.Property(d => d.TotalVisited).HasDefaultValue(0);
             });                
 
             builder.Entity<CategoryEntity>(e =>

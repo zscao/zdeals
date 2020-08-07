@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using ZDeals.Common;
 using ZDeals.Data;
+using ZDeals.Data.Entities;
+using ZDeals.Net;
 using ZDeals.Web.Service.Mapping;
 using ZDeals.Web.Service.Models;
 
@@ -14,15 +16,53 @@ namespace ZDeals.Web.Service.Impl
     {
 
         private readonly ZDealsDbContext _dbContext;
+        private readonly IPageService _pageService;
 
-        public DealService(ZDealsDbContext dbContext)
+        public DealService(ZDealsDbContext dbContext, IPageService pageService)
         {
             _dbContext = dbContext;
+            _pageService = pageService;
         }
 
-        public Task<Result<Deal>> Visit(int dealId)
+        public async Task<Result<Deal>> Visit(int dealId, string clientIp)
         {
-            return GetDealById(dealId);
+            var result = new Result<Deal>();
+
+            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
+            if(deal == null)
+            {
+                result.Errors.Add(new Error(ErrorType.NotFound) 
+                { 
+                    Code = Common.ErrorCodes.Sales.DealNotFound, Message = "Deal not found." 
+                });
+                return result;
+            }
+
+            var pageStatus = await _pageService.CheckPageStatus(deal.Source);
+            if(pageStatus == PageStatus.NotFound)
+            {
+                deal.ExpiryDate = DateTime.UtcNow;
+                result.Errors.Add(new Error(ErrorType.BadRequest) 
+                {
+                    Code = Common.ErrorCodes.Sales.DealExpired, Message = "Deal has expired." 
+                });
+            }
+
+            var visit = new VisitHistoryEntity
+            {
+                DealId = dealId,
+                ClientIp = clientIp,
+                VisitedTime = DateTime.UtcNow
+            };
+            var entry = _dbContext.DealVisitHistory.Add(visit);
+
+            deal.TotalVisited += 1;
+            deal.LastVisitedTime = DateTime.UtcNow;
+
+            var saved = await _dbContext.SaveChangesAsync();
+
+            result.Data = deal.ToDealModel();
+            return result;
         }
 
         public async Task<Result<Deal>> MarkDealExpired(int dealId)
