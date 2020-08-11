@@ -2,8 +2,8 @@
 {
     public class SearchDealRequest
     {
-        public string Category { get; set; }
-        public string Keywords { get; set; }
-        public int pageNumber { get; set; }
+        public string? Category { get; set; }
+        public string? Keywords { get; set; }
+        public int? pageNumber { get; set; }
     }
 }

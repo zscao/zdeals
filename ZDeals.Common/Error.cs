@@ -7,7 +7,7 @@
         /// codes are defined in modules
         /// </summary>
         public int Code { get; set; }
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
         public Error(ErrorType type)
         {

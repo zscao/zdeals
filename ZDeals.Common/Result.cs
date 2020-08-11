@@ -5,7 +5,7 @@ namespace ZDeals.Common
 {
     public class Result
     {
-        public List<Error> Errors { get; set; }
+        public List<Error> Errors { get; private set; }
 
         public Result()
         {
@@ -18,14 +18,14 @@ namespace ZDeals.Common
             if (error != null) Errors.Add(error);
         }
 
-        public Result(IEnumerable<Error> errors)
+        public Result(IEnumerable<Error>? errors)
         {
             Errors = errors?.ToList() ?? new List<Error>();
         }
 
         public bool HasError()
         {
-            return Errors?.Any() ?? false;
+            return Errors.Any();
         }
 
         public bool HasError(ErrorType type)
@@ -46,6 +46,7 @@ namespace ZDeals.Common
 
         public Result()
         {
+            Data = default!;
         }
 
         public Result(T data)
@@ -53,7 +54,13 @@ namespace ZDeals.Common
             Data = data;
         }
 
-        public Result(Error error): base(error) { }
-        public Result(IEnumerable<Error> errors) : base(errors) { }
+        public Result(Error error): base(error) 
+        {
+            Data = default!;
+        }
+        public Result(IEnumerable<Error> errors) : base(errors) 
+        {
+            Data = default!;
+        }
     }
 }

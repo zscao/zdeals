@@ -5,7 +5,7 @@ namespace ZDeals.Web.Service.Mapping
 {
     public static class StoreMapping
     {
-        public static Store ToStoreModel(this StoreEntity entity)
+        public static Store? ToStoreModel(this StoreEntity entity)
         {
             if (entity == null) return null;
 

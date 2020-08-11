@@ -18,23 +18,16 @@ namespace ZDeals.Api.Setup
             using (var scope = host.Services.CreateScope())
             using (var dbContext = scope.ServiceProvider.GetRequiredService<ZDealsDbContext>())
             {
-                try
+                if (dbContext.Stores.Any() == false)
                 {
-                    if(dbContext.Stores.Any() == false)
-                    {
-                        dbContext.Stores.AddRange(GetStoreSeedData());
-                        await dbContext.SaveChangesAsync();
-                    }
-
-                    if(dbContext.Categories.Any() == false)
-                    {
-                        dbContext.Categories.AddRange(GetCategorySeedData());
-                        await dbContext.SaveChangesAsync();
-                    }
+                    dbContext.Stores.AddRange(GetStoreSeedData());
+                    await dbContext.SaveChangesAsync();
                 }
-                catch(Exception ex)
+
+                if (dbContext.Categories.Any() == false)
                 {
-                    throw;
+                    dbContext.Categories.AddRange(GetCategorySeedData());
+                    await dbContext.SaveChangesAsync();
                 }
             }
             return host;

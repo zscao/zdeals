@@ -8,8 +8,8 @@ namespace ZDeals.Web.Service
 {
     public interface ICategoryService
     {
-        Task<Result<CategoryTreeView>> GetCategoryTreeAsync(string rootCode = null);
+        Task<Result<CategoryTreeView>> GetCategoryTreeAsync(string? rootCode = null);
 
-        Task<Result<IEnumerable<CategoryListView>>> GetCategoryListAsync(string rootCode = null);
+        Task<Result<IEnumerable<CategoryListView>>> GetCategoryListAsync(string? rootCode = null);
     }
 }

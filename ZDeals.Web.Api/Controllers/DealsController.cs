@@ -39,12 +39,15 @@ namespace ZDeals.Web.Api.Controllers
 
             var data = result.Data;
 
-            var baseUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-            data.Deals.SetSourceToLocal(baseUrl);
+            if (data?.Deals != null)
+            { 
+                var baseUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+                data.Deals = DealsHelper.SetSourceToLocal(data.Deals, baseUrl);
 
-            if (string.IsNullOrEmpty(_pictureStorageOptions.GetPictureUrl) == false)
-                data.Deals.SetPictureAbsoluteUrl(_pictureStorageOptions);
-           
+
+                if (string.IsNullOrEmpty(_pictureStorageOptions.GetPictureUrl) == false)
+                    data.Deals = DealsHelper.SetPictureAbsoluteUrl(data.Deals, _pictureStorageOptions);
+            }
             return result;
         }
 

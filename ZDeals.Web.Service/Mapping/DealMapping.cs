@@ -5,7 +5,7 @@ namespace ZDeals.Web.Service.Mapping
 {
     public static class DealMapping
     {
-        public static Deal ToDealModel(this DealEntity entity)
+        public static Deal? ToDealModel(this DealEntity entity)
         {
             if (entity == null) return null;
 

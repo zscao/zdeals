@@ -21,11 +21,11 @@ namespace ZDeals.Web.Service.Impl
             _dbContext = dbContext;
         }
 
-        public async Task<Result<CategoryTreeView>> GetCategoryTreeAsync(string rootCode = null)
+        public async Task<Result<CategoryTreeView>> GetCategoryTreeAsync(string? rootCode = null)
         {
             var categories = await _dbContext.Categories.ToListAsync();
 
-            CategoryEntity root = null;
+            CategoryEntity? root = null;
             if (!string.IsNullOrEmpty(rootCode))
             {
                 root = categories.SingleOrDefault(x => x.Code == rootCode);
@@ -36,19 +36,19 @@ namespace ZDeals.Web.Service.Impl
                 root = categories.OrderBy(x => x.Id).FirstOrDefault(x => x.ParentId == null);
             }
 
-            if (root == null)
+            var result = root.ToCategoryTreeView();
+            if (result == null)
             {
                 var error = new Error(ErrorType.NotFound) { Code = Sales.CategoryNotFound, Message = "Category does not exist" };
                 return new Result<CategoryTreeView>(error);
             }
-
-            var result = root.ToCategoryTreeView();
+            
             result.Children = BuildCategoryTree(categories, result);
 
             return new Result<CategoryTreeView>(result);
         }
 
-        public async Task<Result<IEnumerable<CategoryListView>>> GetCategoryListAsync(string rootCode = null)
+        public async Task<Result<IEnumerable<CategoryListView>>> GetCategoryListAsync(string? rootCode = null)
         {
             var tree = await GetCategoryTreeAsync(rootCode);
             if (tree.HasError())
@@ -58,12 +58,12 @@ namespace ZDeals.Web.Service.Impl
 
             return new Result<IEnumerable<CategoryListView>>
             {
-                Data = tree.Data.ToCategoryList(false)
+                Data = tree.Data.ToCategoryList(false)!
             };
         }
 
 
-        private IEnumerable<CategoryTreeView> BuildCategoryTree(IEnumerable<CategoryEntity> categories, CategoryTreeView parent = null)
+        private IEnumerable<CategoryTreeView>? BuildCategoryTree(IEnumerable<CategoryEntity> categories, CategoryTreeView? parent = null)
         {
             if (categories == null) return null;
 
@@ -72,7 +72,7 @@ namespace ZDeals.Web.Service.Impl
 
             foreach (var child in children)
             {
-                var cate = child.ToCategoryTreeView();
+                var cate = child.ToCategoryTreeView()!;
                 result.Add(cate);
 
                 cate.Children = BuildCategoryTree(categories, cate);

@@ -24,9 +24,9 @@ namespace ZDeals.Web.Service.Impl
             _pageService = pageService;
         }
 
-        public async Task<Result<Deal>> Visit(int dealId, string clientIp)
+        public async Task<Result<Deal?>> Visit(int dealId, string clientIp)
         {
-            var result = new Result<Deal>();
+            var result = new Result<Deal?>();
 
             var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
@@ -65,31 +65,31 @@ namespace ZDeals.Web.Service.Impl
             return result;
         }
 
-        public async Task<Result<Deal>> MarkDealExpired(int dealId)
+        public async Task<Result<Deal?>> MarkDealExpired(int dealId)
         {
             var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
             if (deal == null)
             {
                 var error = new Error(ErrorType.NotFound) { Code = Common.ErrorCodes.Sales.DealNotFound, Message = "Deal does not exist." };
-                return new Result<Deal>(error);
+                return new Result<Deal?>(error);
             }
 
             deal.ExpiryDate = DateTime.UtcNow;
             await _dbContext.SaveChangesAsync();
 
-            return new Result<Deal>(deal.ToDealModel());
+            return new Result<Deal?>(deal.ToDealModel());
         }
 
-        public async Task<Result<Deal>> GetDealById(int dealId)
+        public async Task<Result<Deal?>> GetDealById(int dealId)
         {
             var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId && x.Deleted == false);
             if(deal == null)
             {
                 var error = new Error(ErrorType.NotFound) { Code = Common.ErrorCodes.Sales.DealNotFound, Message = "Deal not found." };
-                return new Result<Deal>(error);
+                return new Result<Deal?>(error);
             }
 
-            return new Result<Deal>(deal.ToDealModel());
+            return new Result<Deal?>(deal.ToDealModel());
         }
     }
 }

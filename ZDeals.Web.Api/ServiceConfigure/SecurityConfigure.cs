@@ -19,7 +19,7 @@ namespace ZDeals.Web.Api.ServiceConfigure
             var tokenParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Secret)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Secret ?? string.Empty)),
                 ValidateIssuer = true,
                 ValidIssuer = jwtOptions.Issuer,
                 ValidateAudience = false,

@@ -7,7 +7,7 @@ namespace ZDeals.Web.Service.Mapping
 {
     public static class CategoryMapping
     {
-        public static CategoryTreeView ToCategoryTreeView(this CategoryEntity entity)
+        public static CategoryTreeView? ToCategoryTreeView(this CategoryEntity entity)
         {
             if (entity == null) return null;
 
@@ -20,7 +20,7 @@ namespace ZDeals.Web.Service.Mapping
             };
         }
 
-        public static IEnumerable<CategoryListView> ToCategoryList(this CategoryTreeView category, bool includeRootNode)
+        public static IEnumerable<CategoryListView>? ToCategoryList(this CategoryTreeView category, bool includeRootNode)
         {
             if (category == null) return null;
 
@@ -41,7 +41,7 @@ namespace ZDeals.Web.Service.Mapping
             return result;
         }
 
-        private static IEnumerable<CategoryListView> BuildChildren(IEnumerable<CategoryTreeView> categories, IEnumerable<Category> path = null)
+        private static IEnumerable<CategoryListView>? BuildChildren(IEnumerable<CategoryTreeView>? categories, IEnumerable<Category>? path = null)
         {
             if (categories == null || categories.Count() == 0) return null;
 

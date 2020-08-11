@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 using ZDeals.Web.Api.Options;
 using ZDeals.Web.Service;
@@ -8,30 +9,30 @@ namespace ZDeals.Web.Api.Helpers
 {
     static class DealsHelper
     {
-        public static IEnumerable<Deal> SetPictureAbsoluteUrl(this IEnumerable<Deal> deals, PictureStorageOptions options)
+        public static IEnumerable<Deal> SetPictureAbsoluteUrl(IEnumerable<Deal> deals, PictureStorageOptions options)
         {
-            if (deals == null || string.IsNullOrEmpty(options.GetPictureUrl)) return deals;
+            if (string.IsNullOrEmpty(options.GetPictureUrl)) return deals;
 
-            foreach (var deal in deals)
+            var result = new List<Deal>(deals);
+            foreach (var deal in result)
             {
                 deal.Picture = $"{options.GetPictureUrl}/deals/{deal.Picture}";
             }
 
-            return deals;
+            return result;
         }
 
-        public static IEnumerable<Deal> SetSourceToLocal(this IEnumerable<Deal> deals, string baseUrl)
+        public static IEnumerable<Deal> SetSourceToLocal(IEnumerable<Deal> deals, string baseUrl)
         {
-            if (deals == null) return deals;
-
-            foreach(var deal in deals)
+            var result = new List<Deal>(deals);
+            foreach(var deal in result)
             {
                 deal.Source = $"{baseUrl}/deal/{deal.Id}";
             }
-            return deals;
+            return result;
         }
 
-        public static string GetMoreLink(DealsSearchResult result, DealsSearchRequest request)
+        public static string? GetMoreLink(DealsSearchResult result, DealsSearchRequest request)
         {
             if (!result.More) return null;
 
@@ -45,7 +46,7 @@ namespace ZDeals.Web.Api.Helpers
                 .AddQueryString("page", $"{result.Page + 1}");
         }
 
-        static string AddQueryString(this string url, string key, string value)
+        static string AddQueryString(this string url, string key, string? value)
         {
             if (string.IsNullOrEmpty(value)) return url;
 

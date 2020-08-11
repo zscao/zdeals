@@ -26,15 +26,15 @@ namespace ZDeals.Web.Service.Impl
             _categoryService = categoryService;
         }
 
-        public async Task<Result<DealsSearchResult>> SearchDeals(DealsSearchRequest request)
+        public async Task<Result<DealsSearchResult?>> SearchDeals(DealsSearchRequest request)
         {
             var categoryIds = new List<int>();
 
-            if (!string.IsNullOrEmpty(request?.Category) && request.Category != Common.Constants.DefaultValues.DealsCategoryRoot)
+            if (!string.IsNullOrEmpty(request.Category) && request.Category != Common.Constants.DefaultValues.DealsCategoryRoot)
             {
                 var cateResult = await _categoryService.GetCategoryTreeAsync(request.Category);
                 if (cateResult.HasError())
-                    return new Result<DealsSearchResult>(cateResult.Errors);
+                    return new Result<DealsSearchResult?>(cateResult.Errors);
 
                 categoryIds = cateResult.Data.ToCategoryList(includeRootNode: true).Select(x => x.Id).ToList();
             }
@@ -45,7 +45,7 @@ namespace ZDeals.Web.Service.Impl
                     .Where(x => !x.Deleted && x.VerifiedTime < System.DateTime.UtcNow && (x.ExpiryDate == null || x.ExpiryDate > System.DateTime.UtcNow));
 
             if (categoryIds?.Count > 0) query = query.Where(x => x.DealCategory.Any(c => categoryIds.Contains(c.CategoryId)));
-            if (!string.IsNullOrWhiteSpace(request?.Keywords)) query = query.Where(x => EF.Functions.Like(x.Title, $"%{request.Keywords}%"));
+            if (!string.IsNullOrWhiteSpace(request.Keywords)) query = query.Where(x => EF.Functions.Like(x.Title, $"%{request.Keywords}%"));
 
             var stores = request.Store?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             // get filters 
@@ -72,19 +72,19 @@ namespace ZDeals.Web.Service.Impl
 
             var result = new DealsSearchResult
             {
-                Deals = deals.Select(x => x.ToDealModel()).ToList(),
+                Deals = deals.Select(x => x.ToDealModel()!).ToList(),
                 Category = request?.Category,
-                Keywords = request.Keywords,
+                Keywords = request?.Keywords,
                 Page = page,
                 Sort = request?.Sort ?? "default",
                 More = deals.Count >= PageSize,
                 Filters = new List<DealFilter>() { storeFilter }
             };
 
-            return new Result<DealsSearchResult>(result);
+            return new Result<DealsSearchResult?>(result);
         }
 
-        private DealFilter GetStoreFilter(IEnumerable<string> stores, string[] selected)
+        private DealFilter GetStoreFilter(IEnumerable<string> stores, string[]? selected)
         {
             return new DealFilter
             {
