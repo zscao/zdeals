@@ -18,7 +18,7 @@ namespace ZDeals.Engine.Repo.Startup
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
                     cfg.UseHealthCheck(context);
-                    cfg.Host("ubuntuvm");
+                    cfg.Host("ubuntu2004");
 
                     cfg.ReceiveEndpoint("product_repository_queue", e =>
                     {

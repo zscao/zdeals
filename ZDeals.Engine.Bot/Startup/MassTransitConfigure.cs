@@ -13,7 +13,7 @@ namespace ZDeals.Engine.Bot.Startup
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
                     cfg.UseHealthCheck(context);
-                    cfg.Host("ubuntuvm");
+                    cfg.Host("ubuntu2004");
                 }));
             });
 

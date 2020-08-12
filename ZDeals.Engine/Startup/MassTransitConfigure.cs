@@ -18,7 +18,7 @@ namespace ZDeals.Engine.Startup
                 x.AddBus(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
                     cfg.UseHealthCheck(context);
-                    cfg.Host("ubuntuvm");                    
+                    cfg.Host("ubuntu2004");                    
 
                     cfg.ReceiveEndpoint("parse_page_queue", e =>
                     {
