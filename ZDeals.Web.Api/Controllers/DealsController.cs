@@ -9,7 +9,7 @@ using ZDeals.Web.Service;
 
 namespace ZDeals.Web.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class DealsController : ControllerBase
     {

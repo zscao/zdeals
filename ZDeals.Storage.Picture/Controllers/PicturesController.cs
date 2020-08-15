@@ -16,7 +16,7 @@ namespace ZDeals.Storage.Picture.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/{controller}")]
+    [Route("{controller}")]
     public class PicturesController : ControllerBase
     {
         private readonly IBlobService _blobService;

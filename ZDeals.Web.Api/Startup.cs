@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using System.Globalization;
+
 using ZDeals.Web.Api.ServiceConfigure;
 
 namespace ZDeals.Web.Api
@@ -36,6 +38,9 @@ namespace ZDeals.Web.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var culture = new CultureInfo("en-AU");
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -43,10 +48,13 @@ namespace ZDeals.Web.Api
 
             app.UseCors(CorsPolicyName);
 
+            string pathBase = Configuration.GetValue<string>("PathBase") ?? "/";
+            app.UsePathBase(pathBase);
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ZDeals Web Api v1");
+                c.SwaggerEndpoint($"{pathBase}swagger/v1/swagger.json", "ZDeals Web Api v1");
             });
 
 

@@ -41,6 +41,9 @@ namespace ZDeals.Storage.Picture
 
             app.UseCors(CorsPolicyName);
 
+            string pathBase = Configuration.GetValue<string>("PathBase") ?? "/";
+            app.UsePathBase(pathBase);
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

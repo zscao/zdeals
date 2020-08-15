@@ -43,10 +43,13 @@ namespace ZDeals.Identity
 
             app.UseCors(CorsPolicyName);
 
+            string pathBase = Configuration.GetValue<string>("PathBase") ?? "/";
+            app.UsePathBase(pathBase);
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ZDeals API V1");
+                c.SwaggerEndpoint($"{pathBase}swagger/v1/swagger.json", "ZDeals API V1");
             });
 
             app.UseHttpsRedirection();
