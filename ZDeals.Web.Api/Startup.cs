@@ -41,22 +41,20 @@ namespace ZDeals.Web.Api
             var culture = new CultureInfo("en-AU");
             CultureInfo.DefaultThreadCurrentCulture = culture;
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseCors(CorsPolicyName);
-
             string pathBase = Configuration.GetValue<string>("PathBase") ?? "/";
             app.UsePathBase(pathBase);
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            if (env.IsDevelopment())
             {
-                c.SwaggerEndpoint($"{pathBase}swagger/v1/swagger.json", "ZDeals Web Api v1");
-            });
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint($"{pathBase}swagger/v1/swagger.json", "ZDeals Web Api v1");
+                });
+            }
 
+            app.UseCors(CorsPolicyName);
 
             app.UseHttpsRedirection();
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using System.Net;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
@@ -50,6 +51,12 @@ namespace ZDeals.Api.Controllers
         public async Task<ActionResult<Result>> GetById(int dealId)
         {
             return await _dealService.GetDealByIdAsync(dealId);
+        }
+
+        [HttpGet("exist")]
+        public async Task<ActionResult<Result>> CheckExistenceBySource([FromQuery] string source)
+        {
+            return await _dealService.CheckExistenceBySourceAsync(source);
         }
 
         [HttpPost]

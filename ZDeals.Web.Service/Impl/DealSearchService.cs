@@ -15,7 +15,7 @@ namespace ZDeals.Web.Service.Impl
 {
     public class DealSearchService : IDealSearchService
     {
-        const int PageSize = 5;
+        const int PageSize = 20;
 
         private readonly ZDealsDbContext _dbContext;
         private readonly ICategoryService _categoryService;

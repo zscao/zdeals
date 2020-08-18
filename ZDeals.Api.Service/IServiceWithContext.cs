@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ZDeals.Api.Service
+﻿namespace ZDeals.Api.Service
 {
     public interface IServiceWithContext
     {

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract.Models;
@@ -87,9 +88,30 @@ namespace ZDeals.Api.Service.Impl
 
             return new Result<Deal>(deal.ToDealModel());
         }
+        public async Task<Result<DealExistence>> CheckExistenceBySourceAsync(string source)
+        {
+            var result = new Result<DealExistence>(new DealExistence { Existing = false });
+
+            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Source == source);
+            if (deal != null)
+            {
+                result.Data.Existing = true;
+                result.Data.Deal = deal.ToDealModel();
+            }
+
+            return result;
+        }
+
 
         public async Task<Result<Deal>> CreateDealAsync(CreateDealRequest request)
         {
+            var exist = await _dbContext.Deals.AnyAsync(x => x.Source == request.Source);
+            if (exist)
+            {
+                var error = new Error(ErrorType.BadRequest) { Code = Sales.DealSourceDuplicate, Message = "Deal source duplicate." };
+                return new Result<Deal>(error);
+            }
+
             var store = await FindStoreForUrl(request.Source);
 
             var deal = new DealEntity

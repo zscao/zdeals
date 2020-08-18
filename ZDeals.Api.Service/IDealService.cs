@@ -14,6 +14,8 @@ namespace ZDeals.Api.Service
 
         Task<Result<Deal>> GetDealByIdAsync(int dealId);
 
+        Task<Result<DealExistence>> CheckExistenceBySourceAsync(string source);
+
         Task<Result<Store>> GetDealStoreAsync(int dealId);
 
         Task<Result<Deal>> UpdateDealAsync(int dealId, UpdateDealRequest request);

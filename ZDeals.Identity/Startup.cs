@@ -36,21 +36,20 @@ namespace ZDeals.Identity
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseCors(CorsPolicyName);
-
             string pathBase = Configuration.GetValue<string>("PathBase") ?? "/";
             app.UsePathBase(pathBase);
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            if (env.IsDevelopment())
             {
-                c.SwaggerEndpoint($"{pathBase}swagger/v1/swagger.json", "ZDeals API V1");
-            });
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint($"{pathBase}swagger/v1/swagger.json", "ZDeals API V1");
+                });
+            }
+
+            app.UseCors(CorsPolicyName);
 
             app.UseHttpsRedirection();
 
