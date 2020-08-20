@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract.Models;
@@ -61,6 +62,7 @@ namespace ZDeals.Api.Service.Impl
 
             var deals = await query.AsNoTracking()
                 .Include(x => x.Store)
+                .Include(x => x.Brand)
                 .OrderByDescending(x => x.Id)
                 .Skip((number - 1) * size)
                 .Take(size)
@@ -80,7 +82,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> GetDealByIdAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.Store).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
             {
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
@@ -92,7 +94,7 @@ namespace ZDeals.Api.Service.Impl
         {
             var result = new Result<DealExistence>(new DealExistence { Existing = false });
 
-            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Source == source);
+            var deal = await _dbContext.Deals.Include(x => x.Store).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Source == source);
             if (deal != null)
             {
                 result.Data.Existing = true;
@@ -113,6 +115,7 @@ namespace ZDeals.Api.Service.Impl
             }
 
             var store = await FindStoreForUrl(request.Source);
+            var brand = await _dbContext.Brands.FirstOrDefaultAsync(x => x.Code == request.Brand);
 
             var deal = new DealEntity
             {
@@ -125,7 +128,7 @@ namespace ZDeals.Api.Service.Impl
                 ExpiryDate = request.ExpiryDate,
                 Source = request.Source,
                 Store = store,
-                Brand = request.Brand,
+                Brand = brand,
             };
             
             var entry =_dbContext.Deals.Add(deal);            
@@ -147,11 +150,13 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> UpdateDealAsync(int dealId, UpdateDealRequest request)
         {
-            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.Store).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
             {
                 return new Result<Deal>(new Error(ErrorType.Validation) { Code = Sales.DealNotFound, Message = "Deal does not exist" });
             }
+
+            var brand = await _dbContext.Brands.FirstOrDefaultAsync(x => x.Code == request.Brand);
 
             deal.Title = request.Title;
             deal.Highlight = request.HighLight;
@@ -160,7 +165,7 @@ namespace ZDeals.Api.Service.Impl
             deal.FullPrice = request.FullPrice;
             deal.DealPrice = request.DealPrice;
             deal.ExpiryDate = request.ExpiryDate;
-            deal.Brand = request.Brand;
+            deal.Brand = brand;
 
             // if the deal is change, then needs to be verify again
             deal.VerifiedBy = null;
@@ -187,7 +192,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> VerifyDealAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
 

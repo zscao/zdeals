@@ -16,6 +16,9 @@ namespace ZDeals.Api.Contract.Requests
 
         public string Source { get; set; }
 
+        /// <summary>
+        /// brand code
+        /// </summary>
         public string Brand { get; set; }
     }
 }

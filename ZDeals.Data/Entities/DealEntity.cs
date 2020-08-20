@@ -34,8 +34,8 @@ namespace ZDeals.Data.Entities
         [MaxLength(400)]
         public string Source { get; set; }
 
-        [MaxLength(20)]
-        public string Brand { get; set; }
+        public int? BrandId { get; set; }
+        public BrandEntity Brand { get; set; }
 
         public int? StoreId { get; set; }
 

@@ -15,6 +15,7 @@ namespace ZDeals.Data
         public DbSet<CategoryEntity> Categories { get; set; }
         public DbSet<DealCategoryJoin> DealCategories { get; set; }
         public DbSet<DealPictureEntity> DealPictures { get; set; }
+        public DbSet<BrandEntity> Brands { get; set; }
 
         public DbSet<VisitHistoryEntity> DealVisitHistory { get; set; }
 
@@ -23,12 +24,17 @@ namespace ZDeals.Data
             builder.Entity<StoreEntity>(e =>
             {
                 e.HasIndex(s => s.Name).IsUnique(true);
-            });                
+            });               
+            
+            builder.Entity<BrandEntity>(e => {
+                e.HasIndex(b => b.Code).IsUnique(true);
+            });
 
             builder.Entity<DealEntity>(e =>
             {
                 e.HasIndex(d => d.Title);
                 e.HasOne(d => d.Store).WithMany(s => s.Deals).HasForeignKey(d => d.StoreId);
+                e.HasOne(d => d.Brand).WithMany(s => s.Deals).HasForeignKey(d => d.BrandId);
 
                 e.HasMany(d => d.VisitHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
 

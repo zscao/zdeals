@@ -25,7 +25,7 @@ namespace ZDeals.Api.Service.Mapping
                 DeletedTime = entity.DeletedTime,
                 Store = entity.Store?.ToStoreModel(),
                 Source = entity.Source,
-                Brand = entity.Brand,
+                Brand = entity.Brand?.ToBrandModel(),
             };
         }
     }

@@ -13,6 +13,7 @@ namespace ZDeals.Api.ServiceConfigure
             services.AddScoped<IDealService, DealService>();
             services.AddScoped<IStoreService, StoreService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IBrandService, BrandService>();
         }
     }
 }

@@ -24,8 +24,8 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<PagedStores>> SearchStoresAsync()
         {
-            var total = await _dbContext.Stores.CountAsync();
             var stores = await _dbContext.Stores.AsNoTracking().ToListAsync();
+            var total = stores.Count;
 
             var paged = new PagedStores
             {

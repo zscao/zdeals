@@ -25,7 +25,7 @@ namespace ZDeals.Api.Contract.Models
 
         public string Source { get; set; }
 
-        public string Brand { get; set; }
+        public Brand Brand { get; set; }
 
     }
 }

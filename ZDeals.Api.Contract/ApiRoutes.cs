@@ -49,5 +49,10 @@
             //public const string CreateCategory = BaseUrl + "categories";
 
         }
+
+        public static class Brands
+        {
+            public const string Base = BaseUrl + "brands";
+        }
     }
 }

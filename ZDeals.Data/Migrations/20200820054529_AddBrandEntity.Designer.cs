@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZDeals.Data;
 
 namespace ZDeals.Data.Migrations
 {
     [DbContext(typeof(ZDealsDbContext))]
-    partial class ZDealsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200820054529_AddBrandEntity")]
+    partial class AddBrandEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,11 +24,6 @@ namespace ZDeals.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
-                        .HasMaxLength(20);
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
@@ -97,6 +94,10 @@ namespace ZDeals.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("Brand")
+                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
+                        .HasMaxLength(20);
 
                     b.Property<int?>("BrandId")
                         .HasColumnType("int");
@@ -275,7 +276,7 @@ namespace ZDeals.Data.Migrations
 
             modelBuilder.Entity("ZDeals.Data.Entities.DealEntity", b =>
                 {
-                    b.HasOne("ZDeals.Data.Entities.BrandEntity", "Brand")
+                    b.HasOne("ZDeals.Data.Entities.BrandEntity", "BrandEntity")
                         .WithMany("Deals")
                         .HasForeignKey("BrandId");
 

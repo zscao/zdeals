@@ -19,6 +19,9 @@ namespace ZDeals.Web.Service
 
         public string? Store { get; set; }
 
+        /// <summary>
+        /// contains brand code
+        /// </summary>
         public string? Brand { get; set; }
 
         public string? Sort { get; set; }

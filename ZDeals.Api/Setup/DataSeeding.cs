@@ -29,6 +29,22 @@ namespace ZDeals.Api.Setup
                     dbContext.Categories.AddRange(GetCategorySeedData());
                     await dbContext.SaveChangesAsync();
                 }
+
+                if(dbContext.Brands.Any() == false)
+                {                    
+                    var brands = new List<BrandEntity>
+                    {
+                        new BrandEntity
+                        {
+                            Code = "other",
+                            Name = "Other",
+                            DisplayOrder = 0
+                        }
+                    };
+
+                    dbContext.Brands.AddRange(brands);
+                    await dbContext.SaveChangesAsync();
+                }
             }
             return host;
         }
@@ -140,6 +156,18 @@ namespace ZDeals.Api.Setup
                     Name = "NewEgg",
                     Website = "https://www.newegg.com",
                     Domain = "newegg.com",
+                }
+            };
+        }
+
+        private static List<BrandEntity> GetBrandSeedData()
+        {
+            return new List<BrandEntity>
+            {
+                new BrandEntity
+                {
+                    Name = "Other",
+                    DisplayOrder = 0
                 }
             };
         }

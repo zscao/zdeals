@@ -52,8 +52,9 @@ namespace ZDeals.Web.Service.Impl
             var storeFilter = GetStoreFilter(query.Select(x => x.Store.Name).Distinct().ToList(), stores);
 
             // get brand filter
-            var brands = request.Brand?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            var brandFilter = GetBrandFilter(query.Select(x => x.Brand).Distinct().ToList(), brands);
+            var brandCodes = request.Brand?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var brandIds = GetBrandIds(brandCodes);
+            var brandFilter = GetBrandFilter(query.Select(x => x.BrandId).Distinct().ToList(), brandIds);
 
             // apply filters
             if (stores?.Length > 0)
@@ -61,9 +62,9 @@ namespace ZDeals.Web.Service.Impl
                 query = query.Where(x => stores.Contains(x.Store.Name));
             }
 
-            if(brands?.Length > 0)
+            if(brandIds.Length > 0)
             {
-                query = query.Where(x => brands.Contains(x.Brand));
+                query = query.Where(x => x.BrandId != null && brandIds.Contains(x.BrandId.Value));
             }
 
             // apply sort
@@ -108,20 +109,34 @@ namespace ZDeals.Web.Service.Impl
             };
         }
 
-        private DealFilter GetBrandFilter(IEnumerable<string> brands, string[]? selected)
+        private DealFilter GetBrandFilter(IEnumerable<int?> brands, int[] selected)
         {
+            int[] brandIds = brands.Select(x => x ?? 0).Where(x => x > 0).ToArray();
+
+            var items = _dbContext.Brands
+                .Where(x => brandIds.Contains(x.Id))
+                .Select(x => new FilterItem
+                {
+                    Name = x.Name,
+                    Value = x.Code,
+                    Selected = selected.Contains(x.Id)
+                });
+
             return new DealFilter
             {
                 Code = "brand",
                 Title = "Brand",
                 FilterType = FilterType.MultipleSelection,
-                Items = brands.Where(x => !string.IsNullOrEmpty(x)).Select(x => new FilterItem
-                {
-                    Name = x,
-                    Value = x,
-                    Selected = selected?.Contains(x) ?? false
-                })
+                Items = items
             };
+        }
+
+        private int[] GetBrandIds(IEnumerable<string>? brandCodes)
+        {
+            if (brandCodes == null || brandCodes.Count() == 0) return new int[0];
+
+            var codes = brandCodes.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            return _dbContext.Brands.Where(x => codes.Contains(x.Code)).Select(x => x.Id).ToArray();
         }
     }
 }
