@@ -15,5 +15,7 @@ namespace ZDeals.Api.Contract.Requests
         public DateTime? ExpiryDate { get; set; }
 
         public string Source { get; set; }
+
+        public string Brand { get; set; }
     }
 }

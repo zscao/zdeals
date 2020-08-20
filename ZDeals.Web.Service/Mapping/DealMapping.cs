@@ -25,6 +25,7 @@ namespace ZDeals.Web.Service.Mapping
                 Store = entity.Store?.ToStoreModel(),
                 Picture = entity.DefaultPicture,
                 Source = entity.Source,
+                Brand = entity.Brand,
             };
         }
     }

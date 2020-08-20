@@ -27,6 +27,8 @@ namespace ZDeals.Web.Service.Models
 
         public string? Source { get; set; }
 
+        public string? Brand { get; set; }
+
         public string FullPriceString
         {
             get
@@ -48,7 +50,9 @@ namespace ZDeals.Web.Service.Models
             get
             {
                 var span = DateTime.UtcNow - CreatedTime;
-                if (span.TotalHours < 24)
+                if (span.TotalMinutes < 60)
+                    return span.TotalMinutes.ToString("0 minutes ago");
+                else if (span.TotalHours < 24)
                     return span.TotalHours.ToString("0 hours ago");
                 else
                     return span.TotalDays.ToString("0 days ago");

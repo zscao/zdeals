@@ -12,6 +12,8 @@ namespace ZDeals.Api.Contract.Requests
         public decimal DealPrice { get; set; }
         public string Discount { get; set; }
 
+        public string Brand { get; set; }
+
         public DateTime? ExpiryDate { get; set; }
     }
 }

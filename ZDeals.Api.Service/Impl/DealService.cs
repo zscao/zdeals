@@ -125,6 +125,7 @@ namespace ZDeals.Api.Service.Impl
                 ExpiryDate = request.ExpiryDate,
                 Source = request.Source,
                 Store = store,
+                Brand = request.Brand,
             };
             
             var entry =_dbContext.Deals.Add(deal);            
@@ -159,6 +160,7 @@ namespace ZDeals.Api.Service.Impl
             deal.FullPrice = request.FullPrice;
             deal.DealPrice = request.DealPrice;
             deal.ExpiryDate = request.ExpiryDate;
+            deal.Brand = request.Brand;
 
             // if the deal is change, then needs to be verify again
             deal.VerifiedBy = null;
