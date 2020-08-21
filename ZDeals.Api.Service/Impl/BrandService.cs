@@ -30,7 +30,8 @@ namespace ZDeals.Api.Service.Impl
                 query = query.Where(x => EF.Functions.Like(x.Name, $"%{name}%"));
 
             var brands = await query
-                .OrderBy(x => x.Name)
+                .OrderByDescending(x => x.DisplayOrder)
+                .ThenBy(x => x.Name)
                 .Select(x => x.ToBrandModel())
                 .ToListAsync();
 

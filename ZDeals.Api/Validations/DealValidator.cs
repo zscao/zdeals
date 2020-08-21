@@ -9,14 +9,7 @@ namespace ZDeals.Api.Validations
         public CreateDealValidator()
         {
             RuleFor(x => x.Title).NotEmpty().MaximumLength(200);
-
-            RuleFor(x => x.HighLight).MaximumLength(50);
-
-            RuleFor(x => x.Description).MaximumLength(400);
-
-            RuleFor(x => x.Discount).MaximumLength(20);
-
-            RuleFor(x => x.Source).MaximumLength(400);
+            RuleFor(x => x.Source).NotEmpty().MaximumLength(400);
         }
     }
 

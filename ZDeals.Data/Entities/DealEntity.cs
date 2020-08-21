@@ -31,6 +31,7 @@ namespace ZDeals.Data.Entities
         
         public DateTime? ExpiryDate { get; set; }
 
+        [Required]
         [MaxLength(400)]
         public string Source { get; set; }
 

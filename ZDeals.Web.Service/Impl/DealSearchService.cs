@@ -115,6 +115,8 @@ namespace ZDeals.Web.Service.Impl
 
             var items = _dbContext.Brands
                 .Where(x => brandIds.Contains(x.Id))
+                .OrderByDescending(x => x.DisplayOrder)
+                .ThenBy(x => x.Name)
                 .Select(x => new FilterItem
                 {
                     Name = x.Name,

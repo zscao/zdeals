@@ -115,20 +115,12 @@ namespace ZDeals.Api.Service.Impl
             }
 
             var store = await FindStoreForUrl(request.Source);
-            var brand = await _dbContext.Brands.FirstOrDefaultAsync(x => x.Code == request.Brand);
 
             var deal = new DealEntity
             {
                 Title = request.Title,
-                Highlight = request.HighLight,
-                Description = request.Description,
-                FullPrice = request.FullPrice,
-                DealPrice = request.DealPrice,
-                Discount = request.Discount,
-                ExpiryDate = request.ExpiryDate,
                 Source = request.Source,
-                Store = store,
-                Brand = brand,
+                Store = store
             };
             
             var entry =_dbContext.Deals.Add(deal);            
