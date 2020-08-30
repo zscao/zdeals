@@ -122,9 +122,33 @@ namespace ZDeals.Api.Service.Impl
                 Source = request.Source,
                 Store = store
             };
-            
+
+            if (!string.IsNullOrEmpty(request.Category))
+            {
+                var category = _dbContext.Categories.SingleOrDefault(x => x.Code == request.Category);
+                if (category != null)
+                {
+                    deal.DealCategory = new List<DealCategoryJoin>();
+                    deal.DealCategory.Add(new DealCategoryJoin { Deal = deal, Category = category });
+                }
+            }
+
+
             var entry =_dbContext.Deals.Add(deal);            
             var saved = await _dbContext.SaveChangesAsync();
+
+            //if (!string.IsNullOrEmpty(request.Category))
+            //{
+            //    var category = _dbContext.Categories.SingleOrDefault(x => x.Code == request.Category);
+            //    if (category != null)
+            //    {
+            //        deal = entry.Entity;
+            //        deal.DealCategory = new List<DealCategoryJoin>();
+            //        deal.DealCategory.Add(new DealCategoryJoin { Deal = deal, Category = category });
+
+            //        saved = await _dbContext.SaveChangesAsync();
+            //    }
+            //}
 
             return new Result<Deal>(entry.Entity.ToDealModel());
         }
