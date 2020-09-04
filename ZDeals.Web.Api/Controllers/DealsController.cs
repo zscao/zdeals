@@ -41,8 +41,8 @@ namespace ZDeals.Web.Api.Controllers
 
             if (data?.Deals != null)
             { 
-                var baseUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-                data.Deals = DealsHelper.SetSourceToLocal(data.Deals, baseUrl);
+                //var baseUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+                //data.Deals = DealsHelper.SetSourceToLocal(data.Deals, baseUrl);
 
 
                 if (string.IsNullOrEmpty(_pictureStorageOptions.GetPictureUrl) == false)

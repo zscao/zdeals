@@ -61,7 +61,7 @@ namespace ZDeals.Web.Service.Impl
 
             var saved = await _dbContext.SaveChangesAsync();
 
-            result.Data = deal.ToDealModel();
+            //result.Data = deal.ToDealModel();
             return result;
         }
 
