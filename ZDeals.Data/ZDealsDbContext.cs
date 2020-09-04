@@ -32,7 +32,7 @@ namespace ZDeals.Data
 
             builder.Entity<DealEntity>(e =>
             {
-                e.HasIndex(d => d.Title);
+                e.HasIndex(d => d.Title).ForMySqlIsFullText(true);
                 e.HasOne(d => d.Store).WithMany(s => s.Deals).HasForeignKey(d => d.StoreId);
                 e.HasOne(d => d.Brand).WithMany(s => s.Deals).HasForeignKey(d => d.BrandId);
 

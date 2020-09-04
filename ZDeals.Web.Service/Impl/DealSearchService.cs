@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using MySql.Data.MySqlClient;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace ZDeals.Web.Service.Impl
 {
     public class DealSearchService : IDealSearchService
     {
-        const int PageSize = 20;
+        const int PageSize = 16;
 
         private readonly ZDealsDbContext _dbContext;
         private readonly ICategoryService _categoryService;
@@ -28,16 +30,89 @@ namespace ZDeals.Web.Service.Impl
 
         public async Task<Result<DealsSearchResult?>> SearchDeals(DealsSearchRequest request)
         {
-            var categoryIds = new List<int>();
+            var categoryIds = await GetCategoryIds(request.Category);
 
-            if (!string.IsNullOrEmpty(request.Category) && request.Category != Common.Constants.DefaultValues.DealsCategoryRoot)
+            var query = GetQueryableSql(request, categoryIds);
+            //var query = GetQueryableEFCore(request, categoryIds);
+
+            // get store filters 
+            var stores = request.Store?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var storeFilter = GetStoreFilter(query.Select(x => x.Store.Name).Distinct().ToList(), stores);
+
+            // get brand filter
+            var brandCodes = request.Brand?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var brandIds = GetBrandIds(brandCodes);
+            var brandFilter = GetBrandFilter(query.Select(x => x.BrandId).Distinct().ToList(), brandIds);
+
+            // apply filters
+            if (stores?.Length > 0)
             {
-                var cateResult = await _categoryService.GetCategoryTreeAsync(request.Category);
-                if (cateResult.HasError())
-                    return new Result<DealsSearchResult?>(cateResult.Errors);
-
-                categoryIds = cateResult.Data.ToCategoryList(includeRootNode: true).Select(x => x.Id).ToList();
+                query = query.Where(x => stores.Contains(x.Store.Name));
             }
+
+            if (brandIds.Length > 0)
+            {
+                query = query.Where(x => x.BrandId != null && brandIds.Contains(x.BrandId.Value));
+            }
+
+            // apply sort
+            if (request?.Sort == "price_desc")
+                query = query.OrderByDescending(x => x.DealPrice);
+            else if (request?.Sort == "price_asc")
+                query = query.OrderBy(x => x.DealPrice);
+
+            var page = request?.Page ?? 1;
+            var skipped = PageSize * (page - 1);
+            var deals = await query.Skip(skipped).Take(PageSize).Include(x => x.Store).ToListAsync();
+
+            var result = new DealsSearchResult
+            {
+                Deals = deals.Select(x => x.ToDealModel()!).ToList(),
+                Category = request?.Category,
+                Keywords = request?.Keywords,
+                Page = page,
+                Sort = request?.Sort ?? "default",
+                More = deals.Count >= PageSize,
+                Filters = new List<DealFilter>() { storeFilter, brandFilter }
+            };
+
+            return new Result<DealsSearchResult?>(result);
+        }
+
+        private IQueryable<DealEntity> GetQueryableSql(DealsSearchRequest request, IEnumerable<int> categoryIds)
+        {
+            var parameters = new List<object>();
+            string sql = $" SELECT * FROM Deals d " +
+                         $" WHERE (NOT d.Deleted) " +
+                         $" AND (d.VerifiedTime < UTC_TIMESTAMP()) " +
+                         $" AND (d.ExpiryDate IS NULL OR d.ExpiryDate > UTC_TIMESTAMP()) ";
+
+            if (categoryIds.Count() > 0)
+            {
+                var categories = string.Join(",", categoryIds);
+                sql += $" AND (EXISTS (SELECT 1 FROM DealCategory dc WHERE d.Id = dc.DealId AND dc.CategoryId IN ({categories}) )) ";
+            }
+
+            if (!string.IsNullOrEmpty(request.Keywords))
+            {
+                sql += $" AND MATCH(d.Title) AGAINST (@keywords IN NATURAL LANGUAGE MODE) ";
+
+                var keywords = new MySqlParameter("keywords", request.Keywords);
+                parameters.Add(keywords);
+            }
+
+            IQueryable<DealEntity> query = _dbContext.Deals.FromSqlRaw(sql, parameters.ToArray());
+            return query;
+        }
+
+        /// <summary>
+        /// Original method, deprecated
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private async Task<Result<DealsSearchResult?>> SearchDealsEFCore(DealsSearchRequest request)
+        {
+            var categoryIds = await GetCategoryIds(request.Category);
 
             IQueryable<DealEntity> query = 
                 _dbContext.Deals
@@ -91,6 +166,22 @@ namespace ZDeals.Web.Service.Impl
             };
 
             return new Result<DealsSearchResult?>(result);
+        }
+
+        private async Task<List<int>> GetCategoryIds(string? category)
+        {
+            var result = new List<int>();
+
+            if (!string.IsNullOrEmpty(category) && category != Common.Constants.DefaultValues.DealsCategoryRoot)
+            {
+                var cateResult = await _categoryService.GetCategoryTreeAsync(category);
+                if (cateResult.HasError())
+                    return result;
+
+                result = cateResult.Data.ToCategoryList(includeRootNode: true).Select(x => x.Id).ToList();
+            }
+
+            return result;
         }
 
         private DealFilter GetStoreFilter(IEnumerable<string> stores, string[]? selected)

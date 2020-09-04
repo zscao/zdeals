@@ -15,12 +15,14 @@ namespace ZDeals.Web.Api
     {
         private const string CorsPolicyName = "AllowedOrigins";
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostEnvironment)
         {
             Configuration = configuration;
+            HostEnvironment = hostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment HostEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -29,7 +31,7 @@ namespace ZDeals.Web.Api
             services.AddWebAndValidations();
             services.AddJwtAuthentication(Configuration);
 
-            services.AddZDealsDbContext(Configuration);
+            services.AddZDealsDbContext(Configuration, HostEnvironment);
             services.AddZDealsServices(Configuration);
 
             services.AddSwagger();
