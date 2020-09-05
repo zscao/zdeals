@@ -53,8 +53,10 @@ namespace ZDeals.Data.Entities
 
         public ICollection<VisitHistoryEntity> VisitHistory { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedTime { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime UpdatedTime { get; set; }
 
         public bool Deleted { get; set; }
 
@@ -65,8 +67,5 @@ namespace ZDeals.Data.Entities
         [MaxLength(50)]
         public string VerifiedBy { get; set; }
 
-
-        public int TotalVisited { get; set; }
-        public DateTime? LastVisitedTime { get; set; }
     }
 }

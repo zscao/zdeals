@@ -37,8 +37,6 @@ namespace ZDeals.Data
                 e.HasOne(d => d.Brand).WithMany(s => s.Deals).HasForeignKey(d => d.BrandId);
 
                 e.HasMany(d => d.VisitHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
-
-                e.Property(d => d.TotalVisited).HasDefaultValue(0);
             });                
 
             builder.Entity<CategoryEntity>(e =>

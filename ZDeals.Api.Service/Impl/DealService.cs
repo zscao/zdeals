@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract.Models;
@@ -120,7 +118,8 @@ namespace ZDeals.Api.Service.Impl
             {
                 Title = request.Title,
                 Source = request.Source,
-                Store = store
+                Store = store,
+                CreatedTime = DateTime.UtcNow,
             };
 
             if (!string.IsNullOrEmpty(request.Category))

@@ -17,7 +17,7 @@ namespace ZDeals.Web.Service.Impl
 {
     public class DealSearchService : IDealSearchService
     {
-        const int PageSize = 16;
+        const int PageSize = 20;
 
         private readonly ZDealsDbContext _dbContext;
         private readonly ICategoryService _categoryService;
@@ -36,18 +36,19 @@ namespace ZDeals.Web.Service.Impl
             //var query = GetQueryableEFCore(request, categoryIds);
 
             // get store filters 
-            var stores = request.Store?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            var storeFilter = GetStoreFilter(query.Select(x => x.Store.Name).Distinct().ToList(), stores);
+            string[] stores = request.Store?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+            IEnumerable<int> selectedStores = stores.Select(x => int.TryParse(x, out int s) ? s : 0);
+            var storeFilter = await GetStoreFilter(query.Select(x => x.StoreId).Distinct().ToList(), selectedStores);
 
             // get brand filter
             var brandCodes = request.Brand?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             var brandIds = GetBrandIds(brandCodes);
-            var brandFilter = GetBrandFilter(query.Select(x => x.BrandId).Distinct().ToList(), brandIds);
+            var brandFilter = await GetBrandFilter(query.Select(x => x.BrandId).Distinct().ToList(), brandIds);
 
             // apply filters
-            if (stores?.Length > 0)
+            if (selectedStores.Count() > 0)
             {
-                query = query.Where(x => stores.Contains(x.Store.Name));
+                query = query.Where(x => x.StoreId.HasValue && selectedStores.Contains(x.StoreId.Value));
             }
 
             if (brandIds.Length > 0)
@@ -73,7 +74,7 @@ namespace ZDeals.Web.Service.Impl
                 Page = page,
                 Sort = request?.Sort ?? "default",
                 More = deals.Count >= PageSize,
-                Filters = new List<DealFilter>() { storeFilter, brandFilter }
+                Filters = new List<DealFilter>() { brandFilter, storeFilter }
             };
 
             return new Result<DealsSearchResult?>(result);
@@ -95,10 +96,14 @@ namespace ZDeals.Web.Service.Impl
 
             if (!string.IsNullOrEmpty(request.Keywords))
             {
-                sql += $" AND MATCH(d.Title) AGAINST (@keywords IN NATURAL LANGUAGE MODE) ";
+                var keywordList = request.Keywords.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if(keywordList.Length > 0)
+                {
+                    sql += $" AND MATCH(d.Title) AGAINST (@keywords IN BOOLEAN MODE) ";
 
-                var keywords = new MySqlParameter("keywords", request.Keywords);
-                parameters.Add(keywords);
+                    var keywords = string.Join(" ", keywordList.Select(x => $"{x}*"));
+                    parameters.Add(new MySqlParameter("keywords", keywords));
+                }
             }
 
             IQueryable<DealEntity> query = _dbContext.Deals.FromSqlRaw(sql, parameters.ToArray());
@@ -110,6 +115,7 @@ namespace ZDeals.Web.Service.Impl
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        /*
         private async Task<Result<DealsSearchResult?>> SearchDealsEFCore(DealsSearchRequest request)
         {
             var categoryIds = await GetCategoryIds(request.Category);
@@ -124,7 +130,7 @@ namespace ZDeals.Web.Service.Impl
 
             // get store filters 
             var stores = request.Store?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            var storeFilter = GetStoreFilter(query.Select(x => x.Store.Name).Distinct().ToList(), stores);
+            var storeFilter = GetStoreFilter(query.Select(x => x.Store).Distinct().ToList(), stores);
 
             // get brand filter
             var brandCodes = request.Brand?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -167,6 +173,7 @@ namespace ZDeals.Web.Service.Impl
 
             return new Result<DealsSearchResult?>(result);
         }
+        */
 
         private async Task<List<int>> GetCategoryIds(string? category)
         {
@@ -184,27 +191,35 @@ namespace ZDeals.Web.Service.Impl
             return result;
         }
 
-        private DealFilter GetStoreFilter(IEnumerable<string> stores, string[]? selected)
+        private async Task<DealFilter> GetStoreFilter(IEnumerable<int?> stores, IEnumerable<int> selected)
         {
+            int[] storeIds = stores.Select(x => x ?? 0).Where(x => x > 0).ToArray();
+
+            var items = await _dbContext.Stores
+                .Where(x => storeIds.Contains(x.Id))
+                .OrderBy(x => x.Name)
+                .Select(x => new FilterItem
+                {
+                    Name = x.Name,
+                    Value = x.Id.ToString(),
+                    Selected = selected.Contains(x.Id)
+                })
+                .ToListAsync();
+
             return new DealFilter
             {
                 Code = "store",
                 Title = "Store",
                 FilterType = FilterType.MultipleSelection,
-                Items = stores.Select(x => new FilterItem 
-                { 
-                    Name = x, 
-                    Value = x,
-                    Selected = selected?.Contains(x) ?? false
-                })
+                Items = items
             };
         }
 
-        private DealFilter GetBrandFilter(IEnumerable<int?> brands, int[] selected)
+        private async Task<DealFilter> GetBrandFilter(IEnumerable<int?> brands, int[] selected)
         {
             int[] brandIds = brands.Select(x => x ?? 0).Where(x => x > 0).ToArray();
 
-            var items = _dbContext.Brands
+            var items = await _dbContext.Brands
                 .Where(x => brandIds.Contains(x.Id))
                 .OrderByDescending(x => x.DisplayOrder)
                 .ThenBy(x => x.Name)
@@ -213,7 +228,8 @@ namespace ZDeals.Web.Service.Impl
                     Name = x.Name,
                     Value = x.Code,
                     Selected = selected.Contains(x.Id)
-                });
+                })
+                .ToListAsync();
 
             return new DealFilter
             {

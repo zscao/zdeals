@@ -56,9 +56,6 @@ namespace ZDeals.Web.Service.Impl
             };
             var entry = _dbContext.DealVisitHistory.Add(visit);
 
-            deal.TotalVisited += 1;
-            deal.LastVisitedTime = DateTime.UtcNow;
-
             var saved = await _dbContext.SaveChangesAsync();
 
             //result.Data = deal.ToDealModel();
