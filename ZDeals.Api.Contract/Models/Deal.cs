@@ -14,11 +14,12 @@ namespace ZDeals.Api.Contract.Models
         public string Discount { get; set; }
 
         public DateTime? ExpiryDate { get; set; }
-        public DateTime? VerifiedTime { get; set; }
 
+        public bool Verified { get; set; }
+        public DateTime? VerifiedTime { get; set; }
         public string VerifiedBy { get; set; }
 
-        public bool deleted { get; set; }
+        public bool Deleted { get; set; }
         public DateTime? DeletedTime { get; set; }
 
         public Store Store { get; set; }

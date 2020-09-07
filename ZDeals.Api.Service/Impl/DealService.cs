@@ -39,7 +39,7 @@ namespace ZDeals.Api.Service.Impl
                 query = query.Where(x => x.Deleted == request.Deleted.Value);
 
             if (request.Verified.HasValue)
-                query = query.Where(x => x.VerifiedTime.HasValue == request.Verified.Value);
+                query = query.Where(x => x.Verified == request.Verified.Value);
 
             if (!string.IsNullOrEmpty(request.Category) && request.Category != DefaultValues.DealsCategoryRoot)
             {
@@ -127,8 +127,10 @@ namespace ZDeals.Api.Service.Impl
                 var category = _dbContext.Categories.SingleOrDefault(x => x.Code == request.Category);
                 if (category != null)
                 {
-                    deal.DealCategory = new List<DealCategoryJoin>();
-                    deal.DealCategory.Add(new DealCategoryJoin { Deal = deal, Category = category });
+                    deal.DealCategory = new List<DealCategoryJoin>
+                    {
+                        new DealCategoryJoin { Deal = deal, Category = category }
+                    };
                 }
             }
 
@@ -183,6 +185,7 @@ namespace ZDeals.Api.Service.Impl
             deal.Brand = brand;
 
             // if the deal is change, then needs to be verify again
+            deal.Verified = false;
             deal.VerifiedBy = null;
             deal.VerifiedTime = null;
 
@@ -211,6 +214,7 @@ namespace ZDeals.Api.Service.Impl
             if(deal == null)
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
 
+            deal.Verified = true;
             deal.VerifiedTime = DateTime.UtcNow;
             deal.VerifiedBy = this.RequestContext?.Username;
 
@@ -227,6 +231,7 @@ namespace ZDeals.Api.Service.Impl
 
             deal.DeletedTime = DateTime.UtcNow;
             deal.Deleted = false;
+            deal.Verified = false;
             deal.VerifiedBy = null;
             deal.VerifiedTime = null;
 

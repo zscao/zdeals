@@ -62,6 +62,8 @@ namespace ZDeals.Data.Entities
 
         public DateTime? DeletedTime { get; set; }
 
+        public bool Verified { get; set; }
+
         public DateTime? VerifiedTime { get; set; }
 
         [MaxLength(50)]

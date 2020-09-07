@@ -85,7 +85,7 @@ namespace ZDeals.Web.Service.Impl
             var parameters = new List<object>();
             string sql = $" SELECT * FROM Deals d " +
                          $" WHERE (NOT d.Deleted) " +
-                         $" AND (d.VerifiedTime < UTC_TIMESTAMP()) " +
+                         $" AND (d.Verified) " +
                          $" AND (d.ExpiryDate IS NULL OR d.ExpiryDate > UTC_TIMESTAMP()) ";
 
             if (categoryIds.Count() > 0)

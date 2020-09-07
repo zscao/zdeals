@@ -16,11 +16,6 @@ namespace ZDeals.Web.Service.Models
 
         public DateTime CreatedTime { get; set; }
 
-        public DateTime? ExpiryDate { get; set; }
-        public DateTime? VerifiedTime { get; set; }
-
-        public string? VerifiedBy { get; set; }
-
         public Store? Store { get; set; }
 
         public string? Picture { get; set; }
