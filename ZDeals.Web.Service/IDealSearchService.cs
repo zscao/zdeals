@@ -25,5 +25,10 @@ namespace ZDeals.Web.Service
         public string? Brand { get; set; }
 
         public string? Sort { get; set; }
+
+        /// <summary>
+        /// Delivery
+        /// </summary>
+        public string? Del { get; set; }
     }
 }

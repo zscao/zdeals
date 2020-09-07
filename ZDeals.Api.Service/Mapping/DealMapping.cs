@@ -27,6 +27,7 @@ namespace ZDeals.Api.Service.Mapping
                 Store = entity.Store?.ToStoreModel(),
                 Source = entity.Source,
                 Brand = entity.Brand?.ToBrandModel(),
+                FreeShipping = entity.FreeShipping,
             };
         }
     }

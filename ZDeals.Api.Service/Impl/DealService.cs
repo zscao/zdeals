@@ -183,6 +183,7 @@ namespace ZDeals.Api.Service.Impl
             deal.DealPrice = request.DealPrice;
             deal.ExpiryDate = request.ExpiryDate;
             deal.Brand = brand;
+            deal.FreeShipping = request.FreeShipping;
 
             // if the deal is change, then needs to be verify again
             deal.Verified = false;

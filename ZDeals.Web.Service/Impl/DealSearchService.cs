@@ -18,6 +18,7 @@ namespace ZDeals.Web.Service.Impl
     public class DealSearchService : IDealSearchService
     {
         const int PageSize = 20;
+        const string FreeShipping = "free";
 
         private readonly ZDealsDbContext _dbContext;
         private readonly ICategoryService _categoryService;
@@ -45,15 +46,23 @@ namespace ZDeals.Web.Service.Impl
             var brandIds = GetBrandIds(brandCodes);
             var brandFilter = await GetBrandFilter(query.Select(x => x.BrandId).Distinct().ToList(), brandIds);
 
+            var deliveryFilter = GetDeliveryFilter(request.Del == FreeShipping);
+
             // apply filters
+            // stores
             if (selectedStores.Count() > 0)
             {
                 query = query.Where(x => x.StoreId.HasValue && selectedStores.Contains(x.StoreId.Value));
             }
-
+            // brands
             if (brandIds.Length > 0)
             {
                 query = query.Where(x => x.BrandId != null && brandIds.Contains(x.BrandId.Value));
+            }
+            // delivery
+            if(request.Del == FreeShipping)
+            {
+                query = query.Where(x => x.FreeShipping);
             }
 
             // apply sort
@@ -74,7 +83,7 @@ namespace ZDeals.Web.Service.Impl
                 Page = page,
                 Sort = request?.Sort ?? "default",
                 More = deals.Count >= PageSize,
-                Filters = new List<DealFilter>() { brandFilter, storeFilter }
+                Filters = new List<DealFilter>() { brandFilter, deliveryFilter, storeFilter }
             };
 
             return new Result<DealsSearchResult?>(result);
@@ -237,6 +246,24 @@ namespace ZDeals.Web.Service.Impl
                 Title = "Brand",
                 FilterType = FilterType.MultipleSelection,
                 Items = items
+            };
+        }
+
+        private DealFilter GetDeliveryFilter(bool? selected)
+        {
+            var freeShipping = new FilterItem
+            {
+                Name = "Free Shipping",
+                Value = FreeShipping,
+                Selected = selected ?? false
+            };
+
+            return new DealFilter
+            {
+                Code = "del",
+                Title = "Delivery",
+                FilterType = FilterType.MultipleSelection,
+                Items = new FilterItem[] { freeShipping }
             };
         }
 

@@ -69,5 +69,7 @@ namespace ZDeals.Data.Entities
         [MaxLength(50)]
         public string VerifiedBy { get; set; }
 
+        public bool FreeShipping { get; set; }
+
     }
 }
