@@ -14,6 +14,8 @@ namespace ZDeals.Web.Service.Models
         public decimal DealPrice { get; set; }
         public string? Discount { get; set; }
 
+        public bool FreeShipping { get; set; }
+
         public DateTime CreatedTime { get; set; }
 
         public Store? Store { get; set; }

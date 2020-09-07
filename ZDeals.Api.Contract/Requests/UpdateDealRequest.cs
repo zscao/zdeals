@@ -18,5 +18,7 @@ namespace ZDeals.Api.Contract.Requests
         public string Brand { get; set; }
 
         public DateTime? ExpiryDate { get; set; }
+
+        public bool FreeShipping { get; set; }
     }
 }

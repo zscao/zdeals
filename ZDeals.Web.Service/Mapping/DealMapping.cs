@@ -18,6 +18,7 @@ namespace ZDeals.Web.Service.Mapping
                 DealPrice = entity.DealPrice,
                 FullPrice = entity.FullPrice,
                 Discount = entity.Discount,
+                FreeShipping = entity.FreeShipping,
                 CreatedTime = entity.CreatedTime,
                 Store = entity.Store?.ToStoreModel(),
                 Picture = entity.DefaultPicture,

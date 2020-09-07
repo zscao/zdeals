@@ -28,5 +28,7 @@ namespace ZDeals.Api.Contract.Models
 
         public Brand Brand { get; set; }
 
+        public bool FreeShipping { get; set; }
+
     }
 }
