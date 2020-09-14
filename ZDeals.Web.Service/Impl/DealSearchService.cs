@@ -34,7 +34,6 @@ namespace ZDeals.Web.Service.Impl
             var categoryIds = await GetCategoryIds(request.Category);
 
             var query = GetQueryableSql(request, categoryIds);
-            //var query = GetQueryableEFCore(request, categoryIds);
 
             // get store filters 
             string[] stores = request.Store?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
@@ -48,18 +47,23 @@ namespace ZDeals.Web.Service.Impl
 
             var deliveryFilter = GetDeliveryFilter(request.Del == FreeShipping);
 
-            // apply filters
-            // stores
+            var filters = new List<DealFilter> {
+                brandFilter,
+                deliveryFilter,
+                storeFilter,
+            };
+ 
+            // apply stores filter
             if (selectedStores.Count() > 0)
             {
                 query = query.Where(x => x.StoreId.HasValue && selectedStores.Contains(x.StoreId.Value));
             }
-            // brands
+            // apply brands filter
             if (brandIds.Length > 0)
             {
                 query = query.Where(x => x.BrandId != null && brandIds.Contains(x.BrandId.Value));
             }
-            // delivery
+            // apply delivery filter
             if(request.Del == FreeShipping)
             {
                 query = query.Where(x => x.FreeShipping);
@@ -74,14 +78,6 @@ namespace ZDeals.Web.Service.Impl
             var page = request?.Page ?? 1;
             var skipped = PageSize * (page - 1);
             var deals = await query.Skip(skipped).Take(PageSize).Include(x => x.Store).ToListAsync();
-
-            var filters = new List<DealFilter>();
-            if(deals.Count > 0)
-            {
-                filters.Add(brandFilter);
-                filters.Add(deliveryFilter);
-                filters.Add(storeFilter);
-            }
 
             var result = new DealsSearchResult
             {

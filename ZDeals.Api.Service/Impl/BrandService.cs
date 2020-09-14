@@ -53,7 +53,8 @@ namespace ZDeals.Api.Service.Impl
             var brand = await _dbContext.Brands.SingleOrDefaultAsync(x => x.Id == brandId);
             if (brand == null)
             {
-                return new Result<Brand>(new Error(ErrorType.NotFound) { Code = Sales.BrandNotFound, Message = "Brand does not exist" });
+                var error = new Error(ErrorType.NotFound) { Code = Sales.BrandNotFound, Message = "Brand does not exist" };
+                return new Result<Brand>(error);
             }
 
             return new Result<Brand>(brand.ToBrandModel());
@@ -61,6 +62,13 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Brand>> CreateBrandAsync(CreateBrandRequest request)
         {
+            bool duplicate = await _dbContext.Brands.AnyAsync(x => x.Code == request.Code);
+            if (duplicate)
+            {
+                var error = new Error(ErrorType.BadRequest) { Code = Sales.BrandCodeDuplicate, Message = "Brand code already exists" };
+                return new Result<Brand>(error);
+            }
+
             var brand = new BrandEntity
             {
                 Code = request.Code,
@@ -79,7 +87,8 @@ namespace ZDeals.Api.Service.Impl
             var brand = await _dbContext.Brands.SingleOrDefaultAsync(x => x.Id == brandId);
             if(brand == null)
             {
-                return new Result<Brand>(new Error(ErrorType.NotFound) { Code = Sales.BrandNotFound, Message = "Brand does not exist" });
+                var error = new Error(ErrorType.NotFound) { Code = Sales.BrandNotFound, Message = "Brand does not exist" };
+                return new Result<Brand>(error);
             }
 
             brand.Name = request.Name;

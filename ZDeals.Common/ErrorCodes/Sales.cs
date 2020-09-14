@@ -9,5 +9,6 @@
         public const int DealExpired = 105;
         public const int DealSourceDuplicate = 106;
         public const int BrandNotFound = 107;
+        public const int BrandCodeDuplicate = 108;
     }
 }

@@ -114,6 +114,12 @@ namespace ZDeals.Api.Service.Impl
 
             var store = await FindStoreForUrl(request.Source);
 
+            if(store == null)
+            {
+                var error = new Error(ErrorType.BadRequest) { Code = Sales.StoreNotFound, Message = "Couldn't find store." };
+                return new Result<Deal>(error);
+            }
+
             var deal = new DealEntity
             {
                 Title = request.Title,

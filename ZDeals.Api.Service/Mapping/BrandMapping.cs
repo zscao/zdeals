@@ -11,6 +11,7 @@ namespace ZDeals.Api.Service.Mapping
 
             return new Brand
             {
+                Id = entity.Id,
                 Code = entity.Code,
                 Name = entity.Name,
                 DisplayOrder = entity.DisplayOrder

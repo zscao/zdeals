@@ -42,10 +42,10 @@ namespace ZDeals.Api.Controllers
         public async Task<ActionResult<Result>> Create(CreateBrandRequest request)
         {
             var result = await _brandService.CreateBrandAsync(request);
-            return Created($"api/brands/{result.Data.Code}", result);
+            return Created($"api/brands/{result.Data.Id}", result);
         }
 
-        [HttpPut("{storeId}")]
+        [HttpPut("{brandId}")]
         public async Task<ActionResult<Result>> Update(int brandId, [FromBody] UpdateBrandRequest request)
         {
             return await _brandService.UpdateBrandAsync(brandId, request);
