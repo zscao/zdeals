@@ -1,12 +1,15 @@
 ﻿using FluentValidation.AspNetCore;
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 using System.Linq;
 
-using ZDeals.Common.AspNetCore.Responses;
 using ZDeals.Common.AspNetCore.Filters;
+using ZDeals.Common.AspNetCore.Responses;
 
 namespace ZDeals.Web.Api.ServiceConfigure
 {
@@ -19,6 +22,11 @@ namespace ZDeals.Web.Api.ServiceConfigure
                 options.Filters.Add(typeof(ResponseFilter));
             })
             .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
 
             services.Configure<ApiBehaviorOptions>(options =>
             {

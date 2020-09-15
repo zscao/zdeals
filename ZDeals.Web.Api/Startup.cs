@@ -46,6 +46,8 @@ namespace ZDeals.Web.Api
             string pathBase = Configuration.GetValue<string>("PathBase") ?? "/";
             app.UsePathBase(pathBase);
 
+            app.UseForwardedHeaders();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
