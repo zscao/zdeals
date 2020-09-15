@@ -54,5 +54,9 @@
         {
             public const string Base = BaseUrl + "brands";
         }
+        public static class Dashboard
+        {
+            public const string Base = BaseUrl + "dashboard";
+        }
     }
 }

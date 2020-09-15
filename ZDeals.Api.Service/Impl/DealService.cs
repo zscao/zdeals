@@ -221,7 +221,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> DeleteDealAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
             if (deal == null)
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
 
@@ -241,7 +241,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> VerifyDealAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
 
@@ -262,7 +262,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> RecycleDealAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.Store).Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
             if (deal == null)
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
 

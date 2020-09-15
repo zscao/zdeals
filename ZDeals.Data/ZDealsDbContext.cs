@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ZDeals.Data.Entities;
+using ZDeals.Data.Models;
 
 namespace ZDeals.Data
 {
@@ -20,6 +21,8 @@ namespace ZDeals.Data
         public DbSet<VisitHistoryEntity> DealVisitHistory { get; set; }
 
         public DbSet<ActionHistoryEntity> DealActionHistory { get; set; }
+
+        public DbSet<VisitDetail> DealVisitDeatail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -69,6 +72,12 @@ namespace ZDeals.Data
             {
                 dp.HasKey(e => new { e.FileName, e.DealId });
                 dp.HasOne(e => e.Deal).WithMany(e => e.Pictures).HasForeignKey(e => e.DealId).IsRequired(true);
+            });
+
+            builder.Entity<VisitDetail>(d =>
+            {
+                d.HasNoKey();
+                d.ToView("VisitDetail");
             });
         }
     }
