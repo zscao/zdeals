@@ -19,6 +19,8 @@ namespace ZDeals.Data
 
         public DbSet<VisitHistoryEntity> DealVisitHistory { get; set; }
 
+        public DbSet<ActionHistoryEntity> DealActionHistory { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<StoreEntity>(e =>
@@ -33,10 +35,13 @@ namespace ZDeals.Data
             builder.Entity<DealEntity>(e =>
             {
                 e.HasIndex(d => d.Title).ForMySqlIsFullText(true);
+                e.HasIndex(d => d.Status);
+
                 e.HasOne(d => d.Store).WithMany(s => s.Deals).HasForeignKey(d => d.StoreId);
                 e.HasOne(d => d.Brand).WithMany(s => s.Deals).HasForeignKey(d => d.BrandId);
 
                 e.HasMany(d => d.VisitHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
+                e.HasMany(d => d.ActionHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
             });                
 
             builder.Entity<CategoryEntity>(e =>

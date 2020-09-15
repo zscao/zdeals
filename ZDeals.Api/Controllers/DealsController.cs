@@ -62,6 +62,7 @@ namespace ZDeals.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Result>> Create([FromBody] CreateDealRequest request)
         {
+            _dealService.RequestContext = this.GetRequestContext();
             var result = await _dealService.CreateDealAsync(request);
 
             return Created($"{ApiRoutes.Deals.Base}/{result.Data?.Id}", result);
@@ -70,12 +71,14 @@ namespace ZDeals.Api.Controllers
         [HttpPut("{dealId}")]
         public async Task<ActionResult<Result>> Update(int dealId, [FromBody] UpdateDealRequest request)
         {
+            _dealService.RequestContext = this.GetRequestContext();
             return await _dealService.UpdateDealAsync(dealId, request);
         }
 
         [HttpDelete("{dealId}")]
         public async Task<ActionResult<Result>> Delete(int dealId)
         {
+            _dealService.RequestContext = this.GetRequestContext();
             return await _dealService.DeleteDealAsync(dealId);
         }
 
@@ -108,6 +111,7 @@ namespace ZDeals.Api.Controllers
         [HttpPut("{dealId}/pictures")]
         public async Task<ActionResult<Result>> SavePicture(int dealId, SaveDealPictureRequest request)
         {
+            _dealService.RequestContext = this.GetRequestContext();
             var result = await _dealService.SavePictureAsync(dealId, request);
             return Created($"{ApiRoutes.Deals.Base}/{dealId}/pictures/{result.Data.FileName}", result);
         }
@@ -121,6 +125,7 @@ namespace ZDeals.Api.Controllers
         [HttpPut("{dealId}/categories")]
         public async Task<ActionResult<Result>> SaveCategories(int dealId, SaveDealCategoriesRequest request)
         {
+            _dealService.RequestContext = this.GetRequestContext();
             return await _dealService.SaveCategoriesAsync(dealId, request);
         }
     }

@@ -9,9 +9,7 @@
         public int? PageSize { get; set; }
         public int? PageNumber { get; set; }
 
-        public bool? Verified { get; set; }
-        
-        public bool? Deleted { get; set; }
+        public string? Status { get; set; }
 
         public string Store { get; set; }
     }

@@ -34,12 +34,16 @@ namespace ZDeals.Api.Service.Impl
             int number = request.PageNumber ?? 1;
 
             var query = _dbContext.Deals.AsQueryable();
-            
-            if(request.Deleted.HasValue)
-                query = query.Where(x => x.Deleted == request.Deleted.Value);
 
-            if (request.Verified.HasValue)
-                query = query.Where(x => x.Verified == request.Verified.Value);
+            // set deal status
+            if (request.Status == DealStatusValue.Deleted)
+                query = query.Where(x => x.Status == DealStatus.Deleted);
+            else if (request.Status == DealStatusValue.Verified)
+                query = query.Where(x => x.Status == DealStatus.Verified);
+            else if (request.Status == DealStatusValue.Created)
+                query = query.Where(x => x.Status == DealStatus.Created);
+            else
+                query = query.Where(x => x.Status != DealStatus.Deleted);
 
             if (!string.IsNullOrEmpty(request.Category) && request.Category != DefaultValues.DealsCategoryRoot)
             {
@@ -140,8 +144,16 @@ namespace ZDeals.Api.Service.Impl
                 }
             }
 
+            var entry =_dbContext.Deals.Add(deal);
 
-            var entry =_dbContext.Deals.Add(deal);            
+            _dbContext.DealActionHistory.Add(new ActionHistoryEntity
+            {
+                Deal = deal,
+                Action = DealActionValues.Create,
+                ActedBy = RequestContext?.Username,
+                ActedOn = DateTime.UtcNow,
+            });
+
             var saved = await _dbContext.SaveChangesAsync();
 
             //if (!string.IsNullOrEmpty(request.Category))
@@ -192,9 +204,15 @@ namespace ZDeals.Api.Service.Impl
             deal.FreeShipping = request.FreeShipping;
 
             // if the deal is change, then needs to be verify again
-            deal.Verified = false;
-            deal.VerifiedBy = null;
-            deal.VerifiedTime = null;
+            deal.Status = DealStatus.Created;
+
+            _dbContext.DealActionHistory.Add(new ActionHistoryEntity
+            {
+                DealId = dealId,
+                Action = DealActionValues.Update,
+                ActedBy = RequestContext?.Username,
+                ActedOn = DateTime.UtcNow,
+            });
 
             var saved = await _dbContext.SaveChangesAsync();
             return new Result<Deal>(deal.ToDealModel());
@@ -207,8 +225,14 @@ namespace ZDeals.Api.Service.Impl
             if (deal == null)
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
 
-            deal.Deleted = true;
-            deal.DeletedTime = DateTime.UtcNow;
+            deal.Status = DealStatus.Deleted;
+            _dbContext.DealActionHistory.Add(new ActionHistoryEntity
+            {
+                DealId = dealId,
+                Action = DealActionValues.Delete,
+                ActedBy = RequestContext?.Username,
+                ActedOn = DateTime.UtcNow,
+            });
 
             var saved = await _dbContext.SaveChangesAsync();
 
@@ -221,9 +245,15 @@ namespace ZDeals.Api.Service.Impl
             if(deal == null)
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
 
-            deal.Verified = true;
-            deal.VerifiedTime = DateTime.UtcNow;
-            deal.VerifiedBy = this.RequestContext?.Username;
+            deal.Status = DealStatus.Verified;
+
+            _dbContext.DealActionHistory.Add(new ActionHistoryEntity
+            {
+                DealId = dealId,
+                Action = DealActionValues.Verify,
+                ActedBy = RequestContext?.Username,
+                ActedOn = DateTime.UtcNow,
+            });
 
             var saved = await _dbContext.SaveChangesAsync();
 
@@ -236,11 +266,15 @@ namespace ZDeals.Api.Service.Impl
             if (deal == null)
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
 
-            deal.DeletedTime = DateTime.UtcNow;
-            deal.Deleted = false;
-            deal.Verified = false;
-            deal.VerifiedBy = null;
-            deal.VerifiedTime = null;
+            deal.Status = DealStatus.Created;
+
+            _dbContext.DealActionHistory.Add(new ActionHistoryEntity
+            {
+                DealId = dealId,
+                Action = DealActionValues.Recycle,
+                ActedBy = RequestContext?.Username,
+                ActedOn = DateTime.UtcNow,
+            });
 
             var saved = await _dbContext.SaveChangesAsync();
 

@@ -53,23 +53,22 @@ namespace ZDeals.Data.Entities
 
         public ICollection<VisitHistoryEntity> VisitHistory { get; set; }
 
+        public ICollection<ActionHistoryEntity> ActionHistory { get; set; }
+
         public DateTime CreatedTime { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime UpdatedTime { get; set; }
-
-        public bool Deleted { get; set; }
-
-        public DateTime? DeletedTime { get; set; }
-
-        public bool Verified { get; set; }
-
-        public DateTime? VerifiedTime { get; set; }
-
-        [MaxLength(50)]
-        public string VerifiedBy { get; set; }
 
         public bool FreeShipping { get; set; }
 
+        public DealStatus Status { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime UpdatedTime { get; set; }
+    }
+
+    public enum DealStatus
+    {
+        Deleted = -1,
+        Created = 0,
+        Verified = 1,
     }
 }

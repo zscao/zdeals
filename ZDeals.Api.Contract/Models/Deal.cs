@@ -15,13 +15,6 @@ namespace ZDeals.Api.Contract.Models
 
         public DateTime? ExpiryDate { get; set; }
 
-        public bool Verified { get; set; }
-        public DateTime? VerifiedTime { get; set; }
-        public string VerifiedBy { get; set; }
-
-        public bool Deleted { get; set; }
-        public DateTime? DeletedTime { get; set; }
-
         public Store Store { get; set; }
 
         public string Source { get; set; }
@@ -29,6 +22,8 @@ namespace ZDeals.Api.Contract.Models
         public Brand Brand { get; set; }
 
         public bool FreeShipping { get; set; }
+
+        public string Status { get; set; }
 
     }
 }

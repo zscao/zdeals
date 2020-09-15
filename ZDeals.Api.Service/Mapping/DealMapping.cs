@@ -18,16 +18,12 @@ namespace ZDeals.Api.Service.Mapping
                 DealPrice = entity.DealPrice,
                 FullPrice = entity.FullPrice,
                 Discount = entity.Discount,
-                Verified = entity.Verified,
-                VerifiedTime = entity.VerifiedTime,
-                VerifiedBy = entity.VerifiedBy,
                 ExpiryDate = entity.ExpiryDate,
-                Deleted = entity.Deleted,
-                DeletedTime = entity.DeletedTime,
                 Store = entity.Store?.ToStoreModel(),
                 Source = entity.Source,
                 Brand = entity.Brand?.ToBrandModel(),
                 FreeShipping = entity.FreeShipping,
+                Status = entity.Status.ToString(),
             };
         }
     }

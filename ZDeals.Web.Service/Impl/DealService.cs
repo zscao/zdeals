@@ -79,7 +79,7 @@ namespace ZDeals.Web.Service.Impl
 
         public async Task<Result<Deal?>> GetDealById(int dealId)
         {
-            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId && x.Deleted == false);
+            var deal = await _dbContext.Deals.SingleOrDefaultAsync(x => x.Id == dealId && x.Status == DealStatus.Verified);
             if(deal == null)
             {
                 var error = new Error(ErrorType.NotFound) { Code = Common.ErrorCodes.Sales.DealNotFound, Message = "Deal not found." };
