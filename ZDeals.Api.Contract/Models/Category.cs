@@ -11,7 +11,7 @@ namespace ZDeals.Api.Contract.Models
 
     public class CategoryDetail: Category
     {
-        public int? parentId { get; set; }
+        public int? ParentId { get; set; }
         public int DisplayOrder { get; set; }
     }
 

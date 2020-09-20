@@ -28,7 +28,7 @@ namespace ZDeals.Api.Service.Mapping
                 Id = entity.Id,
                 Code = entity.Code,
                 Title = entity.Title,
-                parentId = entity.ParentId,
+                ParentId = entity.ParentId,
                 DisplayOrder = entity.DisplayOrder
             };
         }

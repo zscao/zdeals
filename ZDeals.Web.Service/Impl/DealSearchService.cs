@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 using MySql.Data.MySqlClient;
 
@@ -20,17 +21,28 @@ namespace ZDeals.Web.Service.Impl
         const int PageSize = 20;
         const string FreeShipping = "free";
 
+        const string DefaultSearchResultKey = "DefaultSearch";
+
         private readonly ZDealsDbContext _dbContext;
         private readonly ICategoryService _categoryService;
 
-        public DealSearchService(ZDealsDbContext dbContext, ICategoryService categoryService)
+        private readonly IMemoryCache _memoryCache;
+
+        public DealSearchService(ZDealsDbContext dbContext, ICategoryService categoryService, IMemoryCache memoryCache)
         {
             _dbContext = dbContext;
             _categoryService = categoryService;
+            _memoryCache = memoryCache;
         }
 
         public async Task<Result<DealsSearchResult?>> SearchDeals(DealsSearchRequest request)
         {
+            if (string.IsNullOrEmpty(request.Keywords) && string.IsNullOrEmpty(request.Category) && !request.Page.HasValue == false)
+            {
+                bool cached = _memoryCache.TryGetValue(DefaultSearchResultKey, out DealsSearchResult cachedResult);
+                if(cached) return new Result<DealsSearchResult?>(cachedResult);
+            }
+
             var categoryIds = await GetCategoryIds(request.Category);
 
             var query = GetQueryableSql(request, categoryIds);
@@ -70,25 +82,35 @@ namespace ZDeals.Web.Service.Impl
             }
 
             // apply sort
-            if (request?.Sort == "price_desc")
+            if (request.Sort == "price_desc")
                 query = query.OrderByDescending(x => x.DealPrice);
-            else if (request?.Sort == "price_asc")
+            else if (request.Sort == "price_asc")
                 query = query.OrderBy(x => x.DealPrice);
+            else if (string.IsNullOrEmpty(request.Keywords))
+            {
+                query = query.OrderByDescending(x => x.Id);
+            }
 
-            var page = request?.Page ?? 1;
+            var page = request.Page ?? 1;
             var skipped = PageSize * (page - 1);
             var deals = await query.Skip(skipped).Take(PageSize).Include(x => x.Store).ToListAsync();
 
             var result = new DealsSearchResult
             {
                 Deals = deals.Select(x => x.ToDealModel()!).ToList(),
-                Category = request?.Category,
-                Keywords = request?.Keywords,
+                Category = request.Category,
+                Keywords = request.Keywords,
                 Page = page,
-                Sort = request?.Sort ?? "default",
+                Sort = request.Sort ?? "default",
                 More = deals.Count >= PageSize,
                 Filters = filters
             };
+
+            // set cache for default search
+            if (string.IsNullOrEmpty(request.Keywords) && string.IsNullOrEmpty(request.Category) && !request.Page.HasValue == false)
+            {
+                _memoryCache.Set(DefaultSearchResultKey, result, TimeSpan.FromMinutes(3));
+            }
 
             return new Result<DealsSearchResult?>(result);
         }

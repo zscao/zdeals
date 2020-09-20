@@ -34,6 +34,8 @@ namespace ZDeals.Web.Api
             services.AddZDealsDbContext(Configuration, HostEnvironment);
             services.AddZDealsServices(Configuration);
 
+            services.AddMemoryCache();
+
             services.AddSwagger();
         }
 
