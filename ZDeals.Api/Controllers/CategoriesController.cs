@@ -33,10 +33,19 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CategoryTreeView>> Create(CreateCategoryRequest request)
+        public async Task<ActionResult<Result>> Create(CreateCategoryRequest request)
         {
             var result = await _categoryService.CreateCategoryAsync(request);
+            if (result.HasError()) return result;
+
             return Created($"api/categories/{result.Data.Id}", result);
+        }
+
+        [HttpPut("{categoryId}")]
+        public async Task<ActionResult<Result>> Update(int categoryId, UpdateCategoryRequest request)
+        {
+            var result = await _categoryService.UpdateCategoryAsync(categoryId, request);
+            return result;
         }
 
         [HttpGet("{categoryId}")]

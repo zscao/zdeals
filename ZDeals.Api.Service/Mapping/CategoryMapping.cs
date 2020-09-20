@@ -19,6 +19,20 @@ namespace ZDeals.Api.Service.Mapping
             };
         }
 
+        public static CategoryDetail ToCategoryDetail(this CategoryEntity entity)
+        {
+            if (entity == null) return null;
+
+            return new CategoryDetail
+            {
+                Id = entity.Id,
+                Code = entity.Code,
+                Title = entity.Title,
+                parentId = entity.ParentId,
+                DisplayOrder = entity.DisplayOrder
+            };
+        }
+
         public static CategoryTreeView ToCategoryTreeView(this CategoryEntity entity)
         {
             if (entity == null) return null;
@@ -27,8 +41,7 @@ namespace ZDeals.Api.Service.Mapping
             {
                 Id = entity.Id,
                 Code = entity.Code,
-                Title = entity.Title,
-                DisplayOrder = entity.DisplayOrder
+                Title = entity.Title
             };
         }
 
@@ -49,7 +62,7 @@ namespace ZDeals.Api.Service.Mapping
             {
                 Id = category.Id,
                 Code = category.Code,
-                Title = category.Title
+                Title = category.Title,
             });
             
             result.Add(new CategoryListView
