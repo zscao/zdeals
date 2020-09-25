@@ -9,6 +9,7 @@ using ZDeals.Data.Entities;
 using ZDeals.Net;
 using ZDeals.Web.Service.Mapping;
 using ZDeals.Web.Service.Models;
+using ZDeals.Web.Service.Options;
 
 namespace ZDeals.Web.Service.Impl
 {
@@ -16,11 +17,13 @@ namespace ZDeals.Web.Service.Impl
     {
 
         private readonly ZDealsDbContext _dbContext;
+        private readonly PictureStorageOptions _pictureStorageOptions;
         private readonly IPageService _pageService;
 
-        public DealService(ZDealsDbContext dbContext, IPageService pageService)
+        public DealService(ZDealsDbContext dbContext, PictureStorageOptions pictureStorageOptions, IPageService pageService)
         {
             _dbContext = dbContext;
+            _pictureStorageOptions = pictureStorageOptions;
             _pageService = pageService;
         }
 
@@ -74,7 +77,7 @@ namespace ZDeals.Web.Service.Impl
             deal.ExpiryDate = DateTime.UtcNow;
             await _dbContext.SaveChangesAsync();
 
-            return new Result<Deal?>(deal.ToDealModel());
+            return new Result<Deal?>(deal.ToDealModel(_pictureStorageOptions?.GetPictureUrl));
         }
 
         public async Task<Result<Deal?>> GetDealById(int dealId)
@@ -86,7 +89,7 @@ namespace ZDeals.Web.Service.Impl
                 return new Result<Deal?>(error);
             }
 
-            return new Result<Deal?>(deal.ToDealModel());
+            return new Result<Deal?>(deal.ToDealModel(_pictureStorageOptions?.GetPictureUrl));
         }
     }
 }

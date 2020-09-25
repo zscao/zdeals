@@ -29,7 +29,7 @@ namespace ZDeals.Api
             services.AddJwtAuthentication(Configuration);
 
             services.AddZDealsDbContext(Configuration);
-            services.AddZDealsServices(Configuration);
+            services.AddZDealsServices();
 
             services.AddSwagger();
         }

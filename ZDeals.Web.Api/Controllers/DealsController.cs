@@ -3,8 +3,6 @@
 using System.Threading.Tasks;
 
 using ZDeals.Common;
-using ZDeals.Web.Api.Helpers;
-using ZDeals.Web.Api.Options;
 using ZDeals.Web.Service;
 
 namespace ZDeals.Web.Api.Controllers
@@ -15,13 +13,11 @@ namespace ZDeals.Web.Api.Controllers
     {
         private readonly IDealSearchService _dealSearchService;
         private readonly IDealService _dealService;
-        private readonly PictureStorageOptions _pictureStorageOptions;
 
-        public DealsController(IDealSearchService dealSearchService, IDealService dealService, PictureStorageOptions pictureStorageOptions)
+        public DealsController(IDealSearchService dealSearchService, IDealService dealService)
         {
             _dealSearchService = dealSearchService;
             _dealService = dealService;
-            _pictureStorageOptions = pictureStorageOptions;
         }
 
         /// <summary>
@@ -32,22 +28,9 @@ namespace ZDeals.Web.Api.Controllers
         /// </remarks>
         /// <response code="200">all deals in the system</response>
         [HttpGet]
-        public async Task<ActionResult<Result>> Search([FromQuery] DealsSearchRequest request)
+        public async Task<ActionResult<Result>> Search([FromQuery] DealSearchRequest request)
         {
             var result = await _dealSearchService.SearchDeals(request);
-            if (result.HasError()) return result;
-
-            var data = result.Data;
-
-            if (data?.Deals != null)
-            { 
-                //var baseUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-                //data.Deals = DealsHelper.SetSourceToLocal(data.Deals, baseUrl);
-
-
-                if (string.IsNullOrEmpty(_pictureStorageOptions.GetPictureUrl) == false)
-                    data.Deals = DealsHelper.SetPictureAbsoluteUrl(data.Deals, _pictureStorageOptions);
-            }
             return result;
         }
 

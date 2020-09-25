@@ -1,7 +1,4 @@
-﻿using System;
-using ZDeals.Web.Service.Mapping;
-
-namespace ZDeals.Web.Service.Models
+﻿namespace ZDeals.Web.Service.Models
 {
     public class Deal
     {
@@ -10,13 +7,13 @@ namespace ZDeals.Web.Service.Models
         public string? Highlight { get; set; }
         public string? Description { get; set; }
 
-        public decimal FullPrice { get; set; }
-        public decimal DealPrice { get; set; }
+        public string? FullPriceString { get; set; }
+        public string? DealPriceString { get; set; }
         public string? Discount { get; set; }
 
         public bool FreeShipping { get; set; }
 
-        public DateTime CreatedTime { get; set; }
+        public string? CreatedTimeString { get; set; }
 
         public Store? Store { get; set; }
 
@@ -25,36 +22,6 @@ namespace ZDeals.Web.Service.Models
         public string? Source { get; set; }
 
         public string? Brand { get; set; }
-
-        public string FullPriceString
-        {
-            get
-            {
-                return DealPrice < FullPrice ? FullPrice.ToPriceWithCurrency() : string.Empty;
-            }
-        }
-
-        public string DealPriceString
-        {
-            get
-            {
-                return DealPrice.ToPriceWithCurrency();
-            }
-        }
-
-        public string CreatedTimeString
-        {
-            get
-            {
-                var span = DateTime.UtcNow - CreatedTime;
-                if (span.TotalMinutes < 60)
-                    return span.TotalMinutes.ToString("0 minutes ago");
-                else if (span.TotalHours < 24)
-                    return span.TotalHours.ToString("0 hours ago");
-                else
-                    return span.TotalDays.ToString("0 days ago");
-            }
-        }
 
     }
 }

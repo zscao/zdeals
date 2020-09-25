@@ -25,7 +25,7 @@ namespace ZDeals.Web.Pages.Deals
             _pictureStorageOptions = pictureStorageOptions;
         }
 
-        public DealsSearchResult DealResult { get; private set; }
+        public DealSearchResult DealResult { get; private set; }
 
         /// <summary>
         /// 
@@ -65,9 +65,9 @@ namespace ZDeals.Web.Pages.Deals
         }
 
 
-        private async Task<DealsSearchResult> SearchDeals(string categoryCode, string keywords, int pageNumber)
+        private async Task<DealSearchResult> SearchDeals(string categoryCode, string keywords, int pageNumber)
         {
-            var result = await _dealService.SearchDeals(new DealsSearchRequest
+            var result = await _dealService.SearchDeals(new DealSearchRequest
             {
                 Category = categoryCode,
                 Keywords = keywords,
@@ -76,7 +76,7 @@ namespace ZDeals.Web.Pages.Deals
             });
             if (result.HasError())
             {
-                DealResult = new DealsSearchResult()
+                DealResult = new DealSearchResult()
                 {
                     Deals = new List<Deal>(),
                     Category = categoryCode,

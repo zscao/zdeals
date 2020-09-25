@@ -2,7 +2,7 @@
 
 namespace ZDeals.Web.Service.Models
 {
-    public class DealsSearchResult
+    public class DealSearchResult
     {
         public IEnumerable<Deal>? Deals { get; set; }
 

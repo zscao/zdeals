@@ -7,10 +7,10 @@ namespace ZDeals.Web.Service
 {
     public interface IDealSearchService
     {
-        Task<Result<DealsSearchResult?>> SearchDeals(DealsSearchRequest request);
+        Task<Result<DealSearchResult?>> SearchDeals(DealSearchRequest request);
     }
 
-    public class DealsSearchRequest
+    public class DealSearchRequest
     {
         public string? Category { get; set; }
         public string? Keywords { get; set; }

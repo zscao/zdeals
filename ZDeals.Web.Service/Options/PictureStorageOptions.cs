@@ -1,4 +1,4 @@
-﻿namespace ZDeals.Web.Api.Options
+﻿namespace ZDeals.Web.Service.Options
 {
     public class PictureStorageOptions
     {

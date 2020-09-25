@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 using MySql.Data.MySqlClient;
 
@@ -11,8 +10,10 @@ using System.Threading.Tasks;
 using ZDeals.Common;
 using ZDeals.Data;
 using ZDeals.Data.Entities;
+using ZDeals.Web.Service.Helpers;
 using ZDeals.Web.Service.Mapping;
 using ZDeals.Web.Service.Models;
+using ZDeals.Web.Service.Options;
 
 namespace ZDeals.Web.Service.Impl
 {
@@ -21,63 +22,56 @@ namespace ZDeals.Web.Service.Impl
         const int PageSize = 20;
         const string FreeShipping = "free";
 
-        const string DefaultSearchResultKey = "DefaultSearch";
-
         private readonly ZDealsDbContext _dbContext;
+        private readonly PictureStorageOptions _pictureStorageOptions;
         private readonly ICategoryService _categoryService;
+        private readonly IDealSearchCache _dealSearchCache;
 
-        private readonly IMemoryCache _memoryCache;
-
-        public DealSearchService(ZDealsDbContext dbContext, ICategoryService categoryService, IMemoryCache memoryCache)
+        public DealSearchService(ZDealsDbContext dbContext, PictureStorageOptions pictureStorageOptions, ICategoryService categoryService, IDealSearchCache dealSearchCache)
         {
             _dbContext = dbContext;
+            _pictureStorageOptions = pictureStorageOptions;
             _categoryService = categoryService;
-            _memoryCache = memoryCache;
+            _dealSearchCache = dealSearchCache;
         }
 
-        public async Task<Result<DealsSearchResult?>> SearchDeals(DealsSearchRequest request)
+        public async Task<Result<DealSearchResult?>> SearchDeals(DealSearchRequest request)
         {
-            if (string.IsNullOrEmpty(request.Keywords) && string.IsNullOrEmpty(request.Category) && !request.Page.HasValue == false)
-            {
-                bool cached = _memoryCache.TryGetValue(DefaultSearchResultKey, out DealsSearchResult cachedResult);
-                if(cached) return new Result<DealsSearchResult?>(cachedResult);
-            }
+            var result = _dealSearchCache.GetSearchResult(request);
+            if(result != null) return new Result<DealSearchResult?>(result);
 
             var categoryIds = await GetCategoryIds(request.Category);
 
             var query = GetQueryableSql(request, categoryIds);
+            var storeFilter = await GetStoreFilter(query);
+            var brandFilter = await GetBrandFilter(query);
+            var deliveryFilter = GetDeliveryFilter();
 
-            // get store filters 
-            string[] stores = request.Store?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
-            IEnumerable<int> selectedStores = stores.Select(x => int.TryParse(x, out int s) ? s : 0);
-            var storeFilter = await GetStoreFilter(query.Select(x => x.StoreId).Distinct().ToList(), selectedStores);
-
-            // get brand filter
-            var brandCodes = request.Brand?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            var brandIds = GetBrandIds(brandCodes);
-            var brandFilter = await GetBrandFilter(query.Select(x => x.BrandId).Distinct().ToList(), brandIds);
-
-            var deliveryFilter = GetDeliveryFilter(request.Del == FreeShipping);
-
-            var filters = new List<DealFilter> {
-                brandFilter,
-                deliveryFilter,
-                storeFilter,
-            };
- 
             // apply stores filter
+            // get store filters 
+            string[] selectedStores = request.Store?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
             if (selectedStores.Count() > 0)
             {
-                query = query.Where(x => x.StoreId.HasValue && selectedStores.Contains(x.StoreId.Value));
+                storeFilter.ApplySelected(selectedStores);
+
+                IEnumerable<int> storeIds = selectedStores.Select(x => int.TryParse(x, out int s) ? s : 0);
+                query = query.Where(x => x.StoreId.HasValue && storeIds.Contains(x.StoreId.Value));
             }
+
             // apply brands filter
-            if (brandIds.Length > 0)
+            // get brand filter
+            var brandCodes = request.Brand?.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            if (brandCodes?.Length > 0)
             {
+                brandFilter.ApplySelected(brandCodes);
+
+                var brandIds = GetBrandIds(brandCodes);
                 query = query.Where(x => x.BrandId != null && brandIds.Contains(x.BrandId.Value));
             }
             // apply delivery filter
             if(request.Del == FreeShipping)
             {
+                deliveryFilter.ApplySelected(new string[] { FreeShipping });
                 query = query.Where(x => x.FreeShipping);
             }
 
@@ -94,28 +88,29 @@ namespace ZDeals.Web.Service.Impl
             var page = request.Page ?? 1;
             var skipped = PageSize * (page - 1);
             var deals = await query.Skip(skipped).Take(PageSize).Include(x => x.Store).ToListAsync();
+            var dealsModel = deals.Select(x => x.ToDealModel(_pictureStorageOptions?.GetPictureUrl)!).ToList();
 
-            var result = new DealsSearchResult
+            result = new DealSearchResult
             {
-                Deals = deals.Select(x => x.ToDealModel()!).ToList(),
+                Deals = dealsModel,
                 Category = request.Category,
                 Keywords = request.Keywords,
                 Page = page,
                 Sort = request.Sort ?? "default",
                 More = deals.Count >= PageSize,
-                Filters = filters
+                Filters = new List<DealFilter> {
+                    brandFilter,
+                    deliveryFilter,
+                    storeFilter,
+                }
             };
 
-            // set cache for default search
-            if (string.IsNullOrEmpty(request.Keywords) && string.IsNullOrEmpty(request.Category) && !request.Page.HasValue == false)
-            {
-                _memoryCache.Set(DefaultSearchResultKey, result, TimeSpan.FromMinutes(3));
-            }
+            _dealSearchCache.SetSearchResult(request, result);
 
-            return new Result<DealsSearchResult?>(result);
+            return new Result<DealSearchResult?>(result);
         }
 
-        private IQueryable<DealEntity> GetQueryableSql(DealsSearchRequest request, IEnumerable<int> categoryIds)
+        private IQueryable<DealEntity> GetQueryableSql(DealSearchRequest request, IEnumerable<int> categoryIds)
         {
             var parameters = new List<object>();
             string sql = $" SELECT * FROM Deals d " +
@@ -225,20 +220,20 @@ namespace ZDeals.Web.Service.Impl
             return result;
         }
 
-        private async Task<DealFilter> GetStoreFilter(IEnumerable<int?> stores, IEnumerable<int> selected)
+        private async Task<DealFilter> GetStoreFilter(IQueryable<DealEntity> query)
         {
-            int[] storeIds = stores.Select(x => x ?? 0).Where(x => x > 0).ToArray();
+            var stores = await query.Select(x => x.Store).Distinct().ToListAsync();
 
-            var items = await _dbContext.Stores
-                .Where(x => storeIds.Contains(x.Id))
+            var items = stores
+                .Where(x => x != null)
                 .OrderBy(x => x.Name)
                 .Select(x => new FilterItem
                 {
                     Name = x.Name,
                     Value = x.Id.ToString(),
-                    Selected = selected.Contains(x.Id)
+                    Selected = false
                 })
-                .ToListAsync();
+                .ToList();
 
             return new DealFilter
             {
@@ -249,21 +244,21 @@ namespace ZDeals.Web.Service.Impl
             };
         }
 
-        private async Task<DealFilter> GetBrandFilter(IEnumerable<int?> brands, int[] selected)
+        private async Task<DealFilter> GetBrandFilter(IQueryable<DealEntity> query)
         {
-            int[] brandIds = brands.Select(x => x ?? 0).Where(x => x > 0).ToArray();
+            var brands = await query.Select(x => x.Brand).Distinct().ToListAsync();
 
-            var items = await _dbContext.Brands
-                .Where(x => brandIds.Contains(x.Id))
+            var items = brands
+                .Where(x => x != null)
                 .OrderByDescending(x => x.DisplayOrder)
                 .ThenBy(x => x.Name)
                 .Select(x => new FilterItem
                 {
                     Name = x.Name,
                     Value = x.Code,
-                    Selected = selected.Contains(x.Id)
+                    Selected = false
                 })
-                .ToListAsync();
+                .ToList();
 
             return new DealFilter
             {
@@ -274,13 +269,13 @@ namespace ZDeals.Web.Service.Impl
             };
         }
 
-        private DealFilter GetDeliveryFilter(bool? selected)
+        private DealFilter GetDeliveryFilter()
         {
             var freeShipping = new FilterItem
             {
                 Name = "Free Shipping",
                 Value = FreeShipping,
-                Selected = selected ?? false
+                Selected = false
             };
 
             return new DealFilter
