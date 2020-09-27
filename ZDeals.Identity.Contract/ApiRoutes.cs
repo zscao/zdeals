@@ -2,7 +2,7 @@
 {
     public static class ApiRoutes
     {
-        public const string BaseUrl = "";
+        public const string BaseUrl = "/";
 
         public static class Error
         {
@@ -13,6 +13,11 @@
         public static class Users
         {
             public const string Base = BaseUrl + "users";
+        }
+
+        public static class Account
+        {
+            public const string Base = BaseUrl + "account";
         }
     }
 }

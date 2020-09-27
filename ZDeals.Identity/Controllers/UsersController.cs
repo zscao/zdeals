@@ -17,31 +17,10 @@ namespace ZDeals.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IJwtService _jwtService;
 
-        public UsersController(IUserService userService, IJwtService jwtService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
-            _jwtService = jwtService; ;
-        }
-
-        [AllowAnonymous]
-        [HttpPost("login")]
-        public async Task<ActionResult<Result>> Login(LoginRequest request)
-        {
-            var authResult = await _userService.AuthenticateAsync(request.Username, request.Password);
-            if (authResult.HasError())
-                return authResult;
-
-            return await _jwtService.GenerateJwtTokenAsync(authResult.Data);
-        }
-
-
-        [AllowAnonymous]
-        [HttpPost("refresh")]
-        public async Task<ActionResult<Result>> Refresh(RefreshTokenRequest request)
-        {
-            return await _jwtService.RefreshTokenAsync(request.Token, request.RefreshToken);
         }
 
         [Authorize(Roles = ApiRoles.Admin)]
@@ -50,5 +29,6 @@ namespace ZDeals.Api.Controllers
         {
             return await _userService.CreateUserAsync(request);
         }
+
     }
 }

@@ -21,7 +21,7 @@ namespace ZDeals.Common.AspNetCore.Filters
                 var result = context.Result as ObjectResult;
                 var type = result.Value.GetType();
 
-                if(type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Result<>))
+                if( type == typeof(Result) || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Result<>)))
                 {
                     var resultValue = result.Value as Result;
                     if (resultValue.HasError())
@@ -54,13 +54,21 @@ namespace ZDeals.Common.AspNetCore.Filters
                     }
                     else
                     {
-                        var dataProperty = type.GetProperty("Data");
-                        if (dataProperty != null)
+                        if (type.IsGenericType)
                         {
-                            result.Value = dataProperty.GetValue(resultValue);                            
-                            if(result.Value == null)
+                            var dataProperty = type.GetProperty("Data");
+                            if (dataProperty != null)
+                            {
+                                result.Value = dataProperty.GetValue(resultValue);
+                                if (result.Value == null)
+                                {
+                                    result.StatusCode = StatusCodes.Status204NoContent;
+                                }
+                            }
+                            else
                             {
                                 result.StatusCode = StatusCodes.Status204NoContent;
+                                result.Value = null;
                             }
                         }
                         else

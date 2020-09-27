@@ -10,6 +10,7 @@ namespace ZDeals.Identity.ServiceConfigure
         public static void AddZDealsServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IJwtService, JwtService>();
         }
     }

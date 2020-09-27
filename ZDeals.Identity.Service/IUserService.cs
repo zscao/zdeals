@@ -12,7 +12,5 @@ namespace ZDeals.Identity
 
         Task<Result<User>> GetUserByName(string username);
 
-        Task<Result<User>> AuthenticateAsync(string username, string password);
-
     }
 }
