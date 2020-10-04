@@ -1,6 +1,8 @@
 ﻿using FluentValidation.AspNetCore;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,14 @@ namespace ZDeals.Web.Api.ServiceConfigure
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => false;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.Secure = CookieSecurePolicy.SameAsRequest;
+                options.HttpOnly = HttpOnlyPolicy.None;
             });
 
             services.Configure<ApiBehaviorOptions>(options =>

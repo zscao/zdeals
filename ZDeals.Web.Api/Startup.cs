@@ -61,8 +61,10 @@ namespace ZDeals.Web.Api
             }
 
             app.UseCors(CorsPolicyName);
-
             app.UseHttpsRedirection();
+
+            app.UseCookiePolicy();
+            app.UseMiddleware<Middlewares.CookieMiddleware>();
 
             app.UseRouting();
 

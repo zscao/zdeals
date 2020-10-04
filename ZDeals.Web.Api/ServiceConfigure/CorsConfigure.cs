@@ -23,6 +23,7 @@ namespace ZDeals.Web.Api.ServiceConfigure
                     builder.WithOrigins(origins)
                         .AllowAnyHeader()
                         .AllowAnyMethod()
+                        .AllowCredentials()
                         .WithExposedHeaders("token-expired");
                 });
             });
