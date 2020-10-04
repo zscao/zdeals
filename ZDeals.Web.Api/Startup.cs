@@ -28,7 +28,7 @@ namespace ZDeals.Web.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(Configuration, CorsPolicyName);
-            services.AddWebAndValidations();
+            services.AddWebAndValidations(HostEnvironment);
             services.AddJwtAuthentication(Configuration);
 
             services.AddZDealsDbContext(Configuration, HostEnvironment);
