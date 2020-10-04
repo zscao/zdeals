@@ -27,7 +27,9 @@ namespace ZDeals.Web.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(Configuration, CorsPolicyName);
+            if(HostEnvironment.IsDevelopment())
+                services.AddCors(Configuration, CorsPolicyName);
+            
             services.AddWebAndValidations(HostEnvironment);
             services.AddJwtAuthentication(Configuration);
 
@@ -58,9 +60,10 @@ namespace ZDeals.Web.Api
                 {
                     c.SwaggerEndpoint($"{pathBase}swagger/v1/swagger.json", "ZDeals Web Api v1");
                 });
+            
+                app.UseCors(CorsPolicyName);
             }
 
-            app.UseCors(CorsPolicyName);
             app.UseHttpsRedirection();
 
             app.UseCookiePolicy();
