@@ -3,6 +3,8 @@
 using System;
 using System.Threading.Tasks;
 
+using ZDeals.Web.Api.Constants;
+
 namespace ZDeals.Web.Api.Middlewares
 {
     /// <summary>
@@ -10,10 +12,6 @@ namespace ZDeals.Web.Api.Middlewares
     /// </summary>
     public class CookieMiddleware
     {
-        const string SessionTokenKey = "session-token";
-        const string SessionIdKey = "ft-session-id";
-        const string CookieConsent = "cookie-consent";
-
         private readonly RequestDelegate _next;
 
         public CookieMiddleware(RequestDelegate next)
@@ -23,7 +21,7 @@ namespace ZDeals.Web.Api.Middlewares
 
         public async Task Invoke(HttpContext context)
         {            
-            if (context.Request.Cookies.Keys.Contains(SessionTokenKey) == false)
+            if (context.Request.Cookies.Keys.Contains(CookieKeys.SessionTokenKey) == false)
             {
                 context.Response.OnStarting(() =>
                 {
@@ -48,13 +46,13 @@ namespace ZDeals.Web.Api.Middlewares
                 IsEssential = true,
             };
 
-            responseCookies.Append(SessionTokenKey, token, options);
+            responseCookies.Append(CookieKeys.SessionTokenKey, token, options);
         }
 
         // issue an track id
         private void AddSessionId(IRequestCookieCollection requestCookies, IResponseCookies responseCookies)
         {
-            if (requestCookies.TryGetValue(SessionIdKey, out string token) == false) 
+            if (requestCookies.TryGetValue(CookieKeys.SessionIdKey, out string token) == false) 
                 token = GenerateRandomId();
 
             var options = new CookieOptions
@@ -64,13 +62,13 @@ namespace ZDeals.Web.Api.Middlewares
                 IsEssential = true,
             };
 
-            responseCookies.Append(SessionIdKey, token, options);
+            responseCookies.Append(CookieKeys.SessionIdKey, token, options);
         }
 
         // update the cookie consent
         private void UpdateCookieConsent(IRequestCookieCollection requestCookies, IResponseCookies responseCookies)
         {
-            if (requestCookies.TryGetValue(CookieConsent, out string token) == false) return;
+            if (requestCookies.TryGetValue(CookieKeys.CookieConsent, out string token) == false) return;
 
             var options = new CookieOptions
             {
@@ -79,7 +77,7 @@ namespace ZDeals.Web.Api.Middlewares
                 IsEssential = true,
             };
 
-            responseCookies.Append(CookieConsent, token, options);
+            responseCookies.Append(CookieKeys.CookieConsent, token, options);
         }
 
         private string GenerateRandomId()

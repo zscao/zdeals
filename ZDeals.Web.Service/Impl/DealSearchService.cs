@@ -135,7 +135,7 @@ namespace ZDeals.Web.Service.Impl
                 }
             }
 
-            IQueryable<DealEntity> query = _dbContext.Deals.FromSqlRaw(sql, parameters.ToArray());
+            IQueryable<DealEntity> query = _dbContext.Deals.FromSqlRaw(sql, parameters.ToArray()).AsNoTracking();
             return query;
         }
 
@@ -292,7 +292,7 @@ namespace ZDeals.Web.Service.Impl
             if (brandCodes == null || brandCodes.Count() == 0) return new int[0];
 
             var codes = brandCodes.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-            return _dbContext.Brands.Where(x => codes.Contains(x.Code)).Select(x => x.Id).ToArray();
+            return _dbContext.Brands.AsNoTracking().Where(x => codes.Contains(x.Code)).Select(x => x.Id).ToArray();
         }
     }
 }
