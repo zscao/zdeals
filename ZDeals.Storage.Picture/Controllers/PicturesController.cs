@@ -62,7 +62,7 @@ namespace ZDeals.Storage.Picture.Controllers
                     Security = BlobSecurity.Public
                 };
 
-                var fileName = Path.GetRandomFileName() + fileExtension;
+                var fileName = $"{Path.GetRandomFileName()}{fileExtension}";
                 var isUploaded = await _blobService.UploadBlobAsync(container, fileName, stream, properties);
 
                 if (!isUploaded)
@@ -83,7 +83,7 @@ namespace ZDeals.Storage.Picture.Controllers
             {
                 image.Mutate(x => x.Resize(new ResizeOptions
                 {
-                    Size = new SixLabors.Primitives.Size(600),
+                    Size = new Size(600),
                     Mode = ResizeMode.Max
                 }));
 
@@ -98,9 +98,20 @@ namespace ZDeals.Storage.Picture.Controllers
 
             contentType = file.ContentType;
             fileExtension = Path.GetExtension(file.FileName);
+            if (string.IsNullOrEmpty(fileExtension)) fileExtension = GetFileExtensionFromContentType(contentType);
 
             input.Position = 0;
             return input;
+        }
+
+        private string? GetFileExtensionFromContentType(string contentType)
+        {
+            if (string.IsNullOrEmpty(contentType)) return contentType;
+
+            var values = contentType.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            if (values.Length > 0) return "." + values[values.Length - 1]; // return the last value
+
+            return null;
         }
     }
 }
