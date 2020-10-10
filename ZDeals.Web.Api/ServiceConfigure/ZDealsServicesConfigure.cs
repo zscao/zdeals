@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using ZDeals.Net;
+using ZDeals.Web.Api.Services;
 using ZDeals.Web.Service;
 using ZDeals.Web.Service.Impl;
 using ZDeals.Web.Service.Options;
@@ -16,7 +17,11 @@ namespace ZDeals.Web.Api.ServiceConfigure
             services.AddScoped<IDealSearchService, DealSearchService>();
             services.AddScoped<ICategoryService, CategoryService>();
 
-            services.AddScoped<IPageService, Net.Impl.PageService>();
+            // request context
+            services.AddScoped<IRequestContextProvider, RequestContextProvider>();
+
+            // web page service
+            services.AddSingleton<IPageService, Net.Impl.PageService>();
 
             // cache service            
             services.AddSingleton<IDealSearchCache, DealSearchCache>();
@@ -24,6 +29,7 @@ namespace ZDeals.Web.Api.ServiceConfigure
             var pictureStorageOptions = new PictureStorageOptions();
             configuration.GetSection("PictureStorageOptions").Bind(pictureStorageOptions);
             services.AddSingleton(pictureStorageOptions);
+
         }
     }
 }

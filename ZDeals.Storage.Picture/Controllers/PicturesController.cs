@@ -54,24 +54,22 @@ namespace ZDeals.Storage.Picture.Controllers
         {
             if (string.IsNullOrEmpty(container)) return BadRequest("Container can't be empty");
 
-            using (var stream = ReadImage(file, out string contentType, out string fileExtension))
+            using var stream = ReadImage(file, out string contentType, out string fileExtension);
+            var properties = new BlobProperties
             {
-                var properties = new BlobProperties
-                {
-                    ContentType = contentType,
-                    Security = BlobSecurity.Public
-                };
+                ContentType = contentType,
+                Security = BlobSecurity.Public
+            };
 
-                var fileName = $"{Path.GetRandomFileName()}{fileExtension}";
-                var isUploaded = await _blobService.UploadBlobAsync(container, fileName, stream, properties);
+            var fileName = $"{Path.GetRandomFileName()}{fileExtension}";
+            var isUploaded = await _blobService.UploadBlobAsync(container, fileName, stream, properties);
 
-                if (!isUploaded)
-                {
-                    return StatusCode(500, "Failed to save file.");
-                }
-
-                return Ok(new { file.ContentType, file.Length, FileName = fileName });
+            if (!isUploaded)
+            {
+                return StatusCode(500, "Failed to save file.");
             }
+
+            return Ok(new { file.ContentType, file.Length, FileName = fileName });
         }
 
         private Stream ReadImage(IFormFile file, out string contentType, out string fileExtension)
@@ -109,9 +107,9 @@ namespace ZDeals.Storage.Picture.Controllers
             if (string.IsNullOrEmpty(contentType)) return contentType;
 
             var values = contentType.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            if (values.Length > 0) return "." + values[values.Length - 1]; // return the last value
-
-            return null;
+            
+            // return the last value
+            return values.Length > 0 ? ("." + values[^1]) : null;
         }
     }
 }

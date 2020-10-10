@@ -19,12 +19,14 @@ namespace ZDeals.Web.Service.Impl
         private readonly ZDealsDbContext _dbContext;
         private readonly PictureStorageOptions _pictureStorageOptions;
         private readonly IPageService _pageService;
+        private readonly IRequestContextProvider _requestContextProvider;
 
-        public DealService(ZDealsDbContext dbContext, PictureStorageOptions pictureStorageOptions, IPageService pageService)
+        public DealService(ZDealsDbContext dbContext, PictureStorageOptions pictureStorageOptions, IPageService pageService,IRequestContextProvider requestContextProvider)
         {
             _dbContext = dbContext;
             _pictureStorageOptions = pictureStorageOptions;
             _pageService = pageService;
+            _requestContextProvider = requestContextProvider;
         }
 
         public async Task<Result<Deal?>> Visit(int dealId, string clientIp)
@@ -51,11 +53,15 @@ namespace ZDeals.Web.Service.Impl
                 });
             }
 
+            var context = _requestContextProvider.Context;
+
             var visit = new VisitHistoryEntity
             {
                 DealId = dealId,
                 ClientIp = clientIp,
-                VisitedTime = DateTime.UtcNow
+                VisitedTime = DateTime.UtcNow,
+                SessionToken = context.SessionToken,
+                SessionId = context.SessionId
             };
             var entry = _dbContext.DealVisitHistory.Add(visit);
 

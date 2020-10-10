@@ -6,7 +6,7 @@ using ZDeals.Common;
 
 namespace ZDeals.Api.Service
 {
-    public interface IDealService : IServiceWithContext
+    public interface IDealService
     {
         Task<Result<PagedDeals>> SearchDealsAsync(SearchDealRequest request);
 

@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using System.Net;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
 using ZDeals.Api.Contract.Requests;
-using ZDeals.Api.Helpers;
 using ZDeals.Api.Service;
 using ZDeals.Common;
 using ZDeals.Common.Constants;
@@ -62,37 +60,31 @@ namespace ZDeals.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Result>> Create([FromBody] CreateDealRequest request)
         {
-            _dealService.RequestContext = this.GetRequestContext();
             var result = await _dealService.CreateDealAsync(request);
-
             return Created($"{ApiRoutes.Deals.Base}/{result.Data?.Id}", result);
         }
 
         [HttpPut("{dealId}")]
         public async Task<ActionResult<Result>> Update(int dealId, [FromBody] UpdateDealRequest request)
         {
-            _dealService.RequestContext = this.GetRequestContext();
             return await _dealService.UpdateDealAsync(dealId, request);
         }
 
         [HttpDelete("{dealId}")]
         public async Task<ActionResult<Result>> Delete(int dealId)
         {
-            _dealService.RequestContext = this.GetRequestContext();
             return await _dealService.DeleteDealAsync(dealId);
         }
 
         [HttpPost("{dealId}/verify")]
         public async Task<ActionResult<Result>> Verify(int dealId)
         {
-            _dealService.RequestContext = this.GetRequestContext();
             return await _dealService.VerifyDealAsync(dealId);
         }
 
         [HttpPost("{dealId}/recycle")]
         public async Task<ActionResult<Result>> Recycle(int dealId)
         {
-            _dealService.RequestContext = this.GetRequestContext();
             return await _dealService.RecycleDealAsync(dealId);
         }
 
@@ -111,7 +103,6 @@ namespace ZDeals.Api.Controllers
         [HttpPut("{dealId}/pictures")]
         public async Task<ActionResult<Result>> SavePicture(int dealId, SaveDealPictureRequest request)
         {
-            _dealService.RequestContext = this.GetRequestContext();
             var result = await _dealService.SavePictureAsync(dealId, request);
             return Created($"{ApiRoutes.Deals.Base}/{dealId}/pictures/{result.Data.FileName}", result);
         }
@@ -125,7 +116,6 @@ namespace ZDeals.Api.Controllers
         [HttpPut("{dealId}/categories")]
         public async Task<ActionResult<Result>> SaveCategories(int dealId, SaveDealCategoriesRequest request)
         {
-            _dealService.RequestContext = this.GetRequestContext();
             return await _dealService.SaveCategoriesAsync(dealId, request);
         }
     }

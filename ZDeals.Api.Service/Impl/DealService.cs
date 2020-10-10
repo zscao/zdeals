@@ -17,15 +17,18 @@ using ZDeals.Data.Entities;
 
 namespace ZDeals.Api.Service.Impl
 {
-    public class DealService : ServiceWithContext, IDealService
+    public class DealService : IDealService
     {
         private readonly ZDealsDbContext _dbContext;
         private readonly ICategoryService _categoryService;
+        private readonly RequestContext _requestContext;
 
-        public DealService(ZDealsDbContext dbContext, ICategoryService categoryService)
+        public DealService(ZDealsDbContext dbContext, ICategoryService categoryService, IRequestContextProvider requestContextProvider)
         {
             _dbContext = dbContext;
             _categoryService = categoryService;
+            
+            _requestContext = requestContextProvider.Context;
         }
 
         public async Task<Result<PagedDeals>> SearchDealsAsync(SearchDealRequest request)
@@ -150,7 +153,7 @@ namespace ZDeals.Api.Service.Impl
             {
                 Deal = deal,
                 Action = DealActionValues.Create,
-                ActedBy = RequestContext?.Username,
+                ActedBy = _requestContext.Username,
                 ActedOn = DateTime.UtcNow,
             });
 
@@ -210,7 +213,7 @@ namespace ZDeals.Api.Service.Impl
             {
                 DealId = dealId,
                 Action = DealActionValues.Update,
-                ActedBy = RequestContext?.Username,
+                ActedBy = _requestContext.Username,
                 ActedOn = DateTime.UtcNow,
             });
 
@@ -230,7 +233,7 @@ namespace ZDeals.Api.Service.Impl
             {
                 DealId = dealId,
                 Action = DealActionValues.Delete,
-                ActedBy = RequestContext?.Username,
+                ActedBy = _requestContext.Username,
                 ActedOn = DateTime.UtcNow,
             });
 
@@ -251,7 +254,7 @@ namespace ZDeals.Api.Service.Impl
             {
                 DealId = dealId,
                 Action = DealActionValues.Verify,
-                ActedBy = RequestContext?.Username,
+                ActedBy = _requestContext.Username,
                 ActedOn = DateTime.UtcNow,
             });
 
@@ -272,7 +275,7 @@ namespace ZDeals.Api.Service.Impl
             {
                 DealId = dealId,
                 Action = DealActionValues.Recycle,
-                ActedBy = RequestContext?.Username,
+                ActedBy = _requestContext.Username,
                 ActedOn = DateTime.UtcNow,
             });
 

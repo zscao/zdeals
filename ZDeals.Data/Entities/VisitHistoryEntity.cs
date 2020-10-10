@@ -16,6 +16,12 @@ namespace ZDeals.Data.Entities
         [MaxLength(200)]
         public string ClientIp { get; set; }
 
+        [MaxLength(50)]
+        public string SessionToken { get; set; }
+
+        [MaxLength(50)]
+        public string SessionId { get; set; }
+
         public DealEntity Deal { get; set; }
     }
 }

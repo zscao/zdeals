@@ -2,6 +2,7 @@
 
 using ZDeals.Api.Service;
 using ZDeals.Api.Service.Impl;
+using ZDeals.Api.Services;
 
 namespace ZDeals.Api.ServiceConfigure
 {
@@ -14,6 +15,8 @@ namespace ZDeals.Api.ServiceConfigure
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IDashboardService, DashboardService>();
+
+            services.AddScoped<IRequestContextProvider, RequestContextProvider>();
         }
     }
 }
