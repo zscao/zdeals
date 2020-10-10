@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Serilog;
+
 using System.Globalization;
 
 using ZDeals.Web.Api.ServiceConfigure;
@@ -68,6 +70,20 @@ namespace ZDeals.Web.Api
 
             app.UseCookiePolicy();
             app.UseMiddleware<Middlewares.CookieMiddleware>();
+
+            app.UseSerilogRequestLogging(options =>
+            {
+                options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+                {
+                    httpContext.Request.Cookies.TryGetValue(Constants.CookieKeys.SessionTokenKey, out string sessionToken);
+                    httpContext.Request.Cookies.TryGetValue(Constants.CookieKeys.SessionIdKey, out string sessionId);
+
+                    diagnosticContext.Set("SessionToken", sessionToken);
+                    diagnosticContext.Set("SessionId", sessionId);
+                };
+
+                options.MessageTemplate = "Request {RequestMethod} {RequestPath} responsed {StatusCode} in {Elapsed} ms. SessionToken:{SessionToken} SessionId:{SessionId}";
+            });
 
             app.UseRouting();
 
