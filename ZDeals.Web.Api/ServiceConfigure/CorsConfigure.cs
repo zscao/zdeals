@@ -8,13 +8,16 @@ namespace ZDeals.Web.Api.ServiceConfigure
 {
     public static class CorsConfigure
     {
-        public static void AddCors(this IServiceCollection services, IConfiguration configuration, string policy)
+        public static bool AddCors(this IServiceCollection services, IConfiguration configuration, string policy)
         {
             var corsOptions = new CorsOptions();
             configuration.GetSection("CorsOptions").Bind(corsOptions);
 
             var allowed = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS") ?? corsOptions.AllowedOrigins;
-            var origins = allowed?.Split(new char[] { ',', ';' }, System.StringSplitOptions.RemoveEmptyEntries) ?? new[] { "*" };
+            if (string.IsNullOrEmpty(allowed)) return false;
+
+            var origins = allowed?.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+            if (origins.Length == 0) return false;
 
             services.AddCors(options =>
             {
@@ -27,6 +30,8 @@ namespace ZDeals.Web.Api.ServiceConfigure
                         .WithExposedHeaders("token-expired");
                 });
             });
+
+            return true;
         }
     }
 }

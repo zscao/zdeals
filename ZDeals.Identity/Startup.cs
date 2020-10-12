@@ -10,6 +10,7 @@ namespace ZDeals.Identity
     public class Startup
     {
         private const string CorsPolicyName = "AllowedOrigins";
+        private bool _corsEnabled = false;
 
         public Startup(IConfiguration configuration)
         {
@@ -21,7 +22,7 @@ namespace ZDeals.Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(Configuration, CorsPolicyName);
+            _corsEnabled = services.AddCors(Configuration, CorsPolicyName);
 
             services.AddWebAndValidations();
 
@@ -49,7 +50,7 @@ namespace ZDeals.Identity
                 });
             }
 
-            app.UseCors(CorsPolicyName);
+            if(_corsEnabled) app.UseCors(CorsPolicyName);
 
             app.UseHttpsRedirection();
 
