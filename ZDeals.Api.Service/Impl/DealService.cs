@@ -200,7 +200,7 @@ namespace ZDeals.Api.Service.Impl
             deal.Highlight = request.HighLight;
             deal.Description = request.Description;
             deal.Discount = request.Discount;
-            deal.FullPrice = request.FullPrice;
+            deal.UsedPrice = request.UsedPrice;
             deal.DealPrice = request.DealPrice;
             deal.ExpiryDate = request.ExpiryDate;
             deal.Brand = brand;

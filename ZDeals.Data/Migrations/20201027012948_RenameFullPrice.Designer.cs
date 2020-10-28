@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZDeals.Data;
 
 namespace ZDeals.Data.Migrations
 {
     [DbContext(typeof(ZDealsDbContext))]
-    partial class ZDealsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201027012948_RenameFullPrice")]
+    partial class RenameFullPrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

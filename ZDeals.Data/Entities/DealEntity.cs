@@ -20,7 +20,7 @@ namespace ZDeals.Data.Entities
 
         [Required]
         [Column(TypeName = "decimal(10, 2)")]
-        public decimal FullPrice { get; set; }
+        public decimal UsedPrice { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(10, 2)")]

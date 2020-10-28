@@ -7,7 +7,7 @@
         public string? Highlight { get; set; }
         public string? Description { get; set; }
 
-        public string? FullPriceString { get; set; }
+        public string? UsedPriceString { get; set; }
         public string? DealPriceString { get; set; }
         public string? Discount { get; set; }
 

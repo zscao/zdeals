@@ -9,7 +9,7 @@ namespace ZDeals.Api.Contract.Models
         public string Highlight { get; set; }
         public string Description { get; set; }
 
-        public decimal FullPrice { get; set; }
+        public decimal UsedPrice { get; set; }
         public decimal DealPrice { get; set; }
         public string Discount { get; set; }
 

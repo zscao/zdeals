@@ -16,7 +16,7 @@ namespace ZDeals.Api.Service.Mapping
                 Highlight = entity.Highlight,
                 Description = entity.Description,
                 DealPrice = entity.DealPrice,
-                FullPrice = entity.FullPrice,
+                UsedPrice = entity.UsedPrice,
                 Discount = entity.Discount,
                 ExpiryDate = entity.ExpiryDate,
                 Store = entity.Store?.ToStoreModel(),

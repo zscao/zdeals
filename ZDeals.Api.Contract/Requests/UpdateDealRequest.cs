@@ -8,7 +8,7 @@ namespace ZDeals.Api.Contract.Requests
         public string HighLight { get; set; }
         public string Description { get; set; }
 
-        public decimal FullPrice { get; set; }
+        public decimal UsedPrice { get; set; }
         public decimal DealPrice { get; set; }
         public string Discount { get; set; }
 

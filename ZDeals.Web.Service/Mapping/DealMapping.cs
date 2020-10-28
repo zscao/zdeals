@@ -20,7 +20,7 @@ namespace ZDeals.Web.Service.Mapping
                 Highlight = entity.Highlight,
                 Description = entity.Description,
                 DealPriceString = entity.DealPrice.ToPriceWithCurrency(),
-                FullPriceString = entity.DealPrice < entity.FullPrice ? entity.FullPrice.ToPriceWithCurrency() : string.Empty,
+                UsedPriceString = entity.DealPrice < entity.UsedPrice ? entity.UsedPrice.ToPriceWithCurrency() : string.Empty,
                 Discount = entity.Discount,
                 FreeShipping = entity.FreeShipping,
                 CreatedTimeString = entity.CreatedTime.ToCreatedTimeString(),
