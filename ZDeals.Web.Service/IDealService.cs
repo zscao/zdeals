@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using ZDeals.Common;
 using ZDeals.Web.Service.Models;
@@ -16,6 +17,8 @@ namespace ZDeals.Web.Service
         /// </summary>
         /// <param name="dealId"></param>
         /// <returns></returns>
-        Task<Result<Deal?>> Visit(int dealId, string clientIp);
+        Task<Result<Deal?>> Visit(int dealId);
+
+        Task<Result<IEnumerable<DealPriceHistory>>> GetDealPriceHistory(int dealId);
     }
 }

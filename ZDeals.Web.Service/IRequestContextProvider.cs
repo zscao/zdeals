@@ -11,15 +11,11 @@
         RequestContext Context { get;  }
     }
 
-    public struct RequestContext
+    public class RequestContext
     {
-        public string SessionToken { get; private set; }
-        public string SessionId { get; private set; }
+        public string? SessionToken { get; set; }
+        public string? SessionId { get; set; }
 
-        public RequestContext(string sessionToken, string sessionId)
-        {
-            SessionToken = sessionToken;
-            SessionId = sessionId;
-        }
+        public string? ClientIP { get; set; }
     }
 }

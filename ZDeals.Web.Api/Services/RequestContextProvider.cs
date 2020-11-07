@@ -22,7 +22,14 @@ namespace ZDeals.Web.Api.Services
                 httpContext.Request.Cookies.TryGetValue(Constants.CookieKeys.SessionTokenKey, out string sessionToken);
                 httpContext.Request.Cookies.TryGetValue(Constants.CookieKeys.SessionIdKey, out string sessionId);
 
-                return new RequestContext(sessionToken: sessionToken, sessionId: sessionId);
+                var clientIp = httpContext.Connection.RemoteIpAddress;
+
+                return new RequestContext 
+                { 
+                    SessionToken = sessionToken, 
+                    SessionId = sessionId ,
+                    ClientIP = clientIp.ToString()
+                };
             }
         }
     }

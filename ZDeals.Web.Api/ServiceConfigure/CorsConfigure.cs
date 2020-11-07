@@ -17,7 +17,7 @@ namespace ZDeals.Web.Api.ServiceConfigure
             if (string.IsNullOrEmpty(allowed)) return false;
 
             var origins = allowed?.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
-            if (origins.Length == 0) return false;
+            if (origins == null || origins.Length == 0) return false;
 
             services.AddCors(options =>
             {

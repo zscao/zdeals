@@ -37,10 +37,14 @@ namespace ZDeals.Web.Api.Controllers
         [HttpPost("visit/{id}")]
         public async Task<ActionResult<Result>> Visit(int id)
         {
-            var clientIp = HttpContext.Connection.RemoteIpAddress;
-
-            var result = await _dealService.Visit(id, clientIp.ToString());
-
+            var result = await _dealService.Visit(id);
+            return result;
+        }
+        
+        [HttpGet("price/{id}")]
+        public async Task<ActionResult<Result>> PriceHistory(int id)
+        {
+            var result = await _dealService.GetDealPriceHistory(id);
             return result;
         }
     }

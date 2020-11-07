@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract.Models;
@@ -209,6 +210,10 @@ namespace ZDeals.Api.Service.Impl
             // if the deal is change, then needs to be verify again
             deal.Status = DealStatus.Created;
 
+
+            // price history
+            await UpdatePriceHistory(dealId, request.DealPrice, request.UsedPrice);
+
             _dbContext.DealActionHistory.Add(new ActionHistoryEntity
             {
                 DealId = dealId,
@@ -395,6 +400,53 @@ namespace ZDeals.Api.Service.Impl
             if (cateResult.HasError()) return new int[0];
 
             return cateResult.Data.ToCategoryList().Select(x => x.Id);
+        }
+
+        private async Task UpdatePriceHistory(int dealId, decimal dealPrice, decimal usedPrice)
+        {
+            var latestPrice = await _dbContext.DealPriceHistory
+                                .Where(x => x.DealId == dealId)
+                                .OrderByDescending(x => x.Id)
+                                .FirstOrDefaultAsync();
+
+            if (latestPrice == null)
+            {
+                int sequence = 1;
+                if (usedPrice > 0)
+                {
+                    _dbContext.DealPriceHistory.Add(new DealPriceHistoryEntity
+                    {
+                        DealId = dealId,
+                        Sequence = sequence++,
+                        Price = usedPrice,
+                        UpdatedDate = DateTime.UtcNow.Date.AddDays(-1), // assume the used price was for yesterday
+                        UpdatedTime = DateTime.UtcNow
+                    });
+                }
+                _dbContext.DealPriceHistory.Add(new DealPriceHistoryEntity
+                {
+                    DealId = dealId,
+                    Sequence = sequence,
+                    Price = dealPrice,
+                    UpdatedDate = DateTime.UtcNow,
+                    UpdatedTime = DateTime.UtcNow
+                });
+            }
+            else
+            {
+                // add a new record if new price is different from the latest price
+                if (Math.Abs(latestPrice.Price - dealPrice) > 0.01m)
+                {
+                    _dbContext.DealPriceHistory.Add(new DealPriceHistoryEntity
+                    {
+                        DealId = dealId,
+                        Sequence = latestPrice.Sequence + 1,
+                        Price = dealPrice,
+                        UpdatedDate = DateTime.UtcNow,
+                        UpdatedTime = DateTime.UtcNow
+                    });
+                }
+            }
         }
 
         #endregion

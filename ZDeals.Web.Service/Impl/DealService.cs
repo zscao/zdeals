@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 using ZDeals.Common;
@@ -29,7 +32,7 @@ namespace ZDeals.Web.Service.Impl
             _requestContextProvider = requestContextProvider;
         }
 
-        public async Task<Result<Deal?>> Visit(int dealId, string clientIp)
+        public async Task<Result<Deal?>> Visit(int dealId)
         {
             var result = new Result<Deal?>();
 
@@ -58,7 +61,7 @@ namespace ZDeals.Web.Service.Impl
             var visit = new VisitHistoryEntity
             {
                 DealId = dealId,
-                ClientIp = clientIp,
+                ClientIp = context.ClientIP,
                 VisitedTime = DateTime.UtcNow,
                 SessionToken = context.SessionToken,
                 SessionId = context.SessionId
@@ -97,5 +100,32 @@ namespace ZDeals.Web.Service.Impl
 
             return new Result<Deal?>(deal.ToDealModel(_pictureStorageOptions?.GetPictureUrl));
         }
+
+        public async Task<Result<IEnumerable<DealPriceHistory>>> GetDealPriceHistory(int dealId)
+        {
+            var data = await _dbContext.DealPriceHistory.Where(x => x.DealId == dealId).OrderBy(x => x.UpdatedTime).ToListAsync();
+
+            var list = new List<DealPriceHistory>();
+            foreach (var d in data)
+            {
+                list.Add(new DealPriceHistory
+                {
+                    Price = d.Price,
+                    Date = d.UpdatedTime
+                });
+            }
+            // add a record to present the price for now
+            if(list.Count > 0)
+            {
+                list.Add(new DealPriceHistory
+                {
+                    Price = list.Last().Price,
+                    Date = DateTime.UtcNow
+                });
+            }
+
+            return new Result<IEnumerable<DealPriceHistory>>(list);
+        }
+
     }
 }

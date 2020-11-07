@@ -22,6 +22,8 @@ namespace ZDeals.Data
 
         public DbSet<ActionHistoryEntity> DealActionHistory { get; set; }
 
+        public DbSet<DealPriceHistoryEntity> DealPriceHistory { get; set; }
+
         public DbSet<VisitDetail> DealVisitDeatail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -37,7 +39,7 @@ namespace ZDeals.Data
 
             builder.Entity<DealEntity>(e =>
             {
-                e.HasIndex(d => d.Title).ForMySqlIsFullText(true);
+                e.HasIndex(d => d.Title).IsFullText(true);
                 e.HasIndex(d => d.Status);
 
                 e.HasOne(d => d.Store).WithMany(s => s.Deals).HasForeignKey(d => d.StoreId);
@@ -45,6 +47,8 @@ namespace ZDeals.Data
 
                 e.HasMany(d => d.VisitHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
                 e.HasMany(d => d.ActionHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
+
+                e.HasMany(d => d.PriceHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
             });                
 
             builder.Entity<CategoryEntity>(e =>

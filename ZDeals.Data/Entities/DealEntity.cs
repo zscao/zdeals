@@ -63,6 +63,9 @@ namespace ZDeals.Data.Entities
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedTime { get; set; }
+
+        public ICollection<DealPriceHistoryEntity> PriceHistory { get; set; }
+
     }
 
     public enum DealStatus
