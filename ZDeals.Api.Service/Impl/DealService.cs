@@ -37,7 +37,7 @@ namespace ZDeals.Api.Service.Impl
             int size = request.PageSize ?? 10;
             int number = request.PageNumber ?? 1;
 
-            var query = _dbContext.Deals.AsQueryable();
+            var query = _dbContext.Deals.AsNoTracking();
 
             // set deal status
             if (request.Status == DealStatusValue.Deleted)
@@ -88,7 +88,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Deal>> GetDealByIdAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.Include(x => x.Store).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.AsNoTracking().Include(x => x.Store).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal == null)
             {
                 return new Result<Deal>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "The deal does not exist." });
@@ -100,7 +100,7 @@ namespace ZDeals.Api.Service.Impl
         {
             var result = new Result<DealExistence>(new DealExistence { Existing = false });
 
-            var deal = await _dbContext.Deals.Include(x => x.Store).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Source == source);
+            var deal = await _dbContext.Deals.AsNoTracking().Include(x => x.Store).Include(x => x.Brand).SingleOrDefaultAsync(x => x.Source == source);
             if (deal != null)
             {
                 result.Data.Existing = true;
@@ -178,7 +178,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<Store>> GetDealStoreAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.AsNoTracking().Include(x => x.Store).SingleOrDefaultAsync(x => x.Id == dealId);
             if(deal?.Store == null)
             {
                 return new Result<Store>(new Error(ErrorType.NotFound) { Code = Sales.StoreNotFound, Message = "Store not found" });
@@ -291,7 +291,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<DealPictureList>> GetPicturesAsync(int dealId)
         {
-            var deal = await _dbContext.Deals.Include(x => x.Pictures).SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.AsNoTracking().Include(x => x.Pictures).SingleOrDefaultAsync(x => x.Id == dealId);
             if (deal == null)
                 return new Result<DealPictureList>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "Could not find the deal" });
 
@@ -340,7 +340,7 @@ namespace ZDeals.Api.Service.Impl
 
         public async Task<Result<DealCategoryList>> GetCategoriesAsync(int dealId)
         {
-            var categories = await _dbContext.DealCategories.Include(x => x.Category).Where(x => x.DealId == dealId).ToListAsync();
+            var categories = await _dbContext.DealCategories.AsNoTracking().Include(x => x.Category).Where(x => x.DealId == dealId).ToListAsync();
 
             var list = new DealCategoryList
             {
@@ -369,6 +369,60 @@ namespace ZDeals.Api.Service.Impl
             var saved = await _dbContext.SaveChangesAsync();
 
             return await GetCategoriesAsync(dealId);
+        }
+
+
+        public async Task<Result<DealPriceList>> GetPricesAsync(int dealId)
+        {
+            var prices = await _dbContext.DealPrices.AsNoTracking().Where(x => x.DealId == dealId).OrderBy(x => x.UpdatedTime).ToListAsync();
+
+            var list = new DealPriceList
+            {
+                Data = prices.Select(x => new DealPrice
+                {
+                    Price = x.Price,
+                    UpdatedTime = x.UpdatedTime
+                })
+            };
+
+            return new Result<DealPriceList>(list);
+        }
+
+        public async Task<Result<DealPriceList>> AddPricesAsync(int dealId, AddPricesRequest request)
+        {
+            var deal = await _dbContext.Deals.Include(x => x.DealPriceHistory).SingleOrDefaultAsync(x => x.Id == dealId);
+            if (deal == null)
+                return new Result<DealPriceList>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "Could not find the deal" });
+
+            DateTime updatedTime = deal.DealPriceHistory.OrderBy(x => x.UpdatedTime).LastOrDefault()?.UpdatedTime ?? deal.UpdatedTime;
+
+            if(request.Prices?.Length > 0)
+            {
+                foreach(var data in request.Prices)
+                {
+                    if( data.UpdatedTime > updatedTime)
+                    {
+                        deal.DealPriceHistory.Add(new DealPriceEntity
+                        {
+                            DealId = deal.Id,
+                            Price = data.Price,
+                            UpdatedTime = data.UpdatedTime
+                        });
+                    }
+                }
+                var saved = await _dbContext.SaveChangesAsync();
+            }
+
+            var list = new DealPriceList
+            {
+                Data = deal.DealPriceHistory.Select(x => new DealPrice
+                {
+                    Price = x.Price,
+                    UpdatedTime = x.UpdatedTime
+                })
+            };
+
+            return new Result<DealPriceList>(list);
         }
 
 
@@ -404,31 +458,26 @@ namespace ZDeals.Api.Service.Impl
 
         private async Task UpdatePriceHistory(int dealId, decimal dealPrice, decimal usedPrice)
         {
-            var latestPrice = await _dbContext.DealPriceHistory
+            var latestPrice = await _dbContext.DealPrices
                                 .Where(x => x.DealId == dealId)
                                 .OrderByDescending(x => x.Id)
                                 .FirstOrDefaultAsync();
 
             if (latestPrice == null)
             {
-                int sequence = 1;
                 if (usedPrice > 0)
                 {
-                    _dbContext.DealPriceHistory.Add(new DealPriceHistoryEntity
+                    _dbContext.DealPrices.Add(new DealPriceEntity
                     {
                         DealId = dealId,
-                        Sequence = sequence++,
                         Price = usedPrice,
-                        UpdatedDate = DateTime.UtcNow.Date.AddDays(-1), // assume the used price was for yesterday
                         UpdatedTime = DateTime.UtcNow
                     });
                 }
-                _dbContext.DealPriceHistory.Add(new DealPriceHistoryEntity
+                _dbContext.DealPrices.Add(new DealPriceEntity
                 {
                     DealId = dealId,
-                    Sequence = sequence,
                     Price = dealPrice,
-                    UpdatedDate = DateTime.UtcNow,
                     UpdatedTime = DateTime.UtcNow
                 });
             }
@@ -437,18 +486,15 @@ namespace ZDeals.Api.Service.Impl
                 // add a new record if new price is different from the latest price
                 if (Math.Abs(latestPrice.Price - dealPrice) > 0.01m)
                 {
-                    _dbContext.DealPriceHistory.Add(new DealPriceHistoryEntity
+                    _dbContext.DealPrices.Add(new DealPriceEntity
                     {
                         DealId = dealId,
-                        Sequence = latestPrice.Sequence + 1,
                         Price = dealPrice,
-                        UpdatedDate = DateTime.UtcNow,
                         UpdatedTime = DateTime.UtcNow
                     });
                 }
             }
         }
-
         #endregion
     }
 }

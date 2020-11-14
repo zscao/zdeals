@@ -9,22 +9,20 @@ namespace ZDeals.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "DealPriceHistory",
+                name: "DealPrices",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    DealId = table.Column<int>(nullable: false),
-                    Sequence = table.Column<int>(nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10, 2)", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "date", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(nullable: false)
+                    UpdatedTime = table.Column<DateTime>(nullable: false),
+                    DealId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DealPriceHistory", x => x.Id);
+                    table.PrimaryKey("PK_DealPrices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DealPriceHistory_Deals_DealId",
+                        name: "FK_DealPrices_Deals_DealId",
                         column: x => x.DealId,
                         principalTable: "Deals",
                         principalColumn: "Id",
@@ -32,15 +30,15 @@ namespace ZDeals.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DealPriceHistory_DealId",
-                table: "DealPriceHistory",
+                name: "IX_DealPrices_DealId",
+                table: "DealPrices",
                 column: "DealId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DealPriceHistory");
+                name: "DealPrices");
         }
     }
 }

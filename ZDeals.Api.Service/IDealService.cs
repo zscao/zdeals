@@ -28,6 +28,10 @@ namespace ZDeals.Api.Service
 
         Task<Result<DealCategoryList>> SaveCategoriesAsync(int dealId, SaveDealCategoriesRequest request);
 
+        Task<Result<DealPriceList>> GetPricesAsync(int dealId);
+
+        Task<Result<DealPriceList>> AddPricesAsync(int dealId, AddPricesRequest request);
+
         Task<Result<Deal>> DeleteDealAsync(int dealId);
 
         Task<Result<Deal>> VerifyDealAsync(int dealId);

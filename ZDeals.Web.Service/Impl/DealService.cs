@@ -52,7 +52,7 @@ namespace ZDeals.Web.Service.Impl
                 deal.ExpiryDate = DateTime.UtcNow;
                 result.Errors.Add(new Error(ErrorType.BadRequest) 
                 {
-                    Code = Common.ErrorCodes.Sales.DealExpired, Message = "Deal has expired." 
+                    Code = Common.ErrorCodes.Sales.DealExpired, Message = "This deal has expired." 
                 });
             }
 
@@ -103,7 +103,7 @@ namespace ZDeals.Web.Service.Impl
 
         public async Task<Result<IEnumerable<DealPriceHistory>>> GetDealPriceHistory(int dealId)
         {
-            var data = await _dbContext.DealPriceHistory.Where(x => x.DealId == dealId).OrderBy(x => x.UpdatedTime).ToListAsync();
+            var data = await _dbContext.DealPrices.Where(x => x.DealId == dealId).OrderBy(x => x.UpdatedTime).ToListAsync();
 
             var list = new List<DealPriceHistory>();
             foreach (var d in data)

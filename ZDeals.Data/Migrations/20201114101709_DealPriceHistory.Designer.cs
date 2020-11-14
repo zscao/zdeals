@@ -9,7 +9,7 @@ using ZDeals.Data;
 namespace ZDeals.Data.Migrations
 {
     [DbContext(typeof(ZDealsDbContext))]
-    [Migration("20201028040042_DealPriceHistory")]
+    [Migration("20201114101709_DealPriceHistory")]
     partial class DealPriceHistory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,7 +226,7 @@ namespace ZDeals.Data.Migrations
                     b.ToTable("DealPictures");
                 });
 
-            modelBuilder.Entity("ZDeals.Data.Entities.DealPriceHistoryEntity", b =>
+            modelBuilder.Entity("ZDeals.Data.Entities.DealPriceEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -238,12 +238,6 @@ namespace ZDeals.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.Property<int>("Sequence")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("date");
-
                     b.Property<DateTime>("UpdatedTime")
                         .HasColumnType("datetime(6)");
 
@@ -251,7 +245,7 @@ namespace ZDeals.Data.Migrations
 
                     b.HasIndex("DealId");
 
-                    b.ToTable("DealPriceHistory");
+                    b.ToTable("DealPrices");
                 });
 
             modelBuilder.Entity("ZDeals.Data.Entities.StoreEntity", b =>
@@ -367,10 +361,10 @@ namespace ZDeals.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ZDeals.Data.Entities.DealPriceHistoryEntity", b =>
+            modelBuilder.Entity("ZDeals.Data.Entities.DealPriceEntity", b =>
                 {
                     b.HasOne("ZDeals.Data.Entities.DealEntity", "Deal")
-                        .WithMany("PriceHistory")
+                        .WithMany("DealPriceHistory")
                         .HasForeignKey("DealId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

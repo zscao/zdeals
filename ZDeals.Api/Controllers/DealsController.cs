@@ -118,5 +118,17 @@ namespace ZDeals.Api.Controllers
         {
             return await _dealService.SaveCategoriesAsync(dealId, request);
         }
+
+        [HttpGet("{dealId}/prices")]
+        public async Task<ActionResult<Result>> GetPrices(int dealId)
+        {
+            return await _dealService.GetPicturesAsync(dealId);
+        }
+
+        [HttpPost("{dealId}/prices")]
+        public async Task<ActionResult<Result>> AddPrices(int dealId, AddPricesRequest request)
+        {
+            return await _dealService.AddPricesAsync(dealId, request);
+        }
     }
 }

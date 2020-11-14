@@ -22,9 +22,9 @@ namespace ZDeals.Data
 
         public DbSet<ActionHistoryEntity> DealActionHistory { get; set; }
 
-        public DbSet<DealPriceHistoryEntity> DealPriceHistory { get; set; }
-
         public DbSet<VisitDetail> DealVisitDeatail { get; set; }
+
+        public DbSet<DealPriceEntity> DealPrices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -48,7 +48,7 @@ namespace ZDeals.Data
                 e.HasMany(d => d.VisitHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
                 e.HasMany(d => d.ActionHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
 
-                e.HasMany(d => d.PriceHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
+                e.HasMany(d => d.DealPriceHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
             });                
 
             builder.Entity<CategoryEntity>(e =>
