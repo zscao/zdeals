@@ -58,5 +58,6 @@
         {
             public const string Base = BaseUrl + "dashboard";
         }
+
     }
 }

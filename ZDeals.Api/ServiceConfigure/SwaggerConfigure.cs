@@ -35,6 +35,8 @@ namespace ZDeals.Api.ServiceConfigure
                         }, new List<string>()
                     }
                 });
+
+                c.EnableAnnotations();
             });
         }
     }

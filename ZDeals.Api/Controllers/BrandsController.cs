@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using Swashbuckle.AspNetCore.Annotations;
+
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
+using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service;
 using ZDeals.Common;
+using ZDeals.Common.AspNetCore.Responses;
 using ZDeals.Common.Constants;
 
 namespace ZDeals.Api.Controllers
@@ -25,6 +29,9 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesDefaultResponseType(typeof(PagedBrands))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
+        [SwaggerOperation(OperationId = "SearchBrands")]
         public async Task<ActionResult<Result>> Search([FromQuery] string name)
         {
             return await _brandService.SearchBrandsAsync(name);
@@ -32,6 +39,9 @@ namespace ZDeals.Api.Controllers
 
 
         [HttpGet("{brandId}")]
+        [ProducesDefaultResponseType(typeof(Brand))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
+        [SwaggerOperation(OperationId = "GetBrand")]
         public async Task<ActionResult<Result>> GetById(int brandId)
         {
             return await _brandService.GetBrandByIdAsync(brandId);
@@ -39,6 +49,9 @@ namespace ZDeals.Api.Controllers
 
 
         [HttpPost]
+        [ProducesDefaultResponseType(typeof(Brand))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
+        [SwaggerOperation(OperationId = "CreateBrand")]
         public async Task<ActionResult<Result>> Create(CreateBrandRequest request)
         {
             var result = await _brandService.CreateBrandAsync(request);
@@ -46,6 +59,9 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpPut("{brandId}")]
+        [ProducesDefaultResponseType(typeof(Brand))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
+        [SwaggerOperation(OperationId = "UpdateBrand")]
         public async Task<ActionResult<Result>> Update(int brandId, [FromBody] UpdateBrandRequest request)
         {
             return await _brandService.UpdateBrandAsync(brandId, request);

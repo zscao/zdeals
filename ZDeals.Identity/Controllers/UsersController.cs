@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 using ZDeals.Common;
+using ZDeals.Common.AspNetCore.Responses;
 using ZDeals.Common.Constants;
 using ZDeals.Identity;
 using ZDeals.Identity.Contract;
+using ZDeals.Identity.Contract.Models;
 using ZDeals.Identity.Contract.Requests;
 
 namespace ZDeals.Api.Controllers
@@ -25,9 +27,12 @@ namespace ZDeals.Api.Controllers
 
         [Authorize(Roles = ApiRoles.Admin)]
         [HttpPost]
+        [ProducesDefaultResponseType(typeof(User))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public async Task<ActionResult<Result>> CreateUser(CreateUserRequest request)
         {
-            return await _userService.CreateUserAsync(request);
+            var result = await _userService.CreateUserAsync(request);
+            return Created($"/users/{result.Data.UserId}", result);
         }
 
     }

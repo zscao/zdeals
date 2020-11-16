@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using ZDeals.Common;
+using ZDeals.Common.AspNetCore.Responses;
 using ZDeals.Web.Service;
+using ZDeals.Web.Service.Models;
 
 namespace ZDeals.Web.Api.Controllers
 {
@@ -19,6 +22,8 @@ namespace ZDeals.Web.Api.Controllers
         }
 
         [HttpGet("list")]
+        [ProducesDefaultResponseType(typeof(IEnumerable<CategoryListView>))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public async Task<ActionResult<Result>> GetCategoryList()
         {
             var result = await _categoryService.GetCategoryListAsync();
@@ -26,6 +31,8 @@ namespace ZDeals.Web.Api.Controllers
         }
 
         [HttpGet("tree")]
+        [ProducesDefaultResponseType(typeof(CategoryTreeView))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public async Task<ActionResult<Result>> GetCategoryTree()
         {
             var result = await _categoryService.GetCategoryTreeAsync();

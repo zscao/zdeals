@@ -6,5 +6,6 @@
         public const string User = "User";
         public const string Member = "Member";
         public const string Anonymous = "Anonymous";
+        public const string Api = "Api";
     }
 }

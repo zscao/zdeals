@@ -5,8 +5,10 @@ using System;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
+using ZDeals.Api.Contract.Models;
 using ZDeals.Api.Service;
 using ZDeals.Common;
+using ZDeals.Common.AspNetCore.Responses;
 using ZDeals.Common.Constants;
 
 namespace ZDeals.Api.Controllers
@@ -24,6 +26,8 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpGet("dailyVisit")]
+        [ProducesDefaultResponseType(typeof(DealVisitStatis))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public async Task<ActionResult<Result>> GetDailyVisitStatis()
         {
             var start = DateTime.Today.AddDays(-30);

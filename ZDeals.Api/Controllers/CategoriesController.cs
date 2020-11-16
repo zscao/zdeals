@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using ZDeals.Api.Contract;
@@ -9,6 +10,7 @@ using ZDeals.Api.Contract.Requests;
 using ZDeals.Api.Service;
 using ZDeals.Api.Service.Mapping;
 using ZDeals.Common;
+using ZDeals.Common.AspNetCore.Responses;
 using ZDeals.Common.Constants;
 
 namespace ZDeals.Api.Controllers
@@ -27,12 +29,16 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesDefaultResponseType(typeof(IEnumerable<CategoryDetail>))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public async Task<ActionResult<Result>> Search()
         {
             return await _categoryService.SearchCategoriesAsync();
         }
 
         [HttpPost]
+        [ProducesDefaultResponseType(typeof(CategoryDetail))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public async Task<ActionResult<Result>> Create(CreateCategoryRequest request)
         {
             var result = await _categoryService.CreateCategoryAsync(request);
@@ -42,6 +48,8 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpPut("{categoryId}")]
+        [ProducesDefaultResponseType(typeof(CategoryDetail))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public async Task<ActionResult<Result>> Update(int categoryId, UpdateCategoryRequest request)
         {
             var result = await _categoryService.UpdateCategoryAsync(categoryId, request);
@@ -49,12 +57,16 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpGet("{categoryId}")]
+        [ProducesDefaultResponseType(typeof(CategoryDetail))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public async Task<ActionResult<Result>> GetById(int categoryId)
         {
             return await _categoryService.GetCategoryByIdAsync(categoryId);
         }
 
         [HttpGet("list")]
+        [ProducesDefaultResponseType(typeof(CategoryList))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public async Task<ActionResult<Result>> GetCategoryList()
         {
             var result = await _categoryService.GetCategoryTreeAsync();
@@ -66,6 +78,8 @@ namespace ZDeals.Api.Controllers
         }
 
         [HttpGet("tree")]
+        [ProducesDefaultResponseType(typeof(CategoryTreeView))]
+        [ProducesErrorResponseType(typeof(ErrorResponse))]
         public async Task<ActionResult<Result>> GetCategoryTree()
         {
             return await _categoryService.GetCategoryTreeAsync();
