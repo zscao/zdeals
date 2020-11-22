@@ -7,5 +7,7 @@
         public const string DealPicturesContainer = "deals";
 
         public const int MaxPictureSize = 600;
+
+        public const string PriceSource = "WEB";
     }
 }

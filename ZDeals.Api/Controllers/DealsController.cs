@@ -155,12 +155,12 @@ namespace ZDeals.Api.Controllers
             return await _dealService.GetPricesAsync(dealId);
         }
 
-        [HttpPost("{dealId}/prices")]
+        [HttpPost("prices")]
         [ProducesDefaultResponseType(typeof(DealPriceList))]
         [ProducesErrorResponseType(typeof(ErrorResponse))]
-        public async Task<ActionResult<Result>> AddPrices(int dealId, AddPricesRequest request)
+        public async Task<ActionResult<Result>> AddPrices(AddPricesRequest request)
         {
-            return await _dealService.AddPricesAsync(dealId, request);
+            return await _dealService.AddPricesAsync(request);
         }
     }
 }

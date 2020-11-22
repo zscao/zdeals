@@ -49,7 +49,7 @@ namespace ZDeals.Data
                 e.HasMany(d => d.ActionHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
 
                 e.HasMany(d => d.DealPriceHistory).WithOne(h => h.Deal).HasForeignKey(d => d.DealId);
-            });                
+            });
 
             builder.Entity<CategoryEntity>(e =>
             {

@@ -30,7 +30,7 @@ namespace ZDeals.Api.Service
 
         Task<Result<DealPriceList>> GetPricesAsync(int dealId);
 
-        Task<Result<DealPriceList>> AddPricesAsync(int dealId, AddPricesRequest request);
+        Task<Result<DealPriceList>> AddPricesAsync(AddPricesRequest request);
 
         Task<Result<Deal>> DeleteDealAsync(int dealId);
 

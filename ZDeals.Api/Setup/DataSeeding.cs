@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using ZDeals.Common.Constants;
 using ZDeals.Data;
 using ZDeals.Data.Entities;
 
@@ -43,6 +45,23 @@ namespace ZDeals.Api.Setup
                     };
 
                     dbContext.Brands.AddRange(brands);
+                    await dbContext.SaveChangesAsync();
+                }
+
+                if(dbContext.DealPrices.Any() == false)
+                {
+                    var deals = await dbContext.Deals.Include(x => x.DealPriceHistory).ToListAsync();
+                    foreach(var deal in deals)
+                    {
+                        deal.DealPriceHistory.Add(new DealPriceEntity
+                        {
+                            Price = deal.DealPrice,
+                            UpdatedTime = deal.CreatedTime,
+                            PriceSource = DefaultValues.PriceSource,
+                            PriceSourceId = deal.Id.ToString(),
+                            DealId = deal.Id
+                        });
+                    }
                     await dbContext.SaveChangesAsync();
                 }
             }

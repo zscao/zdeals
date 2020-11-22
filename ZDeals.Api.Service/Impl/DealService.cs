@@ -297,12 +297,12 @@ namespace ZDeals.Api.Service.Impl
 
             var list = new DealPictureList
             {
-                Data = deal.Pictures.Select(x => x.ToDealPictureModel(isDefault: x.FileName == deal.DefaultPicture))
+                Items = deal.Pictures.Select(x => x.ToDealPictureModel(isDefault: x.FileName == deal.DefaultPicture))
             };
 
-            if(list.Data?.Count() > 1)
+            if(list.Items?.Count() > 1)
             {
-                list.Data = list.Data.OrderBy(x => x.IsDefaultPicture ? 0 : 1);
+                list.Items = list.Items.OrderBy(x => x.IsDefaultPicture ? 0 : 1);
             }
 
             return new Result<DealPictureList>(list);
@@ -344,7 +344,7 @@ namespace ZDeals.Api.Service.Impl
 
             var list = new DealCategoryList
             {
-                Data = categories.Select(x => x.Category.ToCategoryModel())
+                Items = categories.Select(x => x.Category.ToCategoryModel())
             };
 
             return new Result<DealCategoryList>(list);
@@ -378,7 +378,7 @@ namespace ZDeals.Api.Service.Impl
 
             var list = new DealPriceList
             {
-                Data = prices.Select(x => new DealPrice
+                Items = prices.Select(x => new DealPrice
                 {
                     Price = x.Price,
                     UpdatedTime = x.UpdatedTime
@@ -388,34 +388,36 @@ namespace ZDeals.Api.Service.Impl
             return new Result<DealPriceList>(list);
         }
 
-        public async Task<Result<DealPriceList>> AddPricesAsync(int dealId, AddPricesRequest request)
+        public async Task<Result<DealPriceList>> AddPricesAsync(AddPricesRequest request)
         {
-            var deal = await _dbContext.Deals.Include(x => x.DealPriceHistory).SingleOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _dbContext.Deals.Include(x => x.DealPriceHistory).SingleOrDefaultAsync(x => x.Source == request.DealSource);
             if (deal == null)
                 return new Result<DealPriceList>(new Error(ErrorType.NotFound) { Code = Sales.DealNotFound, Message = "Could not find the deal" });
 
-            DateTime updatedTime = deal.DealPriceHistory.OrderBy(x => x.UpdatedTime).LastOrDefault()?.UpdatedTime ?? deal.UpdatedTime;
-
-            if(request.Prices?.Length > 0)
+            if(request.Items?.Length > 0)
             {
-                foreach(var data in request.Prices)
+                foreach (var data in request.Items)
                 {
-                    if( data.UpdatedTime > updatedTime)
+                    if (deal.DealPriceHistory.Any(x => x.PriceSource == data.PriceSource && x.PriceSourceId == data.PriceSourceId)) continue;
+
+                    deal.DealPriceHistory.Add(new DealPriceEntity
                     {
-                        deal.DealPriceHistory.Add(new DealPriceEntity
-                        {
-                            DealId = deal.Id,
-                            Price = data.Price,
-                            UpdatedTime = data.UpdatedTime
-                        });
-                    }
+                        DealId = deal.Id,
+                        Price = data.Price,
+                        UpdatedTime = data.UpdatedTime,
+                        PriceSource = data.PriceSource,
+                        PriceSourceId = data.PriceSourceId
+                    });
+
+                    deal.UsedPrice = deal.DealPrice;
+                    deal.DealPrice = data.Price;
                 }
                 var saved = await _dbContext.SaveChangesAsync();
             }
 
             var list = new DealPriceList
             {
-                Data = deal.DealPriceHistory.Select(x => new DealPrice
+                Items = deal.DealPriceHistory.Select(x => new DealPrice
                 {
                     Price = x.Price,
                     UpdatedTime = x.UpdatedTime
@@ -463,36 +465,14 @@ namespace ZDeals.Api.Service.Impl
                                 .OrderByDescending(x => x.Id)
                                 .FirstOrDefaultAsync();
 
-            if (latestPrice == null)
+            if (latestPrice == null || Math.Abs(latestPrice.Price - dealPrice) > 0.01m)
             {
-                if (usedPrice > 0)
-                {
-                    _dbContext.DealPrices.Add(new DealPriceEntity
-                    {
-                        DealId = dealId,
-                        Price = usedPrice,
-                        UpdatedTime = DateTime.UtcNow
-                    });
-                }
                 _dbContext.DealPrices.Add(new DealPriceEntity
                 {
                     DealId = dealId,
                     Price = dealPrice,
                     UpdatedTime = DateTime.UtcNow
                 });
-            }
-            else
-            {
-                // add a new record if new price is different from the latest price
-                if (Math.Abs(latestPrice.Price - dealPrice) > 0.01m)
-                {
-                    _dbContext.DealPrices.Add(new DealPriceEntity
-                    {
-                        DealId = dealId,
-                        Price = dealPrice,
-                        UpdatedTime = DateTime.UtcNow
-                    });
-                }
             }
         }
         #endregion

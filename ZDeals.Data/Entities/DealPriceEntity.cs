@@ -19,5 +19,11 @@ namespace ZDeals.Data.Entities
 
 
         public DealEntity Deal { get; set; }
+
+        [MaxLength(50)]
+        public string PriceSource { get; set; }
+
+        [MaxLength(50)]
+        public string PriceSourceId { get; set; }
     }
 }

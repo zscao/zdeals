@@ -4,6 +4,6 @@ namespace ZDeals.Api.Contract
 {
     public class DataList<T>
     {
-        public IEnumerable<T> Data { get; set; }
+        public IEnumerable<T> Items { get; set; }
     }
 }

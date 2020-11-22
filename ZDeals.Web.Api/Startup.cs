@@ -60,7 +60,7 @@ namespace ZDeals.Web.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint($"{pathBase}swagger/v1/webapi.json", "ZDeals Web Api v1");
+                    c.SwaggerEndpoint($"{pathBase}swagger/v1/swagger.json", "ZDeals Web Api v1");
                 });
             }
 

@@ -2,6 +2,7 @@
 {
     public class AddPricesRequest
     {
-        public Models.DealPrice[] Prices { get; set; }
+        public string DealSource { get; set; }
+        public Models.DealPrice[] Items { get; set; }
     }
 }
