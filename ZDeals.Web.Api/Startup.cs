@@ -62,9 +62,7 @@ namespace ZDeals.Web.Api
                 {
                     c.SwaggerEndpoint($"{pathBase}swagger/v1/swagger.json", "ZDeals Web Api v1");
                 });
-            }
-
-            if(_corsEnabled) app.UseCors(CorsPolicyName);
+            }            
 
             app.UseHttpsRedirection();
 
@@ -89,6 +87,8 @@ namespace ZDeals.Web.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            if (_corsEnabled) app.UseCors(CorsPolicyName);
 
             app.UseEndpoints(endpoints =>
             {

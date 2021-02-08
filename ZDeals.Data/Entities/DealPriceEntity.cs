@@ -23,7 +23,5 @@ namespace ZDeals.Data.Entities
         [MaxLength(50)]
         public string PriceSource { get; set; }
 
-        [MaxLength(50)]
-        public string PriceSourceId { get; set; }
     }
 }

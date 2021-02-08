@@ -26,4 +26,8 @@ namespace ZDeals.Api.Contract.Models
         public string Status { get; set; }
 
     }
+
+    public class PagedDeals : PagedData<Deal>
+    {
+    }
 }

@@ -398,19 +398,43 @@ namespace ZDeals.Api.Service.Impl
             {
                 foreach (var data in request.Items)
                 {
-                    if (deal.DealPriceHistory.Any(x => x.PriceSource == data.PriceSource && x.PriceSourceId == data.PriceSourceId)) continue;
-
-                    deal.DealPriceHistory.Add(new DealPriceEntity
+                    var lastestPrice = deal.DealPriceHistory.OrderByDescending(x => x.UpdatedTime).FirstOrDefault();
+                    if (lastestPrice == null)
                     {
-                        DealId = deal.Id,
-                        Price = data.Price,
-                        UpdatedTime = data.UpdatedTime,
-                        PriceSource = data.PriceSource,
-                        PriceSourceId = data.PriceSourceId
-                    });
+                        deal.DealPriceHistory.Add(new DealPriceEntity
+                        {
+                            DealId = deal.Id,
+                            Price = data.Price,
+                            UpdatedTime = data.UpdatedTime,
+                            PriceSource = data.PriceSource
+                        });
 
-                    deal.UsedPrice = deal.DealPrice;
-                    deal.DealPrice = data.Price;
+                        deal.UsedPrice = deal.DealPrice;
+                        deal.DealPrice = data.Price;
+                        deal.Discount = "";
+                    }
+                    else if(data.UpdatedTime > lastestPrice.UpdatedTime)
+                    {
+                        if (Math.Abs(lastestPrice.Price - data.Price) > 0.01m)
+                        {
+                            deal.DealPriceHistory.Add(new DealPriceEntity
+                            {
+                                DealId = deal.Id,
+                                Price = data.Price,
+                                UpdatedTime = data.UpdatedTime,
+                                PriceSource = data.PriceSource
+                            });
+
+                            deal.UsedPrice = deal.DealPrice;
+                            deal.DealPrice = data.Price;
+                            deal.Discount = "";
+                        }
+                        else
+                        {
+                            lastestPrice.UpdatedTime = data.UpdatedTime;
+                            lastestPrice.PriceSource = data.PriceSource;
+                        }
+                    }
                 }
                 var saved = await _dbContext.SaveChangesAsync();
             }

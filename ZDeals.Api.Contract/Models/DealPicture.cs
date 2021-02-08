@@ -10,4 +10,8 @@
 
         public string Url { get; set; }
     }
+
+    public class DealPictureList : DataList<DealPicture>
+    {
+    }
 }

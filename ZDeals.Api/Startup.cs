@@ -54,14 +54,14 @@ namespace ZDeals.Api
                 });                
             }
 
-            if(_corsEnabled) app.UseCors(CorsPolicyName);
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            if(_corsEnabled) app.UseCors(CorsPolicyName);
 
             app.UseEndpoints(endpoints =>
             {

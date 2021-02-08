@@ -10,9 +10,9 @@ namespace ZDeals.Api.Contract.Models
         /// indicate who collected the price
         /// </summary>
         public string PriceSource { get; set; }
-        /// <summary>
-        /// the ID of the price in the source
-        /// </summary>
-        public string PriceSourceId { get; set; }
+    }
+
+    public class DealPriceList : DataList<DealPrice>
+    {
     }
 }

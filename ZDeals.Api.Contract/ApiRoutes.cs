@@ -59,5 +59,10 @@
             public const string Base = BaseUrl + "dashboard";
         }
 
+        public static class Products
+        {
+            public const string Base = BaseUrl + "price";
+        }
+
     }
 }

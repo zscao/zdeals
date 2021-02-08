@@ -8,4 +8,8 @@
 
         public string Domain { get; set; }
     }
+
+    public class PagedStores : PagedData<Store>
+    {
+    }
 }

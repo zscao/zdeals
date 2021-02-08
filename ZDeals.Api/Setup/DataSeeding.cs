@@ -58,7 +58,6 @@ namespace ZDeals.Api.Setup
                             Price = deal.DealPrice,
                             UpdatedTime = deal.CreatedTime,
                             PriceSource = DefaultValues.PriceSource,
-                            PriceSourceId = deal.Id.ToString(),
                             DealId = deal.Id
                         });
                     }

@@ -29,4 +29,8 @@ namespace ZDeals.Api.Contract.Models
     public class CategoryList : DataList<CategoryListView>
     {
     }
+
+    public class DealCategoryList : DataList<Category>
+    {
+    }
 }
